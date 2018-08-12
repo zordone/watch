@@ -1,3 +1,5 @@
+/* global fetch */
+
 import React, { Component } from 'react';
 import './App.css';
 
@@ -5,14 +7,24 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // list: []
+            list: []
         };
     }
 
     componentDidMount() {
+        fetch('http://localhost:3000/items')
+            .then(res => res.json())
+            .then(list => list.map(item => ({
+                ...item,
+                id: item._id // eslint-disable-line no-underscore-dangle
+            })))
+            .then(list => {
+                this.setState({ list });
+            });
     }
 
     render() {
+        const { list } = this.state;
         return (
             <div className="App">
                 <header className="App-header">
@@ -23,9 +35,13 @@ class App extends Component {
                         Movies and TV Shows
                     </h2>
                 </header>
-                <p className="App-intro">
-                    Hello World!
-                </p>
+                <ul>
+                    {list.map(item => (
+                        <li key={item.id}>
+                            {item.title}
+                        </li>
+                    ))}
+                </ul>
             </div>
         );
     }
