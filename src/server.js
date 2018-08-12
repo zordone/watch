@@ -3,6 +3,8 @@
 // console is ok in this one file for now.
 /* eslint-disable no-console */
 
+const PORT = 3001;
+
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -91,6 +93,6 @@ app.post('/items', (req, res) => {
 
 // ...
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000.');
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}.`);
 });

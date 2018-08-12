@@ -12,7 +12,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:3000/items')
+        fetch('http://localhost:3001/items')
             .then(res => res.json())
             .then(list => list.map(item => ({
                 ...item,
