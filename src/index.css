@@ -1,9 +1,12 @@
+html {
+  font-size: 16px;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 100;
-  font-size: 16px;
-  background-color: #444;
-  color: #FFF;  
+  background-color: #1A1A1A;
+  color: #FFF;
 }
