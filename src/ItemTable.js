@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -27,7 +28,7 @@ const ItemTable = props => {
                             <TableCell component="th" scope="row">{item.title}</TableCell>
                             <TableCell>{item.type}</TableCell>
                             <TableCell className="ItemTable-skinny-col">
-                                <Button>Edit</Button>
+                                <Button component={NavLink} to={`/item/${item.id}`}>Edit</Button>
                             </TableCell>
                         </TableRow>
                     ))}
