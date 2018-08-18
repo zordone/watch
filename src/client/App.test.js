@@ -1,14 +1,12 @@
-/* global it,document,jest */
+/* global describe,it,expect */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import App from './App';
 
-global.fetch = jest.fn(() => Promise.resolve());
-console.error = jest.fn();
-
-it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<App />, div);
-    ReactDOM.unmountComponentAtNode(div);
+describe('<App>', () => {
+    it('renders without crashing', () => {
+        const wrapper = shallow(<App />);
+        expect(wrapper.children.length).toBeGreaterThan(0);
+    });
 });
