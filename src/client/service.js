@@ -7,3 +7,16 @@ export const listItems = () =>
 export const getItemById = id =>
     fetch(`${BASE_URL}/items/${id}`)
         .then(res => res.json());
+
+export const updateItemById = (id, item) => {
+    const opts = {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    };
+    return fetch(`${BASE_URL}/items/${id}`, opts)
+        .then(res => res.json());
+};

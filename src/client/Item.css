@@ -1,0 +1,21 @@
+.Item {
+    padding: 1rem;
+}
+
+.Item .Item-paper {
+    padding: 1rem;
+    width: 600px;
+    margin: 0 auto;
+}
+
+.Item .Item-row {
+    margin-bottom: 1rem;
+}
+
+.Item .Item-buttons {
+    text-align: center;
+}
+
+.Item .Item-button {
+    margin: 0.5rem;
+}

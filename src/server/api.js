@@ -1,7 +1,5 @@
 const { Item } = require('./models');
 
-console.log('Item', Item);
-
 // just for development
 // eslint-disable-next-line no-unused-vars
 exports.removeAllItems = () => {
@@ -69,7 +67,7 @@ exports.getItemById = (req, res) => {
 exports.updateItemById = (req, res) => {
     const { id } = req.params;
     const body = (req && req.body) || {};
-    // TODO: remove "readonly" fields, like _id, created, etc...
+    // TODO: remove "readonly" fields, like _id, __v, created, updated, etc...
     body.updated = new Date();
     Item.findById(id)
         .then(item => {
