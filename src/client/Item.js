@@ -4,15 +4,30 @@ import PropTypes from 'prop-types';
 class Item extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            item: {}
+        };
+    }
+
+    componentDidMount() {
+        const { match } = this.props;
+        const { id } = match.params;
+        fetch(`http://localhost:3001/items/${id}`)
+            .then(res => res.json())
+            .then(item => {
+                this.setState({ item });
+            });
     }
 
     render() {
-        const { match } = this.props;
-        const { id } = match.params;
+        // const { match } = this.props;
+        // const { id } = match.params;
+        const { item } = this.state;
         return (
             <div className="Item">
-                Item {id}
+                Item: {item._id}
+                <br />
+                Title: {item.title}
             </div>
         );
     }
