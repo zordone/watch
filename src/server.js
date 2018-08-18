@@ -37,15 +37,15 @@ const itemSchema = new mongoose.Schema({
 
 const Item = mongoose.model('Item', itemSchema);
 
-// just for development
+// RemoveAllItems - just for development
 // eslint-disable-next-line no-unused-vars
 const removeAllItems = () => {
     Item.remove({})
         .then(() => {
-            console.log('Removed all items.');
+            console.log('[RemoveAllItems] All items removed.');
         })
         .catch(err => {
-            console.error('Remove all items:', err);
+            console.error('[RemoveAllItems]', err);
         });
 };
 
@@ -59,19 +59,21 @@ app.use((req, res, next) => {
     next();
 });
 
+// ListItems
 app.get('/items', (req, res) => {
     // removeAllItems(); // TODO :remove
     Item.find()
         .then(items => {
-            console.log('ITEMS', items);
+            console.log('[ListItems] Found:', items.length);
             res.send(items);
         })
         .catch(err => {
-            console.error('Items list error:', err);
+            console.error('[ListItems]', err);
             res.sendStatus(500);
         });
 });
 
+// NewItem
 app.post('/items', (req, res) => {
     const body = (req && req.body) || {};
     const model = new Item({
@@ -82,13 +84,27 @@ app.post('/items', (req, res) => {
     model.save((err, saved) => {
         if (err) {
             res.sendStatus(400);
-            console.error('Item is not saved:', err);
+            console.error('[NewItem] Item is not saved.', err);
         } else {
             res.setHeader('Location', `/items/${saved.id}`);
             res.sendStatus(200);
-            console.log('Item is saved. ID:', saved.id);
+            console.log('[NewItem] Item is saved. ID:', saved.id);
         }
     });
+});
+
+// GetItemById
+app.get('/items/:id', (req, res) => {
+    const { id } = req.params;
+    Item.findById(id)
+        .then(items => {
+            console.log('[GetItemById] Found.');
+            res.send(items);
+        })
+        .catch(err => {
+            console.error('[GetItemById]', err);
+            res.sendStatus(500);
+        });
 });
 
 // ...
