@@ -53,6 +53,8 @@ const removeAllItems = () => {
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -83,12 +85,12 @@ app.post('/items', (req, res) => {
     });
     model.save((err, saved) => {
         if (err) {
-            res.sendStatus(400);
             console.error('[NewItem] Item is not saved.', err);
+            res.sendStatus(400);
         } else {
+            console.log('[NewItem] Item is saved. ID:', saved.id);
             res.setHeader('Location', `/items/${saved.id}`);
             res.sendStatus(200);
-            console.log('[NewItem] Item is saved. ID:', saved.id);
         }
     });
 });
@@ -97,12 +99,47 @@ app.post('/items', (req, res) => {
 app.get('/items/:id', (req, res) => {
     const { id } = req.params;
     Item.findById(id)
-        .then(items => {
+        .then(item => {
+            if (!item) {
+                console.log('[GetItemById] Not found.');
+                res.sendStatus(404);
+                return;
+            }
             console.log('[GetItemById] Found.');
-            res.send(items);
+            res.send(item);
         })
         .catch(err => {
             console.error('[GetItemById]', err);
+            res.sendStatus(500);
+        });
+});
+
+// UpdateItemById
+app.put('/items/:id', (req, res) => {
+    const { id } = req.params;
+    const body = (req && req.body) || {};
+    // TODO: remove "readonly" fields, like _id, created, etc...
+    Item.findById(id)
+        .then(item => {
+            if (!item) {
+                console.log('[UpdateItemById] Not found.');
+                res.sendStatus(404);
+                return;
+            }
+            console.log('[UpdateItemById] Found.');
+            item.set(body);
+            item.save((err, saved) => {
+                if (err) {
+                    console.error('[UpdateItemById] Item is not updated.', err);
+                    res.sendStatus(400);
+                } else {
+                    console.log('[UpdateItemById] Item is updated.');
+                    res.send(saved);
+                }
+            });
+        })
+        .catch(err => {
+            console.error('[UpdateItemById]', err);
             res.sendStatus(500);
         });
 });
