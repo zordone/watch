@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as service from './service';
 
 class Item extends Component {
     constructor(props) {
@@ -12,8 +13,7 @@ class Item extends Component {
     componentDidMount() {
         const { match } = this.props;
         const { id } = match.params;
-        fetch(`http://localhost:3001/items/${id}`)
-            .then(res => res.json())
+        service.getItemById(id)
             .then(item => {
                 this.setState({ item });
             });

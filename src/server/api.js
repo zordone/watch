@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const { Item } = require('./models');
 
 console.log('Item', Item);

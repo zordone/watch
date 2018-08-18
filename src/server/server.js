@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const express = require('express');
 const api = require('./api');
 const db = require('./database');

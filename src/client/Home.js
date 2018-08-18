@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ItemTable from './ItemTable';
 import Header from './Header';
+import * as service from './service';
 
 class Home extends Component {
     constructor(props) {
@@ -11,11 +12,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:3001/items')
-            .then(res => res.json())
-            .then(items => items.map(item => ({
-                ...item
-            })))
+        service.listItems()
             .then(items => {
                 this.setState({ items });
             })
