@@ -31,7 +31,8 @@ const ItemType = Object.freeze({
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
     type: { type: String, required: true, enum: Object.values(ItemType) },
-    created: { type: Date, required: true }
+    created: { type: Date, required: true },
+    updated: { type: Date, required: true }
     // TODO: add updated-date, ...
 });
 
@@ -78,10 +79,12 @@ app.get('/items', (req, res) => {
 // NewItem
 app.post('/items', (req, res) => {
     const body = (req && req.body) || {};
+    const now = new Date();
     const model = new Item({
         title: body.title,
         type: body.type,
-        created: new Date()
+        created: now,
+        updated: now
     });
     model.save((err, saved) => {
         if (err) {
@@ -119,6 +122,7 @@ app.put('/items/:id', (req, res) => {
     const { id } = req.params;
     const body = (req && req.body) || {};
     // TODO: remove "readonly" fields, like _id, created, etc...
+    body.updated = new Date();
     Item.findById(id)
         .then(item => {
             if (!item) {
