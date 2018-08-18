@@ -6,9 +6,14 @@
         "arrow-parens": ["error", "as-needed"],
         "implicit-arrow-linebreak": "off",
         "operator-linebreak": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
 
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/jsx-indent": ["error", 4],
         "react/jsx-one-expression-per-line": "off"
+    },
+    "globals": {
+        "fetch": true,
+        "console": true
     }
 }

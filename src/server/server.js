@@ -1,4 +1,3 @@
-/* global console */
 /* eslint-disable no-console */
 
 const express = require('express');

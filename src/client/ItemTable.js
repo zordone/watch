@@ -24,11 +24,11 @@ const ItemTable = props => {
                 </TableHead>
                 <TableBody>
                     {items.map(item => (
-                        <TableRow key={item.id}>
+                        <TableRow key={item._id}>
                             <TableCell component="th" scope="row">{item.title}</TableCell>
                             <TableCell>{item.type}</TableCell>
                             <TableCell className="ItemTable-skinny-col">
-                                <Button component={NavLink} to={`/item/${item.id}`}>Edit</Button>
+                                <Button component={NavLink} to={`/item/${item._id}`}>Edit</Button>
                             </TableCell>
                         </TableRow>
                     ))}

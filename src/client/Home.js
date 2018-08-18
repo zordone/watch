@@ -1,5 +1,3 @@
-/* global fetch */
-
 import React, { Component } from 'react';
 import ItemTable from './ItemTable';
 import Header from './Header';
@@ -16,8 +14,7 @@ class Home extends Component {
         fetch('http://localhost:3001/items')
             .then(res => res.json())
             .then(items => items.map(item => ({
-                ...item,
-                id: item._id // eslint-disable-line no-underscore-dangle
+                ...item
             })))
             .then(items => {
                 this.setState({ items });
