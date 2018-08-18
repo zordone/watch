@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { Item } = require('./models');
 
 // just for development
@@ -13,7 +14,7 @@ exports.removeAllItems = () => {
 };
 
 exports.listItems = (req, res) => {
-    // removeAllItems(); // TODO :remove
+    // removeAllItems(); // TODO remove
     Item.find()
         .then(items => {
             console.log('[ListItems] Found:', items.length);
@@ -37,7 +38,7 @@ exports.newItem = (req, res) => {
     model.save((err, saved) => {
         if (err) {
             console.error('[NewItem] Item is not saved.', err);
-            res.sendStatus(400);
+            res.status(400).send(err.message);
         } else {
             console.log('[NewItem] Item is saved. ID:', saved.id);
             res.setHeader('Location', `/items/${saved.id}`);
@@ -66,8 +67,7 @@ exports.getItemById = (req, res) => {
 
 exports.updateItemById = (req, res) => {
     const { id } = req.params;
-    const body = (req && req.body) || {};
-    // TODO: remove "readonly" fields, like _id, __v, created, updated, etc...
+    const body = _.omit((req && req.body) || {}, Item.dontUpdateFields);
     body.updated = new Date();
     Item.findById(id)
         .then(item => {
@@ -81,7 +81,7 @@ exports.updateItemById = (req, res) => {
             item.save((err, saved) => {
                 if (err) {
                     console.error('[UpdateItemById] Item is not updated.', err);
-                    res.sendStatus(400);
+                    res.status(400).send(err.message);
                 } else {
                     console.log('[UpdateItemById] Item is updated.');
                     res.send(saved);

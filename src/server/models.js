@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const data = require('../common/data.json');
 
 const ItemType = Object.freeze({
     MOVIE: 'movie',
@@ -8,9 +9,13 @@ const ItemType = Object.freeze({
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
     type: { type: String, required: true, enum: Object.values(ItemType) },
+    genres: [{ type: String, enum: data.genres }],
     created: { type: Date, required: true },
     updated: { type: Date, required: true }
     // TODO: more fields ...
 });
 
-exports.Item = mongoose.model('Item', itemSchema);
+const Item = mongoose.model('Item', itemSchema);
+Item.dontUpdateFields = ['_id', '__v', 'created', 'updated'];
+
+exports.Item = Item;
