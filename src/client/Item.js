@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TextField, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import * as service from './service';
+import GenreField from './GenreField';
 import './Item.css';
 
 class Item extends Component {
@@ -11,7 +12,8 @@ class Item extends Component {
         this.state = {
             item: {
                 title: '',
-                type: ''
+                type: '',
+                genres: []
             }
         };
         this.onChange = this.onChange.bind(this);
@@ -52,7 +54,7 @@ class Item extends Component {
     }
 
     onClose() {
-        const { history } = this.props; // eslint-disable-line
+        const { history } = this.props;
         history.goBack();
     }
 
@@ -76,6 +78,13 @@ class Item extends Component {
                             label="Type"
                             onChange={this.onChange}
                             value={item.type}
+                            className="Item-row"
+                        />
+                        <GenreField
+                            id="genres"
+                            label="Genres"
+                            onChange={this.onChange}
+                            value={item.genres}
                             className="Item-row"
                         />
                         <br />

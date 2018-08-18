@@ -9,6 +9,7 @@
         "no-underscore-dangle": ["error", { "allow": ["_id"] }],
         "no-console": "off",
         "class-methods-use-this": "off",
+        "object-curly-newline": "off",
 
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/jsx-indent": ["error", 4],
