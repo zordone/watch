@@ -21,7 +21,8 @@ class Home extends Component {
             })))
             .then(items => {
                 this.setState({ items });
-            });
+            })
+            .catch(console.error);
     }
 
     render() {
