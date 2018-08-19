@@ -2,11 +2,19 @@ import moment from 'moment';
 
 const BASE_URL = 'http://localhost:3001';
 
+const formatDate = dateStr => (
+    dateStr
+        ? moment(dateStr, moment.ISO_8601).format('YYYY-MM-DD')
+        : ''
+);
+
 const parseItem = item => ({
     ...item,
-    finished: item.finished
-        ? moment(item.finished, moment.ISO_8601).format('YYYY-MM-DD')
-        : ''
+    finished: formatDate(item.finished),
+    nextDate: formatDate(item.nextDate),
+    nextType: item.nextType || '',
+    withVali: item.withVali || '',
+    imdbId: item.imdbId || ''
 });
 
 export const listItems = () =>
@@ -17,11 +25,6 @@ export const listItems = () =>
 export const getItemById = id =>
     fetch(`${BASE_URL}/items/${id}`)
         .then(res => res.json())
-        .then(res => {
-            window.moment = moment; // eslint-disable-line
-            console.log('RES', res);
-            return res;
-        })
         .then(parseItem);
 
 export const updateItemById = (id, item) => {

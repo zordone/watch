@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const data = require('../common/data.json');
-
-const ItemType = Object.freeze({
-    MOVIE: 'movie',
-    SHOW: 'show'
-});
+const { ItemType, NextType, ValiType } = require('../common/enums');
 
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -13,9 +9,13 @@ const itemSchema = new mongoose.Schema({
     finished: { type: Date },
     lastWatched: { type: Number },
     inProgress: { type: Number },
+    nextDate: { type: Date },
+    nextType: { type: String, enum: Object.values(NextType) },
+    withVali: { type: String, enum: Object.values(ValiType) },
+    notes: { type: String },
+    imdbId: { type: String },
     created: { type: Date, required: true },
     updated: { type: Date, required: true }
-    // TODO: more fields ...
 });
 
 const Item = mongoose.model('Item', itemSchema);

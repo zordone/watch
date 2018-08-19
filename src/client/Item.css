@@ -13,19 +13,29 @@
 }
 
 .Item .Item-button {
-    margin: 0.5rem;
+    margin: 1rem 0.5rem 0 0.5rem;
 }
 
 .Item-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     grid-gap: 1rem;
 }
 
-/* hide number spin buttons */
+/* hide number/date spin buttons */
 .Item input[type=number]::-webkit-inner-spin-button,
-.Item input[type=number]::-webkit-outer-spin-button {
+.Item input[type=number]::-webkit-outer-spin-button,
+.Item input[type=date]::-webkit-inner-spin-button,
+.Item input[type=date]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* hide datepicker placeholder when empty */
+.Item-empty input:not(:focus)::-webkit-datetime-edit-year-field,
+.Item-empty input:not(:focus)::-webkit-datetime-edit-month-field,
+.Item-empty input:not(:focus)::-webkit-datetime-edit-day-field,
+.Item-empty input:not(:focus)::-webkit-datetime-edit-text {
+    color: transparent;
 }

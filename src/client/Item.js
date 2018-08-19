@@ -4,6 +4,7 @@ import { TextField, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import * as service from './service';
 import GenreField from './GenreField';
+import { ItemType, NextType, ValiType } from '../common/enums';
 import './Item.css';
 
 class Item extends Component {
@@ -12,11 +13,16 @@ class Item extends Component {
         this.state = {
             item: {
                 title: '',
-                type: '',
+                type: ItemType.MOVIE,
                 genres: [],
                 finished: '',
                 lastWatched: '',
-                inProgress: ''
+                inProgress: '',
+                nextDate: '',
+                nextType: NextType.END,
+                withVali: ValiType.NO,
+                notes: '',
+                imdbId: ''
             }
         };
         this.onChange = this.onChange.bind(this);
@@ -52,8 +58,11 @@ class Item extends Component {
             .then(saved => {
                 this.setState({ item: saved });
                 this.onClose();
+            })
+            .catch(err => {
+                console.error('Updating item failed.', err);
+                // TODO: show error message
             });
-        // TODO: show error message
     }
 
     onClose() {
@@ -78,7 +87,6 @@ class Item extends Component {
                             <TextField
                                 id="title"
                                 label="Title"
-                                fullWidth
                                 onChange={this.onChange}
                                 value={item.title}
                                 style={this.gridPosition(1, 1, 5)}
@@ -89,22 +97,21 @@ class Item extends Component {
                                 label="Type"
                                 onChange={this.onChange}
                                 value={item.type}
-                                style={this.gridPosition(1, 6)}
+                                style={this.gridPosition(2, 1)}
                             />
                             <GenreField
                                 id="genres"
                                 label="Genres"
                                 onChange={this.onChange}
                                 value={item.genres}
-                                style={this.gridPosition(2, 1, 3)}
+                                style={this.gridPosition(2, 2, 3)}
                             />
                             <TextField
-                                id="finished"
-                                label="Finished"
-                                // type="date"
+                                id="withVali"
+                                label="With Vali"
                                 onChange={this.onChange}
-                                value={item.finished}
-                                style={this.gridPosition(2, 4)}
+                                value={item.withVali}
+                                style={this.gridPosition(2, 5)}
                             />
                             <TextField
                                 id="lastWatched"
@@ -112,7 +119,7 @@ class Item extends Component {
                                 type="number"
                                 onChange={this.onChange}
                                 value={item.lastWatched}
-                                style={this.gridPosition(2, 5)}
+                                style={this.gridPosition(3, 1)}
                             />
                             <TextField
                                 id="inProgress"
@@ -120,7 +127,47 @@ class Item extends Component {
                                 type="number"
                                 onChange={this.onChange}
                                 value={item.inProgress}
-                                style={this.gridPosition(2, 6)}
+                                style={this.gridPosition(3, 2)}
+                            />
+                            <TextField
+                                id="nextDate"
+                                label="Next date"
+                                type="date"
+                                onChange={this.onChange}
+                                value={item.nextDate}
+                                style={this.gridPosition(3, 3)}
+                                className={item.nextDate ? '' : 'Item-empty'}
+                            />
+                            <TextField
+                                // TODO: make this a select
+                                id="nextType"
+                                label="Next type"
+                                onChange={this.onChange}
+                                value={item.nextType}
+                                style={this.gridPosition(3, 4)}
+                            />
+                            <TextField
+                                id="finished"
+                                label="Finished"
+                                type="date"
+                                onChange={this.onChange}
+                                value={item.finished}
+                                style={this.gridPosition(3, 5)}
+                                className={item.finished ? '' : 'Item-empty'}
+                            />
+                            <TextField
+                                id="notes"
+                                label="Notes"
+                                onChange={this.onChange}
+                                value={item.notes}
+                                style={this.gridPosition(4, 1, 4)}
+                            />
+                            <TextField
+                                id="imdbId"
+                                label="IMDb ID"
+                                onChange={this.onChange}
+                                value={item.imdbId}
+                                style={this.gridPosition(4, 5)}
                             />
                         </div>
                         <div className="Item-buttons">
