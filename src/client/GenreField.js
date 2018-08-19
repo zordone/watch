@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ChipInput from 'material-ui-chip-input';
 import _ from 'lodash';
 import data from '../common/data.json';
+import './GenreField.css';
 
 class GenreField extends Component {
     constructor(props) {
@@ -35,19 +36,15 @@ class GenreField extends Component {
     }
 
     render() {
-        const { id, className, label, value } = this.props;
-
+        const { onChange, className, ...rest } = this.props;
         // TODO: seems like autocomplete is not working (1.0.0-beta)
-
         return (
             <ChipInput
-                id={id}
-                label={label}
-                className={className}
-                value={value}
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
                 dataSource={data.genres}
+                className={`GenreField ${className}`}
+                {...rest}
             />
         );
     }
@@ -56,6 +53,7 @@ class GenreField extends Component {
 GenreField.propTypes = {
     id: PropTypes.string,
     className: PropTypes.string,
+    style: PropTypes.shape({}),
     label: PropTypes.string,
     value: PropTypes.arrayOf(PropTypes.string).isRequired,
     onChange: PropTypes.func
@@ -63,7 +61,8 @@ GenreField.propTypes = {
 
 GenreField.defaultProps = {
     id: undefined,
-    className: undefined,
+    className: '',
+    style: {},
     label: undefined,
     onChange: () => {}
 };
