@@ -13,7 +13,10 @@ class Item extends Component {
             item: {
                 title: '',
                 type: '',
-                genres: []
+                genres: [],
+                finished: '',
+                lastWatched: '',
+                inProgress: ''
             }
         };
         this.onChange = this.onChange.bind(this);
@@ -58,36 +61,68 @@ class Item extends Component {
         history.goBack();
     }
 
+    gridPosition(row, col, span) {
+        return {
+            gridColumn: span ? `${col} / span ${span}` : col,
+            gridRow: row
+        };
+    }
+
     render() {
         const { item } = this.state;
         return (
             <div className="Item">
                 <Paper className="Item-paper">
                     <form noValidate autoComplete="off">
-                        <TextField
-                            id="title"
-                            label="Title"
-                            fullWidth
-                            onChange={this.onChange}
-                            value={item.title}
-                            className="Item-row"
-                            autoFocus
-                        />
-                        <TextField
-                            id="type"
-                            label="Type"
-                            onChange={this.onChange}
-                            value={item.type}
-                            className="Item-row"
-                        />
-                        <GenreField
-                            id="genres"
-                            label="Genres"
-                            onChange={this.onChange}
-                            value={item.genres}
-                            className="Item-row"
-                        />
-                        <br />
+                        <div className="Item-grid">
+                            <TextField
+                                id="title"
+                                label="Title"
+                                fullWidth
+                                onChange={this.onChange}
+                                value={item.title}
+                                style={this.gridPosition(1, 1, 5)}
+                                autoFocus
+                            />
+                            <TextField
+                                id="type"
+                                label="Type"
+                                onChange={this.onChange}
+                                value={item.type}
+                                style={this.gridPosition(1, 6)}
+                            />
+                            <GenreField
+                                id="genres"
+                                label="Genres"
+                                onChange={this.onChange}
+                                value={item.genres}
+                                style={this.gridPosition(2, 1, 3)}
+                            />
+                            <TextField
+                                id="finished"
+                                label="Finished"
+                                // type="date"
+                                onChange={this.onChange}
+                                value={item.finished}
+                                style={this.gridPosition(2, 4)}
+                            />
+                            <TextField
+                                id="lastWatched"
+                                label="Last watched"
+                                type="number"
+                                onChange={this.onChange}
+                                value={item.lastWatched}
+                                style={this.gridPosition(2, 5)}
+                            />
+                            <TextField
+                                id="inProgress"
+                                label="In progress"
+                                type="number"
+                                onChange={this.onChange}
+                                value={item.inProgress}
+                                style={this.gridPosition(2, 6)}
+                            />
+                        </div>
                         <div className="Item-buttons">
                             <Button variant="contained" color="primary" className="Item-button" onClick={this.onSubmit}>Submit</Button>
                             <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>

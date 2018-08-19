@@ -27,11 +27,10 @@ exports.listItems = (req, res) => {
 };
 
 exports.newItem = (req, res) => {
-    const body = (req && req.body) || {};
+    const body = _.omit((req && req.body) || {}, Item.dontUpdateFields);
     const now = new Date();
     const model = new Item({
-        title: body.title,
-        type: body.type,
+        ...body,
         created: now,
         updated: now
     });

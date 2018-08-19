@@ -10,6 +10,9 @@ const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
     type: { type: String, required: true, enum: Object.values(ItemType) },
     genres: [{ type: String, enum: data.genres }],
+    finished: { type: Date },
+    lastWatched: { type: Number },
+    inProgress: { type: Number },
     created: { type: Date, required: true },
     updated: { type: Date, required: true }
     // TODO: more fields ...

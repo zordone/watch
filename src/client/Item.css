@@ -4,12 +4,8 @@
 
 .Item .Item-paper {
     padding: 1rem;
-    width: 600px;
+    width: 800px;
     margin: 0 auto;
-}
-
-.Item .Item-row {
-    margin-bottom: 1rem;
 }
 
 .Item .Item-buttons {
@@ -18,4 +14,18 @@
 
 .Item .Item-button {
     margin: 0.5rem;
+}
+
+.Item-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-gap: 1rem;
+}
+
+/* hide number spin buttons */
+.Item input[type=number]::-webkit-inner-spin-button,
+.Item input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
