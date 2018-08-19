@@ -4,29 +4,16 @@ import { TextField, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import * as service from './service';
 import GenreField from './GenreField';
-import { ItemType, NextType, ValiType } from '../common/enums';
 import './Item.css';
 
 class Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: {
-                title: '',
-                type: ItemType.MOVIE,
-                genres: [],
-                finished: '',
-                lastWatched: '',
-                inProgress: '',
-                nextDate: '',
-                nextType: NextType.END,
-                withVali: ValiType.NO,
-                notes: '',
-                imdbId: ''
-            }
+            item: { ...service.defaultItem }
         };
         this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.onSave = this.onSave.bind(this);
         this.onClose = this.onClose.bind(this);
     }
 
@@ -50,7 +37,7 @@ class Item extends Component {
         });
     }
 
-    onSubmit() {
+    onSave() {
         const { match } = this.props;
         const { id } = match.params;
         const { item } = this.state;
@@ -79,6 +66,8 @@ class Item extends Component {
 
     render() {
         const { item } = this.state;
+
+        console.log('ITEM', item);
         return (
             <div className="Item">
                 <Paper className="Item-paper">
@@ -117,6 +106,7 @@ class Item extends Component {
                                 id="lastWatched"
                                 label="Last watched"
                                 type="number"
+                                inputProps={{ min: '1', max: '99' }}
                                 onChange={this.onChange}
                                 value={item.lastWatched}
                                 style={this.gridPosition(3, 1)}
@@ -125,6 +115,7 @@ class Item extends Component {
                                 id="inProgress"
                                 label="In progress"
                                 type="number"
+                                inputProps={{ min: '1', max: '99' }}
                                 onChange={this.onChange}
                                 value={item.inProgress}
                                 style={this.gridPosition(3, 2)}
@@ -171,7 +162,7 @@ class Item extends Component {
                             />
                         </div>
                         <div className="Item-buttons">
-                            <Button variant="contained" color="primary" className="Item-button" onClick={this.onSubmit}>Submit</Button>
+                            <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
                             <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>
                         </div>
                     </form>

@@ -1,4 +1,6 @@
 import moment from 'moment';
+import _ from 'lodash';
+import { ItemType, NextType, ValiType } from '../common/enums';
 
 const BASE_URL = 'http://localhost:3001';
 
@@ -8,13 +10,28 @@ const formatDate = dateStr => (
         : ''
 );
 
+export const defaultItem = {
+    title: '',
+    type: ItemType.MOVIE,
+    genres: [],
+    finished: '',
+    lastWatched: '',
+    inProgress: '',
+    nextDate: '',
+    nextType: NextType.END,
+    withVali: ValiType.NO,
+    notes: '',
+    imdbId: ''
+};
+
 const parseItem = item => ({
-    ...item,
+    // add missing fields
+    ...defaultItem,
+    // default nulls to empty string
+    ..._.mapValues(item, value => value || ''),
+    // format dates
     finished: formatDate(item.finished),
-    nextDate: formatDate(item.nextDate),
-    nextType: item.nextType || '',
-    withVali: item.withVali || '',
-    imdbId: item.imdbId || ''
+    nextDate: formatDate(item.nextDate)
 });
 
 export const listItems = () =>
@@ -37,5 +54,6 @@ export const updateItemById = (id, item) => {
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items/${id}`, opts)
-        .then(res => res.json());
+        .then(res => res.json())
+        .then(parseItem);
 };
