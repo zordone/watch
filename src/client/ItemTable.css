@@ -9,12 +9,18 @@
 }
 
 .ItemTable-head th {
-  color: #FFF;
-  opacity: 0.3;
+  color: #888;
   font-size: 0.8rem;
   font-weight: 300;
 }
 
-.ItemTable-skinny-col {
+.ItemTable th,
+.ItemTable td,
+.ItemTable td:last-child {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.ItemTable .ItemTable-skinny-col {
   width: 1px;
 }

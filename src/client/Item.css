@@ -23,6 +23,10 @@
     grid-gap: 1rem;
 }
 
+.Item label {
+    color: #888;
+}
+
 /* hide number/date spin buttons */
 .Item input[type=number]::-webkit-inner-spin-button,
 .Item input[type=number]::-webkit-outer-spin-button,

@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'material-ui-chip-input';
 import _ from 'lodash';
 import data from '../common/data.json';
-import './GenreField.css';
+
+const styles = {
+    chipContainer: {
+        minHeight: 'unset',
+        // without the important, a `.chipContainer.labeled` class overrides this to 18.
+        marginTop: '16px !important',
+        display: 'inline-flex',
+        overflow: 'scroll'
+    },
+    chip: {
+        height: '26px'
+    }
+};
 
 class GenreField extends Component {
     constructor(props) {
@@ -36,7 +49,9 @@ class GenreField extends Component {
     }
 
     render() {
-        const { onChange, className, ...rest } = this.props;
+        const { onChange, className, classes, ...rest } = this.props;
+        console.log('GENRES', this.props.value); // eslint-disable-line
+
         // TODO: seems like autocomplete is not working (1.0.0-beta)
         return (
             <ChipInput
@@ -44,6 +59,7 @@ class GenreField extends Component {
                 onDelete={this.onDeleteGenre}
                 dataSource={data.genres}
                 className={`GenreField ${className}`}
+                classes={classes}
                 {...rest}
             />
         );
@@ -67,4 +83,4 @@ GenreField.defaultProps = {
     onChange: () => {}
 };
 
-export default GenreField;
+export default withStyles(styles)(GenreField);
