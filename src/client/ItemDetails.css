@@ -1,0 +1,12 @@
+.ItemDetails {
+    border: 1px solid red;
+}
+
+.ItemDetails-label {
+    color: #888;
+    font-size: 0.75rem;
+}
+.ItemDetails-value {
+    color: #FFF;
+    margin-bottom: 0.5rem;
+}

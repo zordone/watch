@@ -1,0 +1,27 @@
+.ItemForm-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-gap: 1rem;
+}
+
+.ItemForm label {
+    color: #888;
+}
+
+/* hide number/date spin buttons */
+.ItemForm input[type=number]::-webkit-inner-spin-button,
+.ItemForm input[type=number]::-webkit-outer-spin-button,
+.ItemForm input[type=date]::-webkit-inner-spin-button,
+.ItemForm input[type=date]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* hide datepicker placeholder when empty */
+.ItemForm-empty input:not(:focus)::-webkit-datetime-edit-year-field,
+.ItemForm-empty input:not(:focus)::-webkit-datetime-edit-month-field,
+.ItemForm-empty input:not(:focus)::-webkit-datetime-edit-day-field,
+.ItemForm-empty input:not(:focus)::-webkit-datetime-edit-text {
+    color: transparent;
+}

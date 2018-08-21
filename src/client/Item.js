@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import { Button } from '@material-ui/core';
 import * as service from './service';
-import GenreField from './GenreField';
+import ItemForm from './ItemForm';
+import ItemDetails from './ItemDetails';
 import './Item.css';
 
 class Item extends Component {
@@ -26,22 +27,13 @@ class Item extends Component {
             });
     }
 
-    onChange(event) {
-        const { item } = this.state;
-        const { id, value } = event.target;
-        this.setState({
-            item: {
-                ...item,
-                [id]: value
-            }
-        });
+    onChange(item) {
+        this.setState({ item });
     }
 
     onSave() {
-        const { match } = this.props;
-        const { id } = match.params;
         const { item } = this.state;
-        service.updateItemById(id, item)
+        service.updateItemById(item._id, item)
             .then(saved => {
                 this.setState({ item: saved });
                 this.onClose();
@@ -57,115 +49,17 @@ class Item extends Component {
         history.goBack();
     }
 
-    gridPosition(row, col, span) {
-        return {
-            gridColumn: span ? `${col} / span ${span}` : col,
-            gridRow: row
-        };
-    }
-
     render() {
         const { item } = this.state;
-
-        console.log('ITEM', item);
         return (
             <div className="Item">
                 <Paper className="Item-paper">
-                    <form noValidate autoComplete="off">
-                        <div className="Item-grid">
-                            <TextField
-                                id="title"
-                                label="Title"
-                                onChange={this.onChange}
-                                value={item.title}
-                                style={this.gridPosition(1, 1, 5)}
-                                autoFocus
-                            />
-                            <TextField
-                                id="type"
-                                label="Type"
-                                onChange={this.onChange}
-                                value={item.type}
-                                style={this.gridPosition(2, 1)}
-                            />
-                            <GenreField
-                                id="genres"
-                                label="Genres"
-                                onChange={this.onChange}
-                                value={item.genres}
-                                style={this.gridPosition(2, 2, 3)}
-                            />
-                            <TextField
-                                id="withVali"
-                                label="With Vali"
-                                onChange={this.onChange}
-                                value={item.withVali}
-                                style={this.gridPosition(2, 5)}
-                            />
-                            <TextField
-                                id="lastWatched"
-                                label="Last watched"
-                                type="number"
-                                inputProps={{ min: '1', max: '99' }}
-                                onChange={this.onChange}
-                                value={item.lastWatched}
-                                style={this.gridPosition(3, 1)}
-                            />
-                            <TextField
-                                id="inProgress"
-                                label="In progress"
-                                type="number"
-                                inputProps={{ min: '1', max: '99' }}
-                                onChange={this.onChange}
-                                value={item.inProgress}
-                                style={this.gridPosition(3, 2)}
-                            />
-                            <TextField
-                                id="nextDate"
-                                label="Next date"
-                                type="date"
-                                onChange={this.onChange}
-                                value={item.nextDate}
-                                style={this.gridPosition(3, 3)}
-                                className={item.nextDate ? '' : 'Item-empty'}
-                            />
-                            <TextField
-                                // TODO: make this a select
-                                id="nextType"
-                                label="Next type"
-                                onChange={this.onChange}
-                                value={item.nextType}
-                                style={this.gridPosition(3, 4)}
-                            />
-                            <TextField
-                                id="finished"
-                                label="Finished"
-                                type="date"
-                                onChange={this.onChange}
-                                value={item.finished}
-                                style={this.gridPosition(3, 5)}
-                                className={item.finished ? '' : 'Item-empty'}
-                            />
-                            <TextField
-                                id="notes"
-                                label="Notes"
-                                onChange={this.onChange}
-                                value={item.notes}
-                                style={this.gridPosition(4, 1, 4)}
-                            />
-                            <TextField
-                                id="imdbId"
-                                label="IMDb ID"
-                                onChange={this.onChange}
-                                value={item.imdbId}
-                                style={this.gridPosition(4, 5)}
-                            />
-                        </div>
-                        <div className="Item-buttons">
-                            <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
-                            <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>
-                        </div>
-                    </form>
+                    <ItemDetails item={item} />
+                    <ItemForm item={item} onChange={this.onChange} />
+                    <div className="Item-buttons">
+                        <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
+                        <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>
+                    </div>
                 </Paper>
             </div>
         );
