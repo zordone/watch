@@ -8,8 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import ItemIcon from './ItemIcon';
 import './ItemTable.css';
-import { ItemType } from '../common/enums';
 
 const ItemTable = props => {
     const { items } = props;
@@ -31,10 +31,7 @@ const ItemTable = props => {
                     {items.map(item => (
                         <TableRow key={item._id}>
                             <TableCell className="ItemTable-skinny-col">
-                                {item.type === ItemType.MOVIE
-                                    ? <i className="material-icons">movie_creation</i>
-                                    : <i className="material-icons">live_tv</i>
-                                }
+                                <ItemIcon item={item} />
                             </TableCell>
                             <TableCell component="th" scope="row">{item.title}</TableCell>
                             <TableCell>{item.genres.join(', ')}</TableCell>

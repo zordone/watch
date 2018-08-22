@@ -1,5 +1,5 @@
 .ItemDetails {
-    border: 1px solid red;
+    border-bottom: 1px solid red;
 }
 
 .ItemDetails-label {
@@ -9,4 +9,31 @@
 .ItemDetails-value {
     color: #FFF;
     margin-bottom: 0.5rem;
+}
+
+.ItemDetails-title.ItemDetails-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.ItemDetails-state.ItemDetails-value {
+    margin-bottom: 0.5rem;
+    color: lime;
+    font-weight: 600;
+}
+
+.ItemDetails-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    grid-gap: 1rem;
+}
+
+.ItemDetails-poster {
+    background: pink;
+    height: 200px;
+}
+
+.ItemDetails-sidebar .ItemDetails-button {
+    width: 100%;
+    margin-top: 0.5rem;
 }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 import * as service from './service';
 import './ItemDetails.css';
 
-const DetailsRow = ({ label, value }) => [
-    <div className="ItemDetails-label">{label}</div>,
-    <div className="ItemDetails-value">{value}</div>
+const DetailsRow = ({ label, value, className = '' }) => [
+    <div className={`ItemDetails-label ${className}`}>{label}</div>,
+    <div className={`ItemDetails-value ${className}`}>{value}</div>
 ];
 
 class ItemDetails extends Component {
@@ -26,8 +27,20 @@ class ItemDetails extends Component {
         const { item } = this.state;
         return (
             <div className="ItemDetails">
-                <DetailsRow label="Title" value={item.title} />
-                <DetailsRow label="Genre" value={item.genres.join(', ')} />
+                <div className="ItemDetails-grid">
+                    <div className="ItemDetails-sidebar">
+                        <div className="ItemDetails-poster">
+                            Poster
+                        </div>
+                        <Button variant="contained" color="primary" className="ItemDetails-button">Watched</Button>
+                    </div>
+                    <div className="ItemDetails-fields">
+                        <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />
+                        <DetailsRow label="Genre" value={item.genres.join(', ')} />
+                        <DetailsRow label="Notes" value={item.notes} />
+                        <DetailsRow label="State" value="Ready to watch" className="ItemDetails-state" />
+                    </div>
+                </div>
             </div>
         );
     }
