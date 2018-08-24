@@ -4,11 +4,17 @@ import { Button } from '@material-ui/core';
 import * as service from './service';
 import Poster from './Poster';
 import './ItemDetails.css';
+import StateLabel from './StateLabel';
 
-const DetailsRow = ({ label, value, className = '' }) => [
-    <div key="label" className={`ItemDetails-label ${className}`}>{label}</div>,
-    <div key="value" className={`ItemDetails-value ${className}`}>{value}</div>
-];
+const DetailsRow = ({ label, value, className = '', optional = false }) => {
+    if (optional && !value) {
+        return null;
+    }
+    return [
+        <div key="label" className={`ItemDetails-label ${className}`}>{label}</div>,
+        <div key="value" className={`ItemDetails-value ${className}`}>{value}</div>
+    ];
+};
 
 class ItemDetails extends Component {
     constructor(props) {
@@ -26,6 +32,7 @@ class ItemDetails extends Component {
 
     render() {
         const { item } = this.state;
+        const stateLabel = <StateLabel state={item.state} />;
         return (
             <div className="ItemDetails">
                 <div className="ItemDetails-grid">
@@ -35,9 +42,9 @@ class ItemDetails extends Component {
                     </div>
                     <div className="ItemDetails-fields">
                         <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />
-                        <DetailsRow label="Genre" value={item.genres.join(', ')} />
-                        <DetailsRow label="Notes" value={item.notes} />
-                        <DetailsRow label="State" value="Ready to watch" className="ItemDetails-state" />
+                        <DetailsRow label="Genre" value={item.genres.join(', ') || 'Unkown'} />
+                        <DetailsRow label="Notes" value={item.notes} optional />
+                        <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />
                     </div>
                 </div>
             </div>

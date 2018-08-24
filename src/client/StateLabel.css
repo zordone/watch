@@ -1,0 +1,19 @@
+.StateLabel-progress {
+  color: hsl(300, 100%, 50%);
+}
+
+.StateLabel-ready {
+  color: hsl(120, 100%, 50%);
+}
+
+.StateLabel-recheck {
+  color: hsl(40, 100%, 50%);
+}
+
+.StateLabel-waiting {
+  color: hsl(200, 100%, 50%);
+}
+
+.StateLabel-finished {
+  color: #666;
+}

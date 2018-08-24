@@ -1,14 +1,9 @@
-import moment from 'moment';
 import _ from 'lodash';
 import { ItemType, NextType, ValiType } from '../common/enums';
+import { parseDate } from './utils';
+import itemState from './itemState';
 
 const BASE_URL = 'http://localhost:3001';
-
-const formatDate = dateStr => (
-    dateStr
-        ? moment(dateStr, moment.ISO_8601).format('YYYY-MM-DD')
-        : ''
-);
 
 export const defaultItem = {
     title: '',
@@ -31,8 +26,10 @@ const parseItem = item => ({
     // default nulls to empty string
     ..._.mapValues(item, value => value || ''),
     // format dates
-    finished: formatDate(item.finished),
-    nextDate: formatDate(item.nextDate)
+    finished: parseDate(item.finished).input,
+    nextDate: parseDate(item.nextDate).input,
+    // calculated fields
+    state: itemState(item)
 });
 
 export const listItems = () =>

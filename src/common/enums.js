@@ -5,6 +5,7 @@ const ItemType = Object.freeze({
 
 const NextType = Object.freeze({
     EMPTY: '',
+    RECHECK: 'recheck',
     START: 'start',
     END: 'end',
     RELEASE: 'release',
@@ -17,6 +18,15 @@ const ValiType = Object.freeze({
     MAYBE: 'maybe'
 });
 
+const StateType = Object.freeze({
+    FINISHED: 'finished',
+    RECHECK: 'recheck',
+    WAITING: 'waiting',
+    READY: 'ready',
+    PROGRESS: 'progress'
+});
+
 exports.ItemType = ItemType;
 exports.NextType = NextType;
 exports.ValiType = ValiType;
+exports.StateType = StateType;
