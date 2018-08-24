@@ -1,0 +1,15 @@
+.Poster {
+    background-color: #666;
+    height: 200px;
+    width: 150px;
+    border-radius: 4px;
+}
+
+.Poster i {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 100px;
+    opacity: 0.1;
+}

@@ -14,6 +14,7 @@ const itemSchema = new mongoose.Schema({
     withVali: { type: String, enum: Object.values(ValiType) },
     notes: { type: String },
     imdbId: { type: String },
+    posterUrl: { type: String },
     created: { type: Date, required: true },
     updated: { type: Date, required: true }
 });

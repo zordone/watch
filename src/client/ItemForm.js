@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import GenreField from './GenreField';
 import * as service from './service';
+import { ItemType, ValiType, NextType } from '../common/enums';
+import SelectField from './SelectField';
 import './ItemForm.css';
 
 class ItemForm extends Component {
@@ -15,9 +17,9 @@ class ItemForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.state = {
+        this.setState({
             item: { ...nextProps.item }
-        };
+        });
     }
 
     onFieldChange(event) {
@@ -54,12 +56,13 @@ class ItemForm extends Component {
                         style={this.gridPosition(1, 1, 5)}
                         autoFocus
                     />
-                    <TextField
+                    <SelectField
                         id="type"
                         label="Type"
                         onChange={this.onFieldChange}
                         value={item.type}
                         style={this.gridPosition(2, 1)}
+                        options={Object.values(ItemType)}
                     />
                     <GenreField
                         id="genres"
@@ -68,12 +71,13 @@ class ItemForm extends Component {
                         value={item.genres}
                         style={this.gridPosition(2, 2, 3)}
                     />
-                    <TextField
+                    <SelectField
                         id="withVali"
                         label="With Vali"
                         onChange={this.onFieldChange}
                         value={item.withVali}
                         style={this.gridPosition(2, 5)}
+                        options={Object.values(ValiType)}
                     />
                     <TextField
                         id="lastWatched"
@@ -102,13 +106,13 @@ class ItemForm extends Component {
                         style={this.gridPosition(3, 3)}
                         className={item.nextDate ? '' : 'ItemForm-empty'}
                     />
-                    <TextField
-                        // TODO: make this a select
+                    <SelectField
                         id="nextType"
                         label="Next type"
                         onChange={this.onFieldChange}
                         value={item.nextType}
                         style={this.gridPosition(3, 4)}
+                        options={Object.values(NextType)}
                     />
                     <TextField
                         id="finished"
@@ -132,6 +136,13 @@ class ItemForm extends Component {
                         onChange={this.onFieldChange}
                         value={item.imdbId}
                         style={this.gridPosition(4, 5)}
+                    />
+                    <TextField
+                        id="posterUrl"
+                        label="Poster URL"
+                        onChange={this.onFieldChange}
+                        value={item.posterUrl}
+                        style={this.gridPosition(5, 1, 2)}
                     />
                 </div>
             </form>

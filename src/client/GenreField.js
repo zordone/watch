@@ -50,8 +50,6 @@ class GenreField extends Component {
 
     render() {
         const { onChange, className, classes, ...rest } = this.props;
-        console.log('GENRES', this.props.value); // eslint-disable-line
-
         // TODO: seems like autocomplete is not working (1.0.0-beta)
         return (
             <ChipInput

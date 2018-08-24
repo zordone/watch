@@ -10,7 +10,7 @@ const ItemIcon = ({ item }) => (
 
 ItemIcon.propTypes = {
     item: PropTypes.shape({
-        type: PropTypes.oneOf(ItemType)
+        type: PropTypes.oneOf(Object.values(ItemType))
     }).isRequired
 };
 

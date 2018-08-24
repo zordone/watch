@@ -44,7 +44,7 @@ const ItemTable = props => {
                                     to={`/item/${item._id}`}
                                     aria-label="Edit the item"
                                 >
-                                    <i className="material-icons">create</i>
+                                    <i className="material-icons">input</i>
                                 </IconButton>
                             </TableCell>
                         </TableRow>

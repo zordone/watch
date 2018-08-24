@@ -21,7 +21,8 @@ export const defaultItem = {
     nextType: NextType.END,
     withVali: ValiType.NO,
     notes: '',
-    imdbId: ''
+    imdbId: '',
+    posterUrl: ''
 };
 
 const parseItem = item => ({
