@@ -60,7 +60,7 @@ class Item extends Component {
         return (
             <div className="Item">
                 <Paper className="Item-paper">
-                    <ItemDetails item={item} />
+                    <ItemDetails item={item} onChange={this.onChange} />
                     <ItemForm item={item} onChange={this.onChange} />
                     <div className="Item-buttons">
                         <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>

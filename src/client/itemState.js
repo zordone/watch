@@ -22,6 +22,9 @@ const itemState = item => {
             if (item.nextType === NextType.AVAILABLE) {
                 return { type: StateType.READY, message: 'Ready to watch.' };
             }
+            if (item.nextType === NextType.RECHECK) {
+                return { type: StateType.RECHECK, message: 'Time to recheck avilability.' };
+            }
         }
         if (hasDate && !isActual) {
             const result = { type: StateType.WAITING, message: `Waiting. Next recheck on ${nextDate.display}.` };
@@ -53,6 +56,9 @@ const itemState = item => {
             if (item.nextType === NextType.AVAILABLE) {
                 return { type: StateType.READY, message: `${nextSeason} ready to watch.` };
             }
+            if (item.nextType === NextType.RECHECK) {
+                return { type: StateType.RECHECK, message: `Time to recheck ${nextSeason}.` };
+            }
         }
         if (hasDate && !isActual) {
             if (item.nextType === NextType.START) {
@@ -61,8 +67,12 @@ const itemState = item => {
             if (item.nextType === NextType.END) {
                 return { type: StateType.WAITING, message: `Waiting. ${nextSeason} will end on ${nextDate.display}.` };
             }
+            if (item.nextType === NextType.RECHECK) {
+                return { type: StateType.WAITING, message: `Waiting. Next recheck on ${nextDate.display}.` };
+            }
         }
     }
+
     console.error('Unkown state', item);
     return { type: StateType.RECHECK, message: 'Time to recheck' };
 };
