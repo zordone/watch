@@ -42,7 +42,7 @@ const itemState = item => {
             const currentSeason = season(item.inProgress);
             return { type: StateType.PROGRESS, message: `${currentSeason} in progress.` };
         }
-        const nextSeason = season(item.lastWatched || 1);
+        const nextSeason = season((item.lastWatched + 1) || 1);
         if (hasDate && isActual) {
             if (item.nextType === NextType.START) {
                 return { type: StateType.RECHECK, message: `${nextSeason} started on ${nextDate.display}, recheck torrent.` };

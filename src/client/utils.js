@@ -10,5 +10,5 @@ export const parseDate = dateStr => {
 };
 
 export const season = num => (
-    num ? `s${num.toString().padStart('0', 2)}` : ''
+    num ? `s${num.toString().padStart(2, '0')}` : ''
 );

@@ -23,6 +23,8 @@ const ItemTable = props => {
                         <TableCell>Title</TableCell>
                         <TableCell>Genre</TableCell>
                         <TableCell>State</TableCell>
+                        <TableCell>Notes</TableCell>
+                        <TableCell>Vali</TableCell>
                         <TableCell className="ItemTable-skinny-col" />
                     </TableRow>
                 </TableHead>
@@ -35,6 +37,8 @@ const ItemTable = props => {
                             <TableCell component="th" scope="row">{item.title}</TableCell>
                             <TableCell>{item.genres.join(', ')}</TableCell>
                             <TableCell><StateLabel state={item.state} /></TableCell>
+                            <TableCell>{item.notes}</TableCell>
+                            <TableCell>{item.withVali}</TableCell>
                             <TableCell className="ItemTable-skinny-col">
                                 <IconButton
                                     component={NavLink}

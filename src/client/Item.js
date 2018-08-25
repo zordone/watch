@@ -6,6 +6,7 @@ import * as service from './service';
 import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import './Item.css';
+import itemState from './itemState';
 
 class Item extends Component {
     constructor(props) {
@@ -28,7 +29,12 @@ class Item extends Component {
     }
 
     onChange(item) {
-        this.setState({ item });
+        this.setState({
+            item: {
+                ...item,
+                state: itemState(item)
+            }
+        });
     }
 
     onSave() {
