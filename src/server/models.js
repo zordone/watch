@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const data = require('../common/data.json');
-const { ItemType, NextType, ValiType } = require('../common/enums');
+const { ItemType, NextType, ValiType, FinishedType } = require('../common/enums');
 
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
     type: { type: String, required: true, enum: Object.values(ItemType) },
     genres: [{ type: String, enum: data.genres }],
-    finished: { type: Date },
+    finished: { type: String, enum: Object.values(FinishedType) },
     lastWatched: { type: Number },
     inProgress: { type: Number },
     nextDate: { type: Date },

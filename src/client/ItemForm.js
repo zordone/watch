@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import GenreField from './GenreField';
 import * as service from './service';
-import { ItemType, ValiType, NextType } from '../common/enums';
+import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
 import './ItemForm.css';
 
@@ -114,14 +114,13 @@ class ItemForm extends Component {
                         style={this.gridPosition(3, 4)}
                         options={Object.values(NextType)}
                     />
-                    <TextField
+                    <SelectField
                         id="finished"
                         label="Finished"
-                        type="date"
                         onChange={this.onFieldChange}
                         value={item.finished}
                         style={this.gridPosition(3, 5)}
-                        className={item.finished ? '' : 'ItemForm-empty'}
+                        options={Object.values(FinishedType)}
                     />
                     <TextField
                         id="notes"

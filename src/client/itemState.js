@@ -1,17 +1,16 @@
-import { ItemType, NextType, StateType } from '../common/enums';
+import { ItemType, NextType, StateType, FinishedType } from '../common/enums';
 import { parseDate, season } from './utils';
 
 const itemState = item => {
     const now = new Date();
-    const finished = parseDate(item.finished);
-
+    const isFinished = item.finished === FinishedType.YES;
     const nextDate = parseDate(item.nextDate);
     const hasDate = Boolean(nextDate.date);
     const isActual = hasDate && (nextDate.date < now);
 
     if (item.type === ItemType.MOVIE) {
-        if (finished.date) {
-            return { type: StateType.FINISHED, message: `Watched on ${finished.display}.` };
+        if (isFinished) {
+            return { type: StateType.FINISHED, message: 'Watched.' };
         }
         if (item.inProgress) {
             return { type: StateType.PROGRESS, message: 'In progress.' };
@@ -36,8 +35,8 @@ const itemState = item => {
     }
 
     if (item.type === ItemType.SHOW) {
-        if (finished.date) {
-            return { type: StateType.FINISHED, message: `Finished on ${finished.display}` };
+        if (isFinished) {
+            return { type: StateType.FINISHED, message: 'Finished.' };
         }
         if (item.inProgress) {
             const currentSeason = season(item.inProgress);

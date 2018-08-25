@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ItemType, NextType, ValiType } from '../common/enums';
+import { ItemType, NextType, ValiType, FinishedType } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 
@@ -9,7 +9,7 @@ export const defaultItem = {
     title: '',
     type: ItemType.MOVIE,
     genres: [],
-    finished: '',
+    finished: FinishedType.NO,
     lastWatched: '',
     inProgress: '',
     nextDate: '',
@@ -26,7 +26,6 @@ const parseItem = item => ({
     // default nulls to empty string
     ..._.mapValues(item, value => value || ''),
     // format dates
-    finished: parseDate(item.finished).input,
     nextDate: parseDate(item.nextDate).input,
     // calculated fields
     state: itemState(item)

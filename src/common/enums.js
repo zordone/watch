@@ -13,6 +13,7 @@ const NextType = Object.freeze({
 });
 
 const ValiType = Object.freeze({
+    EMPTY: '',
     YES: 'yes',
     NO: 'no',
     MAYBE: 'maybe'
@@ -26,7 +27,15 @@ const StateType = Object.freeze({
     PROGRESS: 'progress'
 });
 
+const FinishedType = Object.freeze({
+    YES: 'yes',
+    NO: 'no',
+    MAYBE: 'maybe',
+    PROBABLY: 'probably'
+});
+
 exports.ItemType = ItemType;
 exports.NextType = NextType;
 exports.ValiType = ValiType;
 exports.StateType = StateType;
+exports.FinishedType = FinishedType;

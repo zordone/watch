@@ -1,9 +1,8 @@
 const _ = require('lodash');
 const { Item } = require('./models');
+const { importCsv } = require('./importCsv');
 
-// just for development
-// eslint-disable-next-line no-unused-vars
-exports.removeAllItems = () => {
+const removeAllItems = () =>
     Item.remove({})
         .then(() => {
             console.log('[RemoveAllItems] All items removed.');
@@ -11,10 +10,40 @@ exports.removeAllItems = () => {
         .catch(err => {
             console.error('[RemoveAllItems]', err);
         });
+
+exports.adminImport = (req, res) => {
+    removeAllItems()
+        .then(() => {
+            console.log('[AdminImport] Database cleared.');
+            const filename = '/Users/zord/Development/watch/_work/export_20180825.csv';
+            let done = 0;
+            let errors = 0;
+            importCsv(filename)
+                .then(models => (
+                    Promise.all(models.map(model => (
+                        model.save()
+                            .then(() => {
+                                done += 1;
+                            })
+                            .catch(err => {
+                                console.log('[AdminImport] Item to save', model);
+                                console.error('[AdminImport] Item is not saved.', err);
+                                errors += 1;
+                            })
+                    )))
+                ))
+                .then(() => {
+                    console.log('[AdminImport] Import finished. Done:', done, 'Errors:', errors);
+                    res.sendStatus(200);
+                });
+        })
+        .catch(err => {
+            console.error('[AdminImport]', err);
+            res.sendStatus(500);
+        });
 };
 
 exports.listItems = (req, res) => {
-    // removeAllItems(); // TODO remove
     Item.find()
         .then(items => {
             console.log('[ListItems] Found:', items.length);

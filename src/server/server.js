@@ -17,6 +17,10 @@ app.use((req, res, next) => {
     next();
 });
 
+// admin
+app.get('/admin/import', api.adminImport);
+
+// client
 app.get('/items', api.listItems);
 app.post('/items', api.newItem);
 app.get('/items/:id', api.getItemById);
