@@ -32,3 +32,13 @@
     width: 100%;
     margin-top: 0.5rem;
 }
+
+.ItemDetails a,
+.ItemDetails a:visited {
+    color: #00a9ff;
+    margin-right: 1rem;
+}
+
+.ItemDetails a:hover {
+    color: #FFF;
+}

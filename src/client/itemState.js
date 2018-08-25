@@ -1,5 +1,5 @@
 import { ItemType, NextType, StateType, FinishedType } from '../common/enums';
-import { parseDate, season } from './utils';
+import { parseDate, seasonCode, getNextSeasonNum } from './utils';
 
 const itemState = item => {
     const now = new Date();
@@ -42,10 +42,10 @@ const itemState = item => {
             return { type: StateType.FINISHED, message: 'Finished.' };
         }
         if (item.inProgress) {
-            const currentSeason = season(item.inProgress);
+            const currentSeason = seasonCode(item.inProgress);
             return { type: StateType.PROGRESS, message: `${currentSeason} in progress.` };
         }
-        const nextSeason = season((item.lastWatched + 1) || 1);
+        const nextSeason = seasonCode(getNextSeasonNum(item));
         if (hasDate && isActual) {
             if (item.nextType === NextType.START) {
                 return { type: StateType.RECHECK, message: `${nextSeason} started on ${nextDate.display}, recheck torrent.` };

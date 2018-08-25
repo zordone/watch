@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { ItemType } from '../common/enums';
 
 export const parseDate = date => {
     const mom = date && (typeof date === 'string'
@@ -21,6 +22,12 @@ export const inputDateAddMonth = (dateStr, months) => {
         .format('YYYY-MM-DD');
 };
 
-export const season = num => (
+export const seasonCode = num => (
     num ? `s${num.toString().padStart(2, '0')}` : ''
+);
+
+export const getNextSeasonNum = item => (
+    item.type === ItemType.MOVIE
+        ? null
+        : (parseInt(item.lastWatched, 10) || 0) + 1
 );
