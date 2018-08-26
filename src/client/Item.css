@@ -6,6 +6,7 @@
     padding: 1rem;
     width: 800px;
     margin: 0 auto;
+    position: relative;
 }
 
 .Item .Item-buttons {
@@ -14,4 +15,10 @@
 
 .Item .Item-button {
     margin: 1rem 0.5rem 0 0.5rem;
+}
+
+.Item .Item-pageButton {
+    top: 1rem;
+    right: 1rem;
+    position: absolute;
 }

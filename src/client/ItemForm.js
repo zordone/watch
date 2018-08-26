@@ -45,15 +45,17 @@ class ItemForm extends Component {
 
     render() {
         const { item } = this.state;
+        const { visible } = this.props;
+        const display = visible ? 'block' : 'none';
         return (
-            <form noValidate autoComplete="off" className="ItemForm">
+            <form noValidate autoComplete="off" className="ItemForm" style={{ display }}>
                 <div className="ItemForm-grid">
                     <TextField
                         id="title"
                         label="Title"
                         onChange={this.onFieldChange}
                         value={item.title}
-                        style={this.gridPosition(1, 1, 5)}
+                        style={this.gridPosition(1, 1, 4)}
                         autoFocus
                     />
                     <SelectField
@@ -127,21 +129,21 @@ class ItemForm extends Component {
                         label="Notes"
                         onChange={this.onFieldChange}
                         value={item.notes}
-                        style={this.gridPosition(4, 1, 4)}
+                        style={this.gridPosition(4, 1, 5)}
                     />
                     <TextField
                         id="imdbId"
                         label="IMDb ID"
                         onChange={this.onFieldChange}
                         value={item.imdbId}
-                        style={this.gridPosition(4, 5)}
+                        style={this.gridPosition(5, 1)}
                     />
                     <TextField
                         id="posterUrl"
                         label="Poster URL"
                         onChange={this.onFieldChange}
                         value={item.posterUrl}
-                        style={this.gridPosition(5, 1, 2)}
+                        style={this.gridPosition(5, 2)}
                     />
                 </div>
             </form>
@@ -151,7 +153,12 @@ class ItemForm extends Component {
 
 ItemForm.propTypes = {
     item: PropTypes.shape({}).isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    visible: PropTypes.bool
+};
+
+ItemForm.defaultProps = {
+    visible: true
 };
 
 export default ItemForm;

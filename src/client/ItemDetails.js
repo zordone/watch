@@ -41,7 +41,7 @@ class ItemDetails extends Component {
         const buttons = [];
         const addButton = (label, onClick) => {
             buttons.push(
-                <Button key={label} variant="contained" color="primary" className="ItemDetails-button" onClick={onClick}>{label}</Button>
+                <Button key={label} variant="contained" color="secondary" className="ItemDetails-button" onClick={onClick}>{label}</Button>
             );
         };
         const isMovie = item.type === ItemType.MOVIE;
@@ -59,7 +59,7 @@ class ItemDetails extends Component {
                     nextType: NextType.AVAILABLE
                 });
             });
-            addButton('Recheck a month later', () => {
+            addButton('Check a month later', () => {
                 this.updateItem({ nextDate: inputDateAddMonth(item.nextDate, 1) });
             });
             if (!isMovie) {
@@ -156,9 +156,11 @@ class ItemDetails extends Component {
 
     render() {
         const { item, buttons, links } = this.state;
+        const { visible } = this.props;
+        const display = visible ? 'block' : 'none';
         const stateLabel = <StateLabel state={item.state} />;
         return (
-            <div className="ItemDetails">
+            <div className="ItemDetails" style={{ display }}>
                 <div className="ItemDetails-grid">
                     <div className="ItemDetails-sidebar">
                         <Poster item={item} />
@@ -166,8 +168,10 @@ class ItemDetails extends Component {
                     </div>
                     <div className="ItemDetails-fields">
                         <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />
+                        <DetailsRow label="Type" value={item.type} />
                         <DetailsRow label="Genre" value={item.genres.join(', ') || 'Unkown'} />
                         <DetailsRow label="Notes" value={item.notes} optional />
+                        <DetailsRow label="With Vali" value={item.withVali} />
                         <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />
                         <DetailsRow label="Links" value={links} />
                     </div>
@@ -179,7 +183,12 @@ class ItemDetails extends Component {
 
 ItemDetails.propTypes = {
     item: PropTypes.shape({}).isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    visible: PropTypes.bool
+};
+
+ItemDetails.defaultProps = {
+    visible: true
 };
 
 export default ItemDetails;
