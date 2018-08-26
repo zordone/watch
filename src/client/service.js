@@ -20,6 +20,19 @@ export const defaultItem = {
     posterUrl: ''
 };
 
+const itemSearchText = item => {
+    const fields = [
+        item.type,
+        item.title,
+        item.genres,
+        item.notes,
+        item.finished === FinishedType.YES ? 'finished' : 'unfinished',
+        item.withVali === ValiType.YES ? 'vali' : '',
+        itemState(item).type
+    ];
+    return fields.filter(field => field).join(' ').toLowerCase();
+};
+
 const parseItem = item => ({
     // add missing fields
     ...defaultItem,
@@ -28,7 +41,8 @@ const parseItem = item => ({
     // format dates
     nextDate: parseDate(item.nextDate).input,
     // calculated fields
-    state: itemState(item)
+    state: itemState(item),
+    searchText: itemSearchText(item)
 });
 
 export const listItems = () =>

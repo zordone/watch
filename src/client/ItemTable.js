@@ -15,7 +15,7 @@ import './ItemTable.css';
 const ItemTable = props => {
     const { items } = props;
     return (
-        <Paper>
+        <Paper className="ItemTable-paper">
             <Table className="ItemTable">
                 <TableHead className="ItemTable-head">
                     <TableRow>
