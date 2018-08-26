@@ -1,3 +1,5 @@
+/* globals document */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, InputAdornment } from '@material-ui/core';
@@ -13,12 +15,33 @@ class SearchField extends Component {
         const { onChange } = props;
         this.onChangeDebounced = _.debounce(value => onChange(value), 200);
         this.onFieldChange = this.onFieldChange.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener('keyup', this.onKeyUp);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.onKeyUp);
     }
 
     onFieldChange(event) {
         const { value } = event.target;
         this.onChangeDebounced(value);
         this.setState({ value });
+    }
+
+    onKeyUp(event) {
+        if (event.code === 'KeyF') {
+            this.inputRef.focus();
+        } else if (event.code === 'Escape') {
+            this.onFieldChange({ target: { value: '' } });
+            this.inputRef.blur();
+        } else if (event.code === 'Enter') {
+            const { onEnterKey } = this.props;
+            onEnterKey();
+        }
     }
 
     render() {
@@ -30,6 +53,7 @@ class SearchField extends Component {
                     placeholder="Search"
                     value={value}
                     onChange={this.onFieldChange}
+                    inputRef={ref => { this.inputRef = ref; }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -53,11 +77,13 @@ class SearchField extends Component {
 }
 
 SearchField.propTypes = {
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onEnterKey: PropTypes.func
 };
 
 SearchField.defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    onEnterKey: () => {}
 };
 
 export default SearchField;

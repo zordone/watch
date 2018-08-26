@@ -1,3 +1,5 @@
+/* globals document */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
@@ -17,6 +19,7 @@ class Item extends Component {
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onClose = this.onClose.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
     }
 
     componentDidMount() {
@@ -26,6 +29,17 @@ class Item extends Component {
             .then(item => {
                 this.setState({ item });
             });
+        document.addEventListener('keyup', this.onKeyUp);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.onKeyUp);
+    }
+
+    onKeyUp(event) {
+        if (event.code === 'Escape') {
+            this.onClose();
+        }
     }
 
     onChange(item) {

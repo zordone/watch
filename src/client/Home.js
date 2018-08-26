@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ItemTable from './ItemTable';
 import Header from './Header';
 import * as service from './service';
@@ -12,6 +13,7 @@ class Home extends Component {
             filteredItems: []
         };
         this.onSearchChanged = this.onSearchChanged.bind(this);
+        this.onEnterKey = this.onEnterKey.bind(this);
     }
 
     componentDidMount() {
@@ -39,12 +41,21 @@ class Home extends Component {
         });
     }
 
+    onEnterKey() {
+        const { filteredItems } = this.state;
+        const { history } = this.props;
+        const item = filteredItems[0];
+        if (item) {
+            history.push(`/item/${item._id}`);
+        }
+    }
+
     render() {
         const { filteredItems } = this.state;
         return (
             <div className="Home">
                 <Header subtitle="Movies and TV Shows">
-                    <SearchField onChange={this.onSearchChanged} />
+                    <SearchField onChange={this.onSearchChanged} onEnterKey={this.onEnterKey} />
                 </Header>
                 <main>
                     <ItemTable items={filteredItems} />
@@ -53,5 +64,11 @@ class Home extends Component {
         );
     }
 }
+
+Home.propTypes = {
+    history: PropTypes.shape({
+        goBack: PropTypes.func.isRequired
+    }).isRequired
+};
 
 export default Home;

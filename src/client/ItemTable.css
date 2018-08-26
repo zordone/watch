@@ -19,6 +19,10 @@
   font-weight: 300;
 }
 
+.ItemTable tr:hover {
+  background: #FFF1;
+}
+
 .ItemTable th,
 .ItemTable td,
 .ItemTable td:last-child {
