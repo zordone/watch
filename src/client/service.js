@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ItemType, NextType, ValiType, FinishedType } from '../common/enums';
+import { ItemType, NextType, ValiType, FinishedType, StateType } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 
@@ -20,7 +20,7 @@ export const defaultItem = {
     posterUrl: ''
 };
 
-const itemSearchText = item => {
+const itemSearchText = (item, state) => {
     const fields = [
         item.type,
         item.title,
@@ -28,27 +28,56 @@ const itemSearchText = item => {
         item.notes,
         item.finished === FinishedType.YES ? 'finished' : 'unfinished',
         item.withVali === ValiType.YES ? 'vali' : '',
-        itemState(item).type
+        state.type
     ];
     return fields.filter(field => field).join(' ').toLowerCase();
 };
 
-const parseItem = item => ({
-    // add missing fields
-    ...defaultItem,
-    // default nulls to empty string
-    ..._.mapValues(item, value => value || ''),
-    // format dates
-    nextDate: parseDate(item.nextDate).input,
-    // calculated fields
-    state: itemState(item),
-    searchText: itemSearchText(item)
-});
+const stateNum = {
+    [StateType.PROGRESS]: 1,
+    [StateType.READY]: 2,
+    [StateType.RECHECK]: 3,
+    [StateType.WAITING]: 4,
+    [StateType.FINISHED]: 5
+};
+
+const parseItem = item => {
+    const state = itemState(item);
+    state.num = stateNum[state.type];
+    const searchText = itemSearchText(item, state);
+    return {
+        // add missing fields
+        ...defaultItem,
+        // default nulls to empty string
+        ..._.mapValues(item, value => value || ''),
+        // format dates
+        nextDate: parseDate(item.nextDate).input,
+        // calculated fields
+        state,
+        searchText
+    };
+};
+
+const compareItems = (a, b) => {
+    if (a.state.num < b.state.num) {
+        return -1;
+    }
+    if (a.state.num > b.state.num) {
+        return 1;
+    }
+    if (a.title < b.title) {
+        return -1;
+    }
+    if (a.title > b.title) {
+        return 1;
+    }
+    return 0;
+};
 
 export const listItems = () =>
     fetch(`${BASE_URL}/items`)
         .then(res => res.json())
-        .then(res => res.map(parseItem));
+        .then(res => res.map(parseItem).sort(compareItems));
 
 export const getItemById = id =>
     fetch(`${BASE_URL}/items/${id}`)
