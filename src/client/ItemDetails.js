@@ -113,6 +113,9 @@ class ItemDetails extends Component {
         const isFinished = item.finished === FinishedType.YES;
         const inProgress = Boolean(item.inProgress);
         const title = encodeURIComponent(item.title);
+        const isCheckable = [StateType.READY, StateType.PROGRESS, StateType.RECHECK].includes(item.state.type);
+        const nextSeasonNum = getNextSeasonNum(item);
+        const season = isMovie ? '' : ` season ${nextSeasonNum}`;
         // IMDb
         if (item.imdbId) {
             addLink('IMDb page', `http://www.imdb.com/title/${item.imdbId}/?ref_=fn_tv_tt_1`);
@@ -121,8 +124,14 @@ class ItemDetails extends Component {
             addLink('IMDb search', `http://www.imdb.com/find?q=${title}${params}`);
         }
         // Subtitles
-        if (!isFinished && item.withVali !== ValiType.NO) {
+        if (isCheckable && item.withVali !== ValiType.NO) {
             addLink('Subtitle search', `https://www.feliratok.info/?search=${title}&nyelv=Magyar`);
+        }
+        // Torrent
+        if (isCheckable) {
+            const query = encodeURIComponent(`${item.title}${season}`);
+            const type = isMovie ? 'movies' : 'tv';
+            addLink('Torrent search', `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
         }
         // Youtube recap
         if (!isFinished && !inProgress && !isMovie && item.lastWatched) {
@@ -131,9 +140,7 @@ class ItemDetails extends Component {
         }
         // Youtube trailer
         if (!isFinished && !inProgress) {
-            const nextSeasonNum = getNextSeasonNum(item);
             const name = isMovie ? 'Movie' : `${seasonCode(nextSeasonNum)}`;
-            const season = isMovie ? '' : ` season ${nextSeasonNum}`;
             const query = encodeURIComponent(`${item.title}${season} trailer`);
             addLink(`${name} trailer`, `https://www.youtube.com/results?search_query=${query}`);
         }
