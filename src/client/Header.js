@@ -4,9 +4,10 @@ import './Header.css';
 
 const Header = ({ subtitle, children }) => (
     <header className="Header">
+        <span className="Header-logo" role="img" aria-label="logo">🍿</span>
         <div className="Header-left">
             <h1 className="Header-title">
-                Watch
+            Watch
             </h1>
             {Boolean(subtitle) && (
                 <h2 className="Header-subtitle">
