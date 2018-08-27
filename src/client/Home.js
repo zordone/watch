@@ -64,16 +64,20 @@ class Home extends Component {
 
     render() {
         const { filteredItems } = this.state;
-        const searchField = <SearchField onChange={this.onSearchChanged} onEnterKey={this.onEnterKey} />;
+        const searchField = (
+            <SearchField
+                onChange={this.onSearchChanged}
+                onEnterKey={this.onEnterKey}
+            />
+        );
         const newButton = (
             <IconButton aria-label="Add new item" onClick={this.onAddNew}>
                 <i className="material-icons">add</i>
             </IconButton>
         );
-
         return (
             <div className="Home">
-                <Header subtitle="Movies and TV Shows" {...{ searchField, newButton }} />
+                <Header {...{ searchField, newButton }} />
                 <main>
                     <ItemTable items={filteredItems} />
                 </main>
