@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Header.css';
 
-const Header = ({ subtitle, children }) => (
+const Header = ({ subtitle, searchField, newButton }) => (
     <header className="Header">
         <span className="Header-logo" role="img" aria-label="logo">🍿</span>
         <div className="Header-left">
@@ -16,19 +16,22 @@ const Header = ({ subtitle, children }) => (
             )}
         </div>
         <div className="Header-right">
-            {children}
+            {searchField}
+            {newButton}
         </div>
     </header>
 );
 
 Header.propTypes = {
     subtitle: PropTypes.string,
-    children: PropTypes.element
+    searchField: PropTypes.element,
+    newButton: PropTypes.element
 };
 
 Header.defaultProps = {
     subtitle: '',
-    children: null
+    searchField: null,
+    newButton: null
 };
 
 export default Header;

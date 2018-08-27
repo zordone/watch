@@ -7,7 +7,6 @@ const PORT = 3001;
 db.connect();
 
 const app = express();
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use((req, res, next) => {

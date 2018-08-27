@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { IconButton } from '@material-ui/core';
 import ItemTable from './ItemTable';
 import Header from './Header';
 import * as service from './service';
@@ -14,6 +15,7 @@ class Home extends Component {
         };
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onEnterKey = this.onEnterKey.bind(this);
+        this.onAddNew = this.onAddNew.bind(this);
     }
 
     componentDidMount() {
@@ -50,13 +52,28 @@ class Home extends Component {
         }
     }
 
+    onAddNew() {
+        const { items } = this.state;
+        const { history } = this.props;
+        const newItem = { ...service.defaultItem };
+        newItem._id = 'new';
+        this.setState({ items: [newItem, ...items] }, () => {
+            history.push('/item/new');
+        });
+    }
+
     render() {
         const { filteredItems } = this.state;
+        const searchField = <SearchField onChange={this.onSearchChanged} onEnterKey={this.onEnterKey} />;
+        const newButton = (
+            <IconButton aria-label="Add new item" onClick={this.onAddNew}>
+                <i className="material-icons">add</i>
+            </IconButton>
+        );
+
         return (
             <div className="Home">
-                <Header subtitle="Movies and TV Shows">
-                    <SearchField onChange={this.onSearchChanged} onEnterKey={this.onEnterKey} />
-                </Header>
+                <Header subtitle="Movies and TV Shows" {...{ searchField, newButton }} />
                 <main>
                     <ItemTable items={filteredItems} />
                 </main>

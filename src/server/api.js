@@ -70,7 +70,7 @@ exports.newItem = (req, res) => {
         } else {
             console.log('[NewItem] Item is saved. ID:', saved.id);
             res.setHeader('Location', `/items/${saved.id}`);
-            res.sendStatus(200);
+            res.send(saved);
         }
     });
 };

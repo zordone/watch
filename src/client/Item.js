@@ -31,10 +31,17 @@ class Item extends Component {
     componentDidMount() {
         const { match } = this.props;
         const { id } = match.params;
-        service.getItemById(id)
-            .then(item => {
-                this.setState({ item });
+        if (id === 'new') {
+            this.setState({
+                item: service.createNewItem(),
+                page: FORM
             });
+        } else {
+            service.getItemById(id)
+                .then(item => {
+                    this.setState({ item });
+                });
+        }
         document.addEventListener('keyup', this.onKeyUp);
     }
 
@@ -59,7 +66,10 @@ class Item extends Component {
 
     onSave() {
         const { item } = this.state;
-        service.updateItemById(item._id, item)
+        const promise = item._id === 'new'
+            ? service.saveNewItem(item)
+            : service.updateItemById(item._id, item);
+        promise
             .then(saved => {
                 this.setState({ item: saved });
                 this.onClose();

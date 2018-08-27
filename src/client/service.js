@@ -97,3 +97,24 @@ export const updateItemById = (id, item) => {
         .then(res => res.json())
         .then(parseItem);
 };
+
+export const createNewItem = () => (
+    parseItem({
+        ...defaultItem,
+        _id: 'new'
+    })
+);
+
+export const saveNewItem = item => {
+    const opts = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(item)
+    };
+    return fetch(`${BASE_URL}/items`, opts)
+        .then(res => res.json())
+        .then(parseItem);
+};
