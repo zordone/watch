@@ -31,3 +31,9 @@ export const getNextSeasonNum = item => (
         ? null
         : (parseInt(item.lastWatched, 10) || 0) + 1
 );
+
+export const maxLength = (str, len) => (
+    str.length <= len
+        ? str
+        : `${str.substr(0, len - 1)}…`
+);

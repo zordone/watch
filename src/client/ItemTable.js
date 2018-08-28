@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import ItemIcon from './ItemIcon';
 import StateLabel from './StateLabel';
+import { maxLength } from './utils';
 import './ItemTable.css';
 
 const ItemTable = props => {
@@ -37,7 +38,7 @@ const ItemTable = props => {
                             <TableCell component="th" scope="row">{item.title}</TableCell>
                             <TableCell>{item.genres.join(', ')}</TableCell>
                             <TableCell><StateLabel state={item.state} /></TableCell>
-                            <TableCell>{item.notes}</TableCell>
+                            <TableCell>{maxLength(item.notes, 50)}</TableCell>
                             <TableCell>{item.withVali}</TableCell>
                             <TableCell className="ItemTable-skinny-col">
                                 <IconButton
