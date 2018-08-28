@@ -1,7 +1,7 @@
 const csv = require('csvtojson');
 const moment = require('moment');
 const { Item } = require('./models');
-const { ItemType, NextType, FinishedType } = require('../common/enums');
+const { ItemType, ValiType, NextType, FinishedType } = require('../common/enums');
 
 const csvDate = dateStr => (
     dateStr
@@ -47,7 +47,7 @@ const importCsv = filename => (
                     inProgress: csvSeason(row['In progress']),
                     nextDate: csvDate(row['Next date']),
                     nextType: csvNextType(row['Next type']),
-                    withVali: row['With Vali'],
+                    withVali: row['With Vali'] || ValiType.NO,
                     notes: row.Notes || '',
                     imdbId: row['# IMDb id'] || '',
                     posterUrl: '',
