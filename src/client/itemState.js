@@ -1,4 +1,4 @@
-import { ItemType, NextType, StateType, FinishedType } from '../common/enums';
+import { ItemType, NextType, StateType, FinishedType, ValiType } from '../common/enums';
 import { parseDate, seasonCode, getNextSeasonNum } from './utils';
 
 const itemState = item => {
@@ -7,6 +7,9 @@ const itemState = item => {
     const nextDate = parseDate(item.nextDate);
     const hasDate = Boolean(nextDate.date);
     const isActual = hasDate && (nextDate.date < now);
+
+    const withVali = item.withVali !== ValiType.NO;
+    const recheckWhat = `torrent${withVali ? ' and subtitles' : ''}`;
 
     if (item.type === ItemType.MOVIE) {
         if (isFinished) {
@@ -17,13 +20,13 @@ const itemState = item => {
         }
         if (hasDate && isActual) {
             if (item.nextType === NextType.RELEASE) {
-                return { type: StateType.RECHECK, message: `Released on ${nextDate.display}, recheck torrent.` };
+                return { type: StateType.RECHECK, message: `Released on ${nextDate.display}, recheck ${recheckWhat}.` };
             }
             if (item.nextType === NextType.AVAILABLE) {
                 return { type: StateType.READY, message: 'Ready to watch.' };
             }
             if (item.nextType === NextType.RECHECK) {
-                return { type: StateType.RECHECK, message: 'Time to recheck avilability.' };
+                return { type: StateType.RECHECK, message: 'Time to recheck availability.' };
             }
         }
         if (hasDate && !isActual) {
@@ -48,10 +51,10 @@ const itemState = item => {
         const nextSeason = seasonCode(getNextSeasonNum(item));
         if (hasDate && isActual) {
             if (item.nextType === NextType.START) {
-                return { type: StateType.RECHECK, message: `${nextSeason} started on ${nextDate.display}, recheck torrent.` };
+                return { type: StateType.RECHECK, message: `${nextSeason} started on ${nextDate.display}, recheck ${recheckWhat}.` };
             }
             if (item.nextType === NextType.END) {
-                return { type: StateType.RECHECK, message: `${nextSeason} ended on ${nextDate.display}, recheck torrent.` };
+                return { type: StateType.RECHECK, message: `${nextSeason} ended on ${nextDate.display}, recheck ${recheckWhat}.` };
             }
             if (item.nextType === NextType.AVAILABLE) {
                 return { type: StateType.READY, message: `${nextSeason} ready to watch.` };
