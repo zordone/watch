@@ -1,7 +1,7 @@
 const csv = require('csvtojson');
 const moment = require('moment');
 const { Item } = require('./models');
-const { NextType, FinishedType } = require('../common/enums');
+const { ItemType, NextType, FinishedType } = require('../common/enums');
 
 const csvDate = dateStr => (
     dateStr
@@ -32,11 +32,17 @@ const importCsv = filename => (
         .then(rows => (
             rows.map(row => {
                 const now = new Date();
+                const isFinishedMovie = (
+                    row.Type === ItemType.MOVIE &&
+                    row['Last done'] === 'watched'
+                );
                 return new Item({
                     title: row.Title,
                     type: row.Type,
                     genres: csvGenres(row.Genre),
-                    finished: row.Finished || FinishedType.NO,
+                    finished: isFinishedMovie
+                        ? FinishedType.YES
+                        : row.Finished || FinishedType.NO,
                     lastWatched: csvSeason(row['Last done']),
                     inProgress: csvSeason(row['In progress']),
                     nextDate: csvDate(row['Next date']),

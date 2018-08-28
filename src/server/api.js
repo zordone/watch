@@ -15,7 +15,7 @@ exports.adminImport = (req, res) => {
     removeAllItems()
         .then(() => {
             console.log('[AdminImport] Database cleared.');
-            const filename = '/Users/zord/Development/watch/_work/export.csv';
+            const filename = '/Users/zord/Development/watch/_work/import.csv';
             let done = 0;
             let errors = 0;
             importCsv(filename)
