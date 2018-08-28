@@ -5,6 +5,8 @@ import ItemTable from './ItemTable';
 import Header from './Header';
 import * as service from './service';
 import SearchField from './SearchField';
+import packageJson from '../../package.json';
+import './Home.css';
 
 class Home extends Component {
     constructor(props) {
@@ -80,6 +82,10 @@ class Home extends Component {
                 <Header {...{ searchField, newButton }} />
                 <main>
                     <ItemTable items={filteredItems} />
+                    <div className="Home-footer">
+                        <span>{filteredItems.length} items</span>
+                        <span>v{packageJson.version}</span>
+                    </div>
                 </main>
             </div>
         );

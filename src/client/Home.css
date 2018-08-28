@@ -1,0 +1,10 @@
+.Home-footer {
+    font-size: 0.8rem;
+    opacity: 0.2;
+    margin: 0.4rem;
+    height: 1rem;
+}
+
+.Home-footer span:last-child {
+    float: right;
+}
