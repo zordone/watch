@@ -62,7 +62,8 @@
         "test": "node scripts/test.js --env=jsdom",
         "server": "node ./src/server/server.js",
         "lint": "./node_modules/eslint/bin/eslint.js ./src",
-        "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix"
+        "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
+        "start-all": "node scripts/start-all.js"
     },
     "jest": {
         "collectCoverageFrom": [
