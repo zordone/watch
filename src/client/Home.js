@@ -73,7 +73,7 @@ class Home extends Component {
             />
         );
         const newButton = (
-            <IconButton aria-label="Add new item" onClick={this.onAddNew}>
+            <IconButton className="NewButton" aria-label="Add new item" onClick={this.onAddNew}>
                 <i className="material-icons">add</i>
             </IconButton>
         );

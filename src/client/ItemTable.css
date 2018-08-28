@@ -1,6 +1,6 @@
 .ItemTable-paper {
-  /* full height - header - top/bottom padding - footer */
-  max-height: calc(100vh - 75px - 2rem - 1rem);
+  /* full height - header - top padding - footer */
+  max-height: calc(100vh - 75px - 1rem - 1.5rem);
   overflow-y: scroll;
 }
 

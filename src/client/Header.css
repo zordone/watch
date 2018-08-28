@@ -9,7 +9,7 @@
 .Header-logo {
     grid-column: 1;
     font-size: 3rem;
-    transform: translate(1rem, 9px);
+    transform: translate(1rem, 10px);
     position: absolute;
 }
 
@@ -39,4 +39,9 @@
 .Header-right .SearchField {
     flex-grow: 1;
     margin-right: 1rem;
+}
+
+.Header-right .NewButton {
+    height: 43px;
+    width: 43px;
 }
