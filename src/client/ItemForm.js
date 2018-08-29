@@ -6,6 +6,7 @@ import * as service from './service';
 import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
 import './ItemForm.css';
+import { parseDate } from './utils';
 
 class ItemForm extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class ItemForm extends Component {
             item: { ...service.defaultItem }
         };
         this.onFieldChange = this.onFieldChange.bind(this);
+        this.onDateKeyDown = this.onDateKeyDown.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -34,6 +36,14 @@ class ItemForm extends Component {
             item: newItem
         });
         onChange(newItem);
+    }
+
+    onDateKeyDown(event) {
+        if (event.key.toLowerCase() === 't') {
+            const { id } = event.target;
+            const value = parseDate(new Date()).input;
+            this.onFieldChange({ target: { id, value } });
+        }
     }
 
     gridPosition(row, col, span) {
@@ -107,6 +117,7 @@ class ItemForm extends Component {
                         value={item.nextDate}
                         style={this.gridPosition(3, 3)}
                         className={item.nextDate ? '' : 'ItemForm-empty'}
+                        onKeyDown={this.onDateKeyDown}
                     />
                     <SelectField
                         id="nextType"
