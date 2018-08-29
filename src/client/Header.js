@@ -6,8 +6,7 @@ const Header = ({ searchField, newButton }) => (
     <header className="Header">
         <span className="Header-logo" role="img" aria-label="logo">🍿</span>
         <div className="Header-left">
-            <h1 className="Header-title">Watch</h1>
-            <h2 className="Header-subtitle">Movies and TV Shows</h2>
+            <div className="Header-title" />
         </div>
         <div className="Header-right">
             {searchField}
