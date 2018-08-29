@@ -8,8 +8,8 @@ const StateLabel = ({ state }) => {
         return null;
     }
     return (
-        <div className={`StateLabel-${state.type}`}>
-            {state.message}
+        <div className={`StateLabel StateLabel-${state.type}`}>
+            {state.children || state.message}
         </div>
     );
 };

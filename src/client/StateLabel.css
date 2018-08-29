@@ -17,3 +17,7 @@
 .StateLabel-finished {
   color: #666;
 }
+
+.StateLabel .bold {
+  font-weight: 600;
+}

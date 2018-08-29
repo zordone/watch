@@ -1,5 +1,18 @@
+import React from 'react';
 import { ItemType, NextType, StateType, FinishedType, ValiType } from '../common/enums';
 import { parseDate, seasonCode, getNextSeasonNum } from './utils';
+
+const boldRegex = /^(s\d{2}|\d{4}. \d{2}. \d{2})$/i;
+
+const state = (type, parts) => ({
+    type,
+    message: parts.join(''),
+    children: parts.map(part => (
+        boldRegex.exec(part)
+            ? <strong key={part}>{part}</strong>
+            : part
+    ))
+});
 
 const itemState = item => {
     const now = new Date();
@@ -13,71 +26,71 @@ const itemState = item => {
 
     if (item.type === ItemType.MOVIE) {
         if (isFinished) {
-            return { type: StateType.FINISHED, message: 'Watched.' };
+            return state(StateType.FINISHED, ['Watched.']);
         }
         if (item.inProgress) {
-            return { type: StateType.PROGRESS, message: 'In progress.' };
+            return state(StateType.PROGRESS, ['In progress.']);
         }
         if (hasDate && isActual) {
             if (item.nextType === NextType.RELEASE) {
-                return { type: StateType.RECHECK, message: `Released on ${nextDate.display}, recheck ${recheckWhat}.` };
+                return state(StateType.RECHECK, ['Released on ', nextDate.display, `, recheck ${recheckWhat}.`]);
             }
             if (item.nextType === NextType.AVAILABLE) {
-                return { type: StateType.READY, message: 'Ready to watch.' };
+                return state(StateType.READY, ['Ready to watch.']);
             }
             if (item.nextType === NextType.RECHECK) {
-                return { type: StateType.RECHECK, message: 'Time to recheck availability.' };
+                return state(StateType.RECHECK, ['Time to recheck availability.']);
             }
         }
         if (hasDate && !isActual) {
-            const result = { type: StateType.WAITING, message: `Waiting. Next recheck on ${nextDate.display}.` };
             if (item.nextType === NextType.RELEASE) {
-                result.message = `Waiting. Will be available on ${nextDate.display}`;
-            } else if (item.nextType === NextType.AVAILABLE) {
-                result.message = `Waiting. Will be available on ${nextDate.display}`;
+                return state(StateType.WAITING, ['Waiting. Will be released on ', nextDate.display, '.']);
             }
-            return result;
+            if (item.nextType === NextType.AVAILABLE) {
+                return state(StateType.WAITING, ['Waiting. Will be available on ', nextDate.display, '.']);
+            }
+            return state(StateType.WAITING, ['Waiting. Next recheck on ', nextDate.display, '.']);
         }
     }
 
     if (item.type === ItemType.SHOW) {
         if (isFinished) {
-            return { type: StateType.FINISHED, message: 'Finished.' };
+            return state(StateType.FINISHED, ['Finished.']);
         }
         if (item.inProgress) {
             const currentSeason = seasonCode(item.inProgress);
-            return { type: StateType.PROGRESS, message: `${currentSeason} in progress.` };
+            return state(StateType.PROGRESS, [currentSeason, ' in progress.']);
         }
         const nextSeason = seasonCode(getNextSeasonNum(item));
         if (hasDate && isActual) {
             if (item.nextType === NextType.START) {
-                return { type: StateType.RECHECK, message: `${nextSeason} started on ${nextDate.display}, recheck ${recheckWhat}.` };
+                return state(StateType.RECHECK, [nextSeason, ' started on ', nextDate.display, `, recheck ${recheckWhat}.`]);
             }
             if (item.nextType === NextType.END) {
-                return { type: StateType.RECHECK, message: `${nextSeason} ended on ${nextDate.display}, recheck ${recheckWhat}.` };
+                return state(StateType.RECHECK, [nextSeason, ' ended on ', nextDate.display, `, recheck ${recheckWhat}.`]);
             }
             if (item.nextType === NextType.AVAILABLE) {
-                return { type: StateType.READY, message: `${nextSeason} ready to watch.` };
+                return state(StateType.READY, [nextSeason, ' ready to watch.']);
             }
             if (item.nextType === NextType.RECHECK) {
-                return { type: StateType.RECHECK, message: `Time to recheck ${nextSeason}.` };
+                return state(StateType.RECHECK, ['Time to recheck ', nextSeason, '.']);
             }
         }
         if (hasDate && !isActual) {
             if (item.nextType === NextType.START) {
-                return { type: StateType.WAITING, message: `Waiting. ${nextSeason} will start on ${nextDate.display}.` };
+                return state(StateType.WAITING, ['Waiting. ', nextSeason, ' will start on ', nextDate.display, '.']);
             }
             if (item.nextType === NextType.END) {
-                return { type: StateType.WAITING, message: `Waiting. ${nextSeason} will end on ${nextDate.display}.` };
+                return state(StateType.WAITING, ['Waiting. ', nextSeason, ' will end on ', nextDate.display, '.']);
             }
             if (item.nextType === NextType.RECHECK) {
-                return { type: StateType.WAITING, message: `Waiting. Next recheck on ${nextDate.display}.` };
+                return state(StateType.WAITING, ['Waiting. ', 'Next recheck on ', nextDate.display, '.']);
             }
         }
     }
 
     console.error('Unkown state', item);
-    return { type: StateType.RECHECK, message: 'Time to recheck' };
+    return state(StateType.RECHECK, ['Time to recheck.']);
 };
 
 export default itemState;
