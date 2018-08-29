@@ -50,8 +50,7 @@ const importCsv = filename => (
                     withVali: row.WithVali || ValiType.NO,
                     notes: row.Notes || '',
                     imdbId: row.IMDb || '',
-                    imdbId: row['# IMDb id'] || '',
-                    posterUrl: '',
+                    posterUrl: row.Poster || '',
                     created: now,
                     updated: now
                 });
