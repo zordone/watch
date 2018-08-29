@@ -28,6 +28,9 @@ const itemSearchText = (item, state) => {
         item.notes,
         item.finished === FinishedType.YES ? 'finished' : 'unfinished',
         item.withVali === ValiType.YES ? 'vali' : '',
+        item.withVali === ValiType.NO ? 'csaba' : '',
+        !item.posterUrl && 'noposter',
+        !item.imdbId && 'noimdb',
         state.type
     ];
     return fields.filter(field => field).join(' ').toLowerCase();
