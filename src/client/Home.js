@@ -83,7 +83,7 @@ class Home extends Component {
                 <main>
                     <ItemTable items={filteredItems} />
                     <div className="Home-footer">
-                        <span>{filteredItems.length} items</span>
+                        <span>{filteredItems.length} item{filteredItems.length === 1 ? '' : 's'}</span>
                         <span>v{packageJson.version}</span>
                     </div>
                 </main>
