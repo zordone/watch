@@ -11,8 +11,9 @@ const Poster = ({ item }) => {
         style.backgroundSize = 'cover';
     }
     return (
-        <div className="Poster" style={style}>
-            <ItemIcon item={item} />
+        <div className="Poster">
+            <ItemIcon className="Poster i" item={item} />
+            <div className="Poster-image" style={style} />
         </div>
     );
 };
