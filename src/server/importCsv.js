@@ -34,7 +34,7 @@ const importCsv = filename => (
                 const now = new Date();
                 const isFinishedMovie = (
                     row.Type === ItemType.MOVIE &&
-                    row['Last done'] === 'watched'
+                    row.LastDone === 'watched'
                 );
                 return new Item({
                     title: row.Title,
@@ -43,12 +43,13 @@ const importCsv = filename => (
                     finished: isFinishedMovie
                         ? FinishedType.YES
                         : row.Finished || FinishedType.NO,
-                    lastWatched: csvSeason(row['Last done']),
-                    inProgress: csvSeason(row['In progress']),
-                    nextDate: csvDate(row['Next date']),
-                    nextType: csvNextType(row['Next type']),
-                    withVali: row['With Vali'] || ValiType.NO,
+                    lastWatched: csvSeason(row.LastDone),
+                    inProgress: csvSeason(row.InProgress),
+                    nextDate: csvDate(row.NextDate),
+                    nextType: csvNextType(row.NextType),
+                    withVali: row.WithVali || ValiType.NO,
                     notes: row.Notes || '',
+                    imdbId: row.IMDb || '',
                     imdbId: row['# IMDb id'] || '',
                     posterUrl: '',
                     created: now,
