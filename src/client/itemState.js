@@ -19,7 +19,7 @@ const itemState = item => {
     const isFinished = item.finished === FinishedType.YES;
     const nextDate = parseDate(item.nextDate);
     const hasDate = Boolean(nextDate.date);
-    const isActual = hasDate && (nextDate.date < now);
+    const isActual = hasDate && (nextDate.date <= now);
 
     const withVali = item.withVali !== ValiType.NO;
     const recheckWhat = `torrent${withVali ? ' and subtitles' : ''}`;
