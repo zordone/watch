@@ -5,13 +5,9 @@ import './Header.css';
 const Header = ({ searchField, newButton }) => (
     <header className="Header">
         <img className="Header-logo" alt="logo" src="/app-logo.png" />
-        <div className="Header-left">
-            <div className="Header-title" />
-        </div>
-        <div className="Header-right">
-            {searchField}
-            {newButton}
-        </div>
+        <div className="Header-title" />
+        {searchField}
+        {newButton}
     </header>
 );
 
