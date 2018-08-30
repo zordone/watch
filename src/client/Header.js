@@ -4,7 +4,7 @@ import './Header.css';
 
 const Header = ({ searchField, newButton }) => (
     <header className="Header">
-        <span className="Header-logo" role="img" aria-label="logo">🍿</span>
+        <img className="Header-logo" alt="logo" src="/app-logo.png" />
         <div className="Header-left">
             <div className="Header-title" />
         </div>
