@@ -1,0 +1,76 @@
+.Loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    background: #1A1A1A;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    justify-items: center;
+    animation: hide 500ms ease-in 1 forwards 3.7s;
+    pointer-events: none;
+}
+
+.Loader-center {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    width: 50%;
+    height: 200px;
+    animation:
+        hide 500ms ease-in 1 forwards 3.7s,
+        zoom 500ms ease-in 1 forwards 3.7s;
+}
+
+.Loader-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.Loader-bg {
+    background: url('/app-logo-bg.png') no-repeat center center / contain;
+    opacity: 0.5;
+    filter: drop-shadow(0 0 7px #080808);
+}
+
+.Loader-fg {
+    background: url('/app-logo.png') no-repeat center center / contain;
+    mask: url(/wave-mask.png);
+    mask-size: 8% 200%;
+    mask-position: 0 0%;
+    animation:
+        waves 8s linear infinite,
+        loading 2.5s linear 1 forwards 1s;
+}
+
+@keyframes waves {
+    from { -webkit-mask-position-x: 0%; }
+    to   { -webkit-mask-position-x: 100%; }
+}
+
+@keyframes loading {
+    from { -webkit-mask-position-y: 0%; }
+    to   { -webkit-mask-position-y: 100%; }
+}
+
+@keyframes hide {
+    0%   { opacity: 1; }
+    20%  { opacity: 0.9; }
+    40%  { opacity: 0.6; }
+    70%  { opacity: 0.1; }
+    90%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+@keyframes zoom {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.2); }
+    100% { transform: scale(20); }
+}
