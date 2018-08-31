@@ -77,10 +77,13 @@ const compareItems = (a, b) => {
     return 0;
 };
 
+export const sortItems = items => items.sort(compareItems);
+
 export const listItems = () =>
     fetch(`${BASE_URL}/items`)
         .then(res => res.json())
-        .then(res => res.map(parseItem).sort(compareItems));
+        .then(res => res.map(parseItem))
+        .then(sortItems);
 
 export const getItemById = id =>
     fetch(`${BASE_URL}/items/${id}`)

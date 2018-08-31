@@ -22,6 +22,14 @@ class SearchField extends Component {
         document.addEventListener('keyup', this.onKeyUp);
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { value: prevValue } = this.state;
+        const { value: nextValue } = nextProps;
+        if (prevValue !== nextValue) {
+            this.setState({ value: nextValue });
+        }
+    }
+
     componentWillUnmount() {
         document.removeEventListener('keyup', this.onKeyUp);
     }
@@ -78,12 +86,14 @@ class SearchField extends Component {
 
 SearchField.propTypes = {
     onChange: PropTypes.func,
-    onEnterKey: PropTypes.func
+    onEnterKey: PropTypes.func,
+    value: PropTypes.string
 };
 
 SearchField.defaultProps = {
     onChange: () => {},
-    onEnterKey: () => {}
+    onEnterKey: () => {},
+    value: ''
 };
 
 export default SearchField;

@@ -1,14 +1,17 @@
 /* globals document */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import { Button, IconButton } from '@material-ui/core';
 import * as service from './service';
+import * as actions from './redux/actions';
+import * as selectors from './redux/selectors';
 import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
-import './Item.css';
 import itemState from './itemState';
+import './Item.css';
 
 const FORM = 'form';
 const DETAILS = 'details';
@@ -65,13 +68,19 @@ class Item extends Component {
     }
 
     onSave() {
+        const { updateItem, addNewItem, items } = this.props;
         const { item } = this.state;
-        const promise = item._id === 'new'
+        const isNew = item._id === 'new';
+        if (isNew) {
+            addNewItem(item);
+        }
+        const promise = isNew
             ? service.saveNewItem(item)
             : service.updateItemById(item._id, item);
         promise
             .then(saved => {
                 this.setState({ item: saved });
+                updateItem(items, saved);
                 this.onClose();
             })
             .catch(err => {
@@ -128,7 +137,22 @@ Item.propTypes = {
     }).isRequired,
     history: PropTypes.shape({
         goBack: PropTypes.func.isRequired
-    }).isRequired
+    }).isRequired,
+    addNewItem: PropTypes.func.isRequired,
+    updateItem: PropTypes.func.isRequired,
+    items: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
-export default Item;
+const mapStateToProps = state => ({
+    items: selectors.getItems(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+    addNewItem: item => dispatch(actions.addNewItem(item)),
+    updateItem: (items, item) => dispatch(actions.updateItem(items, item))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Item);

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import ItemTable from './ItemTable';
 import Header from './Header';
-import * as service from './service';
+import * as actions from './redux/actions';
+import * as selectors from './redux/selectors';
 import SearchField from './SearchField';
 import packageJson from '../../package.json';
 import Loader from './Loader';
@@ -13,7 +15,6 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
             filteredItems: []
         };
         this.onSearchChanged = this.onSearchChanged.bind(this);
@@ -22,28 +23,36 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        service.listItems()
-            .then(items => {
-                this.setState({ items }, () => this.onSearchChanged(''));
+        const { fetchItems, items, search } = this.props;
+        const isFetched = Boolean(items.length);
+        const itemsPromise = isFetched
+            ? Promise.resolve()
+            : fetchItems();
+        itemsPromise
+            .then(() => {
+                this.onSearchChanged(search);
             })
             .catch(console.error);
     }
 
+    componentWillUnmount() {
+        const { setFirstLoad } = this.props;
+        setFirstLoad(false);
+    }
+
     onSearchChanged(search) {
-        const { items } = this.state;
+        const { items, setSearch } = this.props;
         const searchWords = search.split(' ').map(word => word.trim()).filter(word => word);
         if (!searchWords.length) {
-            this.setState({
-                filteredItems: items
-            });
+            this.setState({ filteredItems: items });
+            setSearch('');
             return;
         }
         const filteredItems = items.filter(item => (
             searchWords.every(word => item.searchText.includes(word))
         ));
-        this.setState({
-            filteredItems
-        });
+        this.setState({ filteredItems });
+        setSearch(search);
     }
 
     onEnterKey() {
@@ -56,21 +65,18 @@ class Home extends Component {
     }
 
     onAddNew() {
-        const { items } = this.state;
         const { history } = this.props;
-        const newItem = { ...service.defaultItem };
-        newItem._id = 'new';
-        this.setState({ items: [newItem, ...items] }, () => {
-            history.push('/item/new');
-        });
+        history.push('/item/new');
     }
 
     render() {
         const { filteredItems } = this.state;
+        const { firstLoad, search } = this.props;
         const searchField = (
             <SearchField
                 onChange={this.onSearchChanged}
                 onEnterKey={this.onEnterKey}
+                value={search}
             />
         );
         const newButton = (
@@ -88,7 +94,7 @@ class Home extends Component {
                         <span>v{packageJson.version}</span>
                     </div>
                 </main>
-                <Loader />
+                {firstLoad && <Loader progress={0} />}
             </div>
         );
     }
@@ -97,7 +103,25 @@ class Home extends Component {
 Home.propTypes = {
     history: PropTypes.shape({
         goBack: PropTypes.func.isRequired
-    }).isRequired
+    }).isRequired,
+    items: PropTypes.arrayOf(PropTypes.object).isRequired,
+    fetchItems: PropTypes.func.isRequired,
+    search: PropTypes.string.isRequired
 };
 
-export default Home;
+const mapStateToProps = state => ({
+    items: selectors.getItems(state),
+    search: selectors.getSearch(state),
+    firstLoad: selectors.getFirstLoad(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+    fetchItems: () => dispatch(actions.fetchItems()),
+    setSearch: search => dispatch(actions.setSearch(search)),
+    setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);
