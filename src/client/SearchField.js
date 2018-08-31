@@ -16,10 +16,12 @@ class SearchField extends Component {
         this.onChangeDebounced = _.debounce(value => onChange(value), 200);
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
     }
 
     componentDidMount() {
         document.addEventListener('keyup', this.onKeyUp);
+        document.addEventListener('keydown', this.onKeyDown);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -32,6 +34,7 @@ class SearchField extends Component {
 
     componentWillUnmount() {
         document.removeEventListener('keyup', this.onKeyUp);
+        document.removeEventListener('keydown', this.onKeyDown);
     }
 
     onFieldChange(event) {
@@ -46,10 +49,13 @@ class SearchField extends Component {
         } else if (event.code === 'Escape') {
             this.onFieldChange({ target: { value: '' } });
             this.inputRef.blur();
-        } else if (event.code === 'Enter') {
-            const { onEnterKey } = this.props;
-            onEnterKey();
         }
+    }
+
+    onKeyDown(event) {
+        const { onShortcut } = this.props;
+        const inSearch = document.activeElement === this.inputRef;
+        onShortcut(event.code, inSearch);
     }
 
     render() {
@@ -86,13 +92,13 @@ class SearchField extends Component {
 
 SearchField.propTypes = {
     onChange: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    onShortcut: PropTypes.func,
     value: PropTypes.string
 };
 
 SearchField.defaultProps = {
     onChange: () => {},
-    onEnterKey: () => {},
+    onShortcut: () => {},
     value: ''
 };
 

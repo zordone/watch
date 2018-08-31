@@ -18,7 +18,7 @@ class Home extends Component {
             filteredItems: []
         };
         this.onSearchChanged = this.onSearchChanged.bind(this);
-        this.onEnterKey = this.onEnterKey.bind(this);
+        this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
     }
 
@@ -55,12 +55,18 @@ class Home extends Component {
         setSearch(search);
     }
 
-    onEnterKey() {
-        const { filteredItems } = this.state;
-        const { history } = this.props;
-        const item = filteredItems[0];
-        if (item) {
-            history.push(`/item/${item._id}`);
+    onShortcut(code, inSearch) {
+        if (code === 'Enter') {
+            // open first item
+            const { filteredItems } = this.state;
+            const { history } = this.props;
+            const item = filteredItems[0];
+            if (item) {
+                history.push(`/item/${item._id}`);
+            }
+        } else if (code === 'KeyN' && !inSearch) {
+            // add new item
+            this.onAddNew();
         }
     }
 
@@ -75,7 +81,7 @@ class Home extends Component {
         const searchField = (
             <SearchField
                 onChange={this.onSearchChanged}
-                onEnterKey={this.onEnterKey}
+                onShortcut={this.onShortcut}
                 value={search}
             />
         );
