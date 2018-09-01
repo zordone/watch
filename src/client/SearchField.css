@@ -1,6 +1,11 @@
 .SearchField {
+  position: relative;
   background: #FFF1;
   border-radius: 4px;
+}
+
+.SearchField-input input::selection {
+  background: #0084ffab;
 }
 
 .SearchField-input i {
@@ -21,4 +26,32 @@
 .SearchField.not-empty input,
 .SearchField.not-empty i {
   color: #00a9ff;
+}
+
+.SearchField-words {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  font-size: 1.5rem;
+  top: 7px;
+  left: 51px;
+  color: transparent;
+  pointer-events: none;
+}
+
+.SearchField-words span {
+  margin-right: 0.36rem;
+}
+
+.SearchField-keyword {
+  color: #0062ff;
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 1px currentColor,
+    0 0 1px currentColor,
+    0 0 2px currentColor,
+    0 0 2px currentColor,
+    0 0 3px currentColor,
+    0 0 5px currentColor,
+    0 0 8px currentColor;
 }

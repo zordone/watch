@@ -2,8 +2,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, InputAdornment } from '@material-ui/core';
 import _ from 'lodash';
+import { TextField, InputAdornment } from '@material-ui/core';
+import { SearchKeywords } from '../common/enums';
 import './SearchField.css';
 
 class SearchField extends Component {
@@ -58,11 +59,20 @@ class SearchField extends Component {
         onShortcut(event.code, inSearch);
     }
 
+    renderWord(word) {
+        const isKeyword = Object.values(SearchKeywords).includes(word);
+        const className = isKeyword ? 'SearchField-keyword' : '';
+        return <span key={word} className={className}>{word}</span>;
+    }
+
     render() {
         const { value } = this.state;
         const emptyClass = value ? 'not-empty' : 'empty';
         return (
             <div className={`SearchField ${emptyClass}`}>
+                <div className="SearchField-words">
+                    {value.split(' ').map(word => this.renderWord(word))}
+                </div>
                 <TextField
                     placeholder="Search"
                     value={value}
@@ -75,7 +85,7 @@ class SearchField extends Component {
                             </InputAdornment>
                         ),
                         style: {
-                            fontSize: '1.5rem'
+                            fontSize: '1.5rem' // TODO: move this to css?
                         },
                         disableUnderline: true,
                         classes: {

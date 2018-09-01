@@ -34,8 +34,20 @@ const FinishedType = Object.freeze({
     PROBABLY: 'probably'
 });
 
+const SearchKeywords = Object.freeze({
+    ...ItemType,
+    ...StateType,
+    FINISHED: 'finished',
+    UNFINISHED: 'unfinished',
+    VALI: 'vali',
+    CSABA: 'csaba',
+    NOPOSTER: 'noposter',
+    NOIMDB: 'noimbdb'
+});
+
 exports.ItemType = ItemType;
 exports.NextType = NextType;
 exports.ValiType = ValiType;
 exports.StateType = StateType;
 exports.FinishedType = FinishedType;
+exports.SearchKeywords = SearchKeywords;

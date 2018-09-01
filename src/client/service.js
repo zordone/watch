@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ItemType, NextType, ValiType, FinishedType, StateType } from '../common/enums';
+import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 
@@ -20,21 +20,24 @@ export const defaultItem = {
     posterUrl: ''
 };
 
-const itemSearchText = (item, state) => {
-    const fields = [
+const cleanArray = array =>
+    array
+        .map(item => item.trim().toLowerCase())
+        .filter(item => item);
+
+const itemSearchData = (item, state) => ({
+    text: `${item.title} ${item.notes}`.toLowerCase(),
+    starts: cleanArray(item.genres),
+    equals: cleanArray([
         item.type,
-        item.title,
-        item.genres,
-        item.notes,
-        item.finished === FinishedType.YES ? 'finished' : 'unfinished',
-        item.withVali === ValiType.YES ? 'vali' : '',
-        item.withVali === ValiType.NO ? 'csaba' : '',
-        !item.posterUrl && 'noposter',
-        !item.imdbId && 'noimdb',
-        state.type
-    ];
-    return fields.filter(field => field).join(' ').toLowerCase();
-};
+        state.type,
+        item.finished === FinishedType.YES ? SearchKeywords.FINISHED : SearchKeywords.UNFINISHED,
+        item.withVali === ValiType.YES ? SearchKeywords.VALI : '',
+        item.withVali === ValiType.NO ? SearchKeywords.CSABA : '',
+        !item.posterUrl ? SearchKeywords.NOPOSTER : '',
+        !item.imdbId ? SearchKeywords.NOIMDB : ''
+    ])
+});
 
 const stateNum = {
     [StateType.PROGRESS]: 1,
@@ -47,7 +50,7 @@ const stateNum = {
 const parseItem = item => {
     const state = itemState(item);
     state.num = stateNum[state.type];
-    const searchText = itemSearchText(item, state);
+    const searchData = itemSearchData(item, state);
     return {
         // add missing fields
         ...defaultItem,
@@ -57,7 +60,7 @@ const parseItem = item => {
         nextDate: parseDate(item.nextDate).input,
         // calculated fields
         state,
-        searchText
+        searchData
     };
 };
 

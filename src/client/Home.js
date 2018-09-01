@@ -49,7 +49,14 @@ class Home extends Component {
             return;
         }
         const filteredItems = items.filter(item => (
-            searchWords.every(word => item.searchText.includes(word))
+            searchWords.every(word => {
+                const { text, starts, equals } = item.searchData;
+                return (
+                    text.includes(word) ||
+                    starts.find(keyword => keyword.startsWith(word)) ||
+                    equals.includes(word)
+                );
+            })
         ));
         this.setState({ filteredItems });
         setSearch(search);
