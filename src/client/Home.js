@@ -7,16 +7,14 @@ import Header from './Header';
 import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';
 import SearchField from './SearchField';
-import packageJson from '../../package.json';
 import Loader from './Loader';
+import { anyChanged } from './utils';
+import packageJson from '../../package.json';
 import './Home.css';
 
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            filteredItems: []
-        };
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
@@ -35,6 +33,10 @@ class Home extends Component {
             .catch(console.error);
     }
 
+    shouldComponentUpdate(nextProps) {
+        return anyChanged(['search', 'filteredItems'], this.props, nextProps);
+    }
+
     componentWillUnmount() {
         const { setFirstLoad } = this.props;
         setFirstLoad(false);
@@ -44,8 +46,7 @@ class Home extends Component {
         const { items, setSearch } = this.props;
         const searchWords = search.split(' ').map(word => word.trim()).filter(word => word);
         if (!searchWords.length) {
-            this.setState({ filteredItems: items });
-            setSearch('');
+            setSearch('', items);
             return;
         }
         const filteredItems = items.filter(item => (
@@ -58,15 +59,13 @@ class Home extends Component {
                 );
             })
         ));
-        this.setState({ filteredItems });
-        setSearch(search);
+        setSearch(search, filteredItems);
     }
 
     onShortcut(code, inSearch) {
         if (code === 'Enter') {
             // open first item
-            const { filteredItems } = this.state;
-            const { history } = this.props;
+            const { filteredItems, history } = this.props;
             const item = filteredItems[0];
             if (item) {
                 history.push(`/item/${item._id}`);
@@ -83,8 +82,7 @@ class Home extends Component {
     }
 
     render() {
-        const { filteredItems } = this.state;
-        const { firstLoad, search } = this.props;
+        const { filteredItems, firstLoad, search } = this.props;
         const searchField = (
             <SearchField
                 onChange={this.onSearchChanged}
@@ -119,18 +117,20 @@ Home.propTypes = {
     }).isRequired,
     items: PropTypes.arrayOf(PropTypes.object).isRequired,
     fetchItems: PropTypes.func.isRequired,
-    search: PropTypes.string.isRequired
+    search: PropTypes.string.isRequired,
+    filteredItems: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 const mapStateToProps = state => ({
     items: selectors.getItems(state),
     search: selectors.getSearch(state),
+    filteredItems: selectors.getFilteredItems(state),
     firstLoad: selectors.getFirstLoad(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchItems: () => dispatch(actions.fetchItems()),
-    setSearch: search => dispatch(actions.setSearch(search)),
+    setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad))
 });
 

@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 
 const initialState = {
     items: [],
+    filteredItems: [],
     search: '',
     firstLoad: true
 };
@@ -28,7 +29,8 @@ export default (state = initialState, action) => {
     case types.SET_SEARCH:
         return {
             ...state,
-            search: action.search
+            search: action.search,
+            filteredItems: action.filteredItems
         };
     case types.SET_FIRST_LOAD:
         return {

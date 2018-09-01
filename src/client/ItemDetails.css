@@ -24,11 +24,6 @@
     grid-gap: 1rem;
 }
 
-.ItemDetails-sidebar .ItemDetails-button {
-    width: 100%;
-    margin-top: 0.5rem;
-}
-
 .ItemDetails a,
 .ItemDetails a:visited {
     color: #00a9ff;
@@ -42,4 +37,10 @@
 .ItemDetails .ItemDetails-button {
     text-transform: none;
     padding: 8px;
+}
+
+.ItemDetails-sidebar .ItemDetails-button {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 8px 4px;
 }

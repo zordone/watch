@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Home from './Home';
 import Item from './Item';
@@ -24,8 +24,10 @@ const App = () => (
     <MuiThemeProvider theme={theme}>
         <BrowserRouter>
             <div className="App">
-                <Route exact path="/" component={Home} />
-                <Route exact path="/item/:id" component={Item} />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/item/:id" component={Item} />
+                </Switch>
             </div>
         </BrowserRouter>
     </MuiThemeProvider>

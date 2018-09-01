@@ -29,9 +29,10 @@ export const updateItem = (items, newItem) => {
     };
 };
 
-export const setSearch = search => ({
+export const setSearch = (search, filteredItems) => ({
     type: types.SET_SEARCH,
-    search
+    search,
+    filteredItems
 });
 
 export const setFirstLoad = firstLoad => ({

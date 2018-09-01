@@ -42,9 +42,10 @@ const ItemTable = props => {
                             <TableCell>{item.withVali}</TableCell>
                             <TableCell className="ItemTable-skinny-col">
                                 <IconButton
+                                    key={`open-${item._id}`}
                                     component={NavLink}
                                     to={`/item/${item._id}`}
-                                    aria-label="Edit the item"
+                                    aria-label="Open item details"
                                 >
                                     <i className="material-icons">input</i>
                                 </IconButton>

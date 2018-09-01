@@ -37,3 +37,38 @@ export const maxLength = (str, len) => (
         ? str
         : `${str.substr(0, len - 1)}…`
 );
+
+export const cachePureFunction = (func, debugName = '') => {
+    const cache = {};
+    return (...args) => {
+        const key = JSON.stringify(args);
+        if (key in cache) {
+            if (debugName) {
+                console.debug(debugName, 'Cache hit:', key);
+            }
+            return cache[key];
+        }
+        const result = func(...args);
+        cache[key] = result;
+        if (debugName) {
+            console.debug(debugName, 'Cache miss:', key);
+        }
+        return result;
+    };
+};
+
+export const anyChanged = (names, prev, next, debugName = '') => {
+    const allNames = Object.keys({ ...prev, ...next });
+    const changedNames = (names || allNames)
+        .filter(name => {
+            const changed = prev[name] !== next[name];
+            if (changed && debugName) {
+                console.debug(debugName, 'Changed:', name, prev[name], '->', next[name]);
+            }
+            return changed;
+        });
+    if (!changedNames.length && debugName) {
+        console.debug(debugName, 'Not changed.');
+    }
+    return changedNames.length > 0;
+};

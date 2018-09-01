@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'material-ui-chip-input';
@@ -18,7 +18,7 @@ const styles = {
     }
 };
 
-class GenreField extends Component {
+class GenreField extends PureComponent {
     constructor(props) {
         super(props);
         this.onAddGenre = this.onAddGenre.bind(this);

@@ -1,13 +1,13 @@
 /* globals document */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { TextField, InputAdornment } from '@material-ui/core';
 import { SearchKeywords } from '../common/enums';
 import './SearchField.css';
 
-class SearchField extends Component {
+class SearchField extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,6 +18,7 @@ class SearchField extends Component {
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.onSetInputRef = this.onSetInputRef.bind(this);
     }
 
     componentDidMount() {
@@ -38,10 +39,15 @@ class SearchField extends Component {
         document.removeEventListener('keydown', this.onKeyDown);
     }
 
+    onSetInputRef(ref) {
+        this.inputRef = ref;
+    }
+
     onFieldChange(event) {
         const { value } = event.target;
-        this.onChangeDebounced(value);
-        this.setState({ value });
+        const cleaned = value.trimStart().replace(/\s+/g, ' ');
+        this.onChangeDebounced(cleaned);
+        this.setState({ value: cleaned });
     }
 
     onKeyUp(event) {
@@ -59,10 +65,10 @@ class SearchField extends Component {
         onShortcut(event.code, inSearch);
     }
 
-    renderWord(word) {
+    renderWord(word, index) {
         const isKeyword = Object.values(SearchKeywords).includes(word);
         const className = isKeyword ? 'SearchField-keyword' : '';
-        return <span key={word} className={className}>{word}</span>;
+        return <span key={`${word}-${index}`} className={className}>{word}</span>;
     }
 
     render() {
@@ -71,13 +77,13 @@ class SearchField extends Component {
         return (
             <div className={`SearchField ${emptyClass}`}>
                 <div className="SearchField-words">
-                    {value.split(' ').map(word => this.renderWord(word))}
+                    {value.split(' ').map(this.renderWord)}
                 </div>
                 <TextField
                     placeholder="Search"
                     value={value}
                     onChange={this.onFieldChange}
-                    inputRef={ref => { this.inputRef = ref; }}
+                    inputRef={this.onSetInputRef}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">

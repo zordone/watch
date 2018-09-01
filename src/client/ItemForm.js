@@ -5,8 +5,8 @@ import GenreField from './GenreField';
 import * as service from './service';
 import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
+import { parseDate, cachePureFunction } from './utils';
 import './ItemForm.css';
-import { parseDate } from './utils';
 
 class ItemForm extends Component {
     constructor(props) {
@@ -16,6 +16,10 @@ class ItemForm extends Component {
         };
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onDateKeyDown = this.onDateKeyDown.bind(this);
+        // cache pure stuff
+        this.gridPosition = cachePureFunction(this.gridPosition);
+        this.formStyle = cachePureFunction(this.formStyle);
+        this.seasonInputProps = { min: '1', max: '99' };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -53,12 +57,17 @@ class ItemForm extends Component {
         };
     }
 
+    formStyle(visible) {
+        return {
+            display: visible ? 'block' : 'none'
+        };
+    }
+
     render() {
         const { item } = this.state;
         const { visible } = this.props;
-        const display = visible ? 'block' : 'none';
         return (
-            <form noValidate autoComplete="off" className="ItemForm" style={{ display }}>
+            <form noValidate autoComplete="off" className="ItemForm" style={this.formStyle(visible)}>
                 <div className="ItemForm-grid">
                     <TextField
                         id="title"
@@ -95,7 +104,7 @@ class ItemForm extends Component {
                         id="lastWatched"
                         label="Last watched"
                         type="number"
-                        inputProps={{ min: '1', max: '99' }}
+                        inputProps={this.seasonInputProps}
                         onChange={this.onFieldChange}
                         value={item.lastWatched}
                         style={this.gridPosition(3, 1)}
@@ -104,7 +113,7 @@ class ItemForm extends Component {
                         id="inProgress"
                         label="In progress"
                         type="number"
-                        inputProps={{ min: '1', max: '99' }}
+                        inputProps={this.seasonInputProps}
                         onChange={this.onFieldChange}
                         value={item.inProgress}
                         style={this.gridPosition(3, 2)}

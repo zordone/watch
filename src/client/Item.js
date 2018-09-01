@@ -11,6 +11,7 @@ import * as selectors from './redux/selectors';
 import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import itemState from './itemState';
+import { anyChanged } from './utils';
 import './Item.css';
 
 const FORM = 'form';
@@ -46,6 +47,10 @@ class Item extends Component {
                 });
         }
         document.addEventListener('keyup', this.onKeyUp);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return anyChanged(['page', 'item'], this.state, nextState);
     }
 
     componentWillUnmount() {

@@ -24,6 +24,7 @@ class ItemDetails extends Component {
         this.state = {
             item: { ...service.defaultItem }
         };
+        this.checkableStates = [StateType.READY, StateType.PROGRESS, StateType.RECHECK];
     }
 
     componentWillReceiveProps(nextProps) {
@@ -47,9 +48,8 @@ class ItemDetails extends Component {
         const isMovie = item.type === ItemType.MOVIE;
         const isWaitingOrRecheck = [StateType.WAITING, StateType.RECHECK].includes(item.state.type);
         const nextSeasonNum = getNextSeasonNum(item);
-        // TODO: no buttons for new item
         if (item.state.type === StateType.FINISHED) {
-            return buttons;
+            return [];
         }
         if (isWaitingOrRecheck) {
             const name = isMovie ? 'Movie' : seasonCode(nextSeasonNum);
@@ -113,7 +113,7 @@ class ItemDetails extends Component {
         const isFinished = item.finished === FinishedType.YES;
         const inProgress = Boolean(item.inProgress);
         const title = encodeURIComponent(item.title);
-        const isCheckable = [StateType.READY, StateType.PROGRESS, StateType.RECHECK].includes(item.state.type);
+        const isCheckable = this.checkableStates.includes(item.state.type);
         const nextSeasonNum = getNextSeasonNum(item);
         const season = isMovie ? '' : ` season ${nextSeasonNum}`;
         // IMDb
