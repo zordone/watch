@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import ItemIcon from './ItemIcon';
-import StateLabel from './StateLabel';
-import { maxLength } from './utils';
+import ItemRow from './ItemRow';
 import './ItemTable.css';
 
 const ItemTable = props => {
@@ -31,26 +27,7 @@ const ItemTable = props => {
                 </TableHead>
                 <TableBody>
                     {items.map(item => (
-                        <TableRow key={item._id}>
-                            <TableCell className="ItemTable-skinny-col">
-                                <ItemIcon item={item} />
-                            </TableCell>
-                            <TableCell component="th" scope="row">{item.title}</TableCell>
-                            <TableCell>{item.genres.join(', ')}</TableCell>
-                            <TableCell><StateLabel state={item.state} /></TableCell>
-                            <TableCell>{maxLength(item.notes, 50)}</TableCell>
-                            <TableCell>{item.withVali}</TableCell>
-                            <TableCell className="ItemTable-skinny-col">
-                                <IconButton
-                                    key={`open-${item._id}`}
-                                    component={NavLink}
-                                    to={`/item/${item._id}`}
-                                    aria-label="Open item details"
-                                >
-                                    <i className="material-icons">input</i>
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
+                        <ItemRow key={item._id} item={item} />
                     ))}
                 </TableBody>
             </Table>

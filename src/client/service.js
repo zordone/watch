@@ -22,7 +22,7 @@ export const defaultItem = {
 
 const cleanArray = array =>
     array
-        .map(item => item.trim().toLowerCase())
+        .map(item => (item || '').trim().toLowerCase())
         .filter(item => item);
 
 const itemSearchData = (item, state) => ({
