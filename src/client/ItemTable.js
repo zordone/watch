@@ -13,6 +13,9 @@ const ItemTable = props => {
     const { items, onRowClick, currentId } = props;
     return (
         <Paper className="ItemTable-paper">
+            <div className="ItemTable-fixedHeader">
+                <div className="ItemTable-fixedHeaderShadow" />
+            </div>
             <Table className="ItemTable">
                 <TableHead className="ItemTable-head">
                     <TableRow>

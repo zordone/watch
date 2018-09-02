@@ -15,7 +15,7 @@ const Poster = ({ item, onPosterSearch }) => {
             <ItemIcon className="Poster-fallback" item={item} />
             <div className="Poster-image" style={style} />
             <IconButton className="Poster-search" aria-label="Poster search" onClick={onPosterSearch}>
-                <i className="material-icons">search</i>
+                <i className="material-icons">cloud_download</i>
             </IconButton>
         </div>
     );

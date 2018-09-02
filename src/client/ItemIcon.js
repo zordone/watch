@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ItemType } from '../common/enums';
 
 const ItemIcon = ({ item }) => (
-    <i className="ItemIcon material-icons">
+    <i className={`ItemIcon material-icons ${item.type}`}>
         {item.type === ItemType.MOVIE ? 'movie_creation' : 'live_tv'}
     </i>
 );

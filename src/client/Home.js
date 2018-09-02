@@ -11,6 +11,7 @@ import * as selectors from './redux/selectors';
 import SearchField from './SearchField';
 import Loader from './Loader';
 import { anyChanged } from './utils';
+import fixedHeaderWorkaround from './fixedHeader';
 import packageJson from '../../package.json';
 import './Home.css';
 
@@ -24,6 +25,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        fixedHeaderWorkaround();
         const { fetchItems, items, search } = this.props;
         const isFetched = Boolean(items.length);
         const itemsPromise = isFetched
