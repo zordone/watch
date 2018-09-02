@@ -163,14 +163,14 @@ class ItemDetails extends Component {
 
     render() {
         const { item, buttons, links } = this.state;
-        const { visible } = this.props;
+        const { visible, onPosterSearch } = this.props;
         const display = visible ? 'block' : 'none';
         const stateLabel = <StateLabel state={item.state} />;
         return (
             <div className="ItemDetails" style={{ display }}>
                 <div className="ItemDetails-grid">
                     <div className="ItemDetails-sidebar">
-                        <Poster item={item} />
+                        <Poster item={item} onPosterSearch={onPosterSearch} />
                         {buttons}
                     </div>
                     <div className="ItemDetails-fields">
@@ -191,11 +191,13 @@ class ItemDetails extends Component {
 ItemDetails.propTypes = {
     item: PropTypes.shape({}).isRequired,
     onChange: PropTypes.func.isRequired,
+    onPosterSearch: PropTypes.func,
     visible: PropTypes.bool
 };
 
 ItemDetails.defaultProps = {
-    visible: true
+    visible: true,
+    onPosterSearch: () => {}
 };
 
 export default ItemDetails;

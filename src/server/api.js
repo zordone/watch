@@ -1,6 +1,9 @@
 const _ = require('lodash');
+const Scraper = require('images-scraper');
 const { Item } = require('./models');
 const { importCsv } = require('./importCsv');
+
+const between = (value, min, max) => (min <= value && value <= max);
 
 const removeAllItems = () =>
     Item.remove({})
@@ -119,5 +122,43 @@ exports.updateItemById = (req, res) => {
         .catch(err => {
             console.error('[UpdateItemById]', err);
             res.sendStatus(500);
+        });
+};
+
+exports.searchImages = (req, res) => {
+    const { query } = req.params;
+    console.log('[SearchImages] Search:', query);
+    const google = new Scraper.Google();
+    const params = {
+        keyword: query,
+        num: 20,
+        rlimit: 10,
+        detail: true,
+        advanced: {
+            resolution: 'm'
+        },
+        nightmare: {
+            show: false
+        }
+    };
+    google.list(params)
+        .then(images => {
+            const filtered = images
+                .map(image => {
+                    const { width, height, url } = image;
+                    const ratio = width / height;
+                    return { width, height, ratio, url };
+                })
+                .filter(image => (
+                    between(image.width, 150, 600) &&
+                    between(image.height, 200, 800) &&
+                    between(image.ratio, 0.7, 0.8)
+                ));
+            console.log('[SearchImages] Filtered:', filtered.length);
+            res.send(filtered);
+        })
+        .catch(err => {
+            console.log('[SearchImages]', err);
+            res.status(500).send(err.message || 'Unknown scraper error');
         });
 };

@@ -4,9 +4,10 @@
 
 .Item .Item-paper {
     padding: 1rem;
-    width: 800px;
+    width: 850px;
     margin: 0 auto;
     position: relative;
+    box-sizing: border-box;
 }
 
 .Item .Item-buttons {
@@ -21,4 +22,10 @@
     top: 1rem;
     right: 1rem;
     position: absolute;
+}
+
+.Item .PosterSearch {
+    width: 850px;
+    margin: 1rem auto;
+    position: relative;
 }

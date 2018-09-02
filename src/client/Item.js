@@ -12,6 +12,7 @@ import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import itemState from './itemState';
 import { anyChanged } from './utils';
+import PosterSearch from './PosterSearch';
 import './Item.css';
 
 const FORM = 'form';
@@ -22,7 +23,12 @@ class Item extends Component {
         super(props);
         this.state = {
             item: { ...service.defaultItem },
-            page: DETAILS
+            page: DETAILS,
+            posters: {
+                visible: false,
+                searching: false,
+                images: []
+            }
         };
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
@@ -30,6 +36,8 @@ class Item extends Component {
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onShowForm = this.onShowForm.bind(this);
         this.onShowDetails = this.onShowDetails.bind(this);
+        this.onPosterSearch = this.onPosterSearch.bind(this);
+        this.onPosterSelect = this.onPosterSelect.bind(this);
     }
 
     componentDidMount() {
@@ -50,7 +58,7 @@ class Item extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return anyChanged(['page', 'item'], this.state, nextState);
+        return anyChanged(['page', 'item', 'posters'], this.state, nextState);
     }
 
     componentWillUnmount() {
@@ -107,12 +115,42 @@ class Item extends Component {
         this.setState({ page: DETAILS });
     }
 
+    onPosterSearch() {
+        const { item } = this.state;
+        this.setState({
+            posters: { visible: true, searching: true, images: [] }
+        });
+        const query = `${item.title} ${item.type} poster portrait official`;
+        service.searchImages(query)
+        // service.mockSearchImages(3000)
+            .then(images => {
+                this.setState({
+                    posters: { visible: true, searching: false, images }
+                });
+            });
+    }
+
+    onPosterSelect(url) {
+        const { item } = this.state;
+        if (url) {
+            this.onChange({ ...item, posterUrl: url });
+        }
+        this.setState({
+            posters: { visible: false, searching: false, images: [] }
+        });
+    }
+
     render() {
-        const { item, page } = this.state;
+        const { item, page, posters } = this.state;
         return (
             <div className="Item">
                 <Paper className="Item-paper">
-                    <ItemDetails item={item} onChange={this.onChange} visible={page === DETAILS} />
+                    <ItemDetails
+                        item={item}
+                        onChange={this.onChange}
+                        visible={page === DETAILS}
+                        onPosterSearch={this.onPosterSearch}
+                    />
                     <ItemForm item={item} onChange={this.onChange} visible={page === FORM} />
                     <div className="Item-buttons">
                         <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
@@ -129,6 +167,7 @@ class Item extends Component {
                         </IconButton>
                     )}
                 </Paper>
+                <PosterSearch {...posters} onSelect={this.onPosterSelect} />
             </div>
         );
     }
