@@ -146,10 +146,10 @@ class ItemDetails extends Component {
             const query = encodeURIComponent(`${item.title}${season} trailer`);
             addLink(`${name} trailer`, `https://www.youtube.com/results?search_query=${query}`);
         }
-        // Poster image
+        // Poster search
         if (!item.posterUrl) {
             const query = encodeURIComponent(`${item.title} ${item.type} poster`);
-            addLink('Poster search', `https://www.google.hu/search?q=${query}&tbm=isch`);
+            addLink('Poster search', `https://www.google.hu/search?q=${query}&tbm=isch&tbs=isz:m`);
         }
         return links;
     }
