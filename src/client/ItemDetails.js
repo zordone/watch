@@ -60,7 +60,9 @@ class ItemDetails extends Component {
                 });
             });
             addButton('Check a month later', () => {
-                this.updateItem({ nextDate: inputDateAddMonth(item.nextDate, 1) });
+                const today = parseDate(new Date()).input;
+                const date = today > item.nextDate ? today : item.nextDate;
+                this.updateItem({ nextDate: inputDateAddMonth(date, 1) });
             });
             if (!isMovie) {
                 addButton('Finished the show', () => {
