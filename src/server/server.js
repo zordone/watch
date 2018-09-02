@@ -1,14 +1,16 @@
 const express = require('express');
 const api = require('./api');
 const db = require('./database');
+const { PORT } = require('./config');
 
-const PORT = 3001;
+db.connect()
+    // TODO: when the server will be running non-stop, this won't be enough.
+    // we should do daily backups.
+    .then(() => api.adminBackup({ isAutoBackup: true }));
 
-db.connect();
-
+// middleware
 const app = express();
 app.use(express.json());
-
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -18,6 +20,7 @@ app.use((req, res, next) => {
 
 // admin
 app.get('/admin/import', api.adminImport);
+app.get('/admin/backup', api.adminBackup);
 
 // client
 app.get('/items', api.listItems);
