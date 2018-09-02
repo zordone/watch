@@ -62,6 +62,16 @@
     overflow-x: scroll;
 }
 
+.PosterSearch-images::-webkit-scrollbar {
+    background: none;
+    height: 0.5rem;
+}
+
+.PosterSearch-images::-webkit-scrollbar-thumb {
+    background: #FFF2;
+    border-radius: 0.25rem;
+}
+
 .PosterSearch-poster {
     position: relative;
     background: none;
@@ -104,8 +114,9 @@
 .PosterSearch-fade {
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: 0.5rem;
     width: 3rem;
+    pointer-events: none;
 }
 
 .PosterSearch-fade.left {

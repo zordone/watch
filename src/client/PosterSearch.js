@@ -2,19 +2,32 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import './PosterSearch.css';
-import { IconButton } from '@material-ui/core';
 
 class PosterSearch extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            failedUrls: []
+        };
+        this.onFailedImage = this.onFailedImage.bind(this);
+    }
+
+    onFailedImage(event) {
+        const { failedUrls } = this.state;
+        const url = event.target.attributes.src.value;
+        this.setState({
+            failedUrls: [...failedUrls, url]
+        });
+    }
+
     render() {
         const { visible, searching, images, onSelect } = this.props;
+        const { failedUrls } = this.state;
         if (!visible) {
             return null;
         }
-        const closeButton = (
-            <IconButton className="PosterSearch-close" aria-label="Close posters" onClick={() => onSelect(null)}>
-                <i className="material-icons">close</i>
-            </IconButton>
-        );
+        const filteredImages = images
+            .filter(image => !failedUrls.includes(image.url));
         return (
             <Paper className="PosterSearch">
                 {searching && (
@@ -22,25 +35,28 @@ class PosterSearch extends PureComponent {
                         <div className="PosterSearch-searching-bg" />
                         <i className="material-icons">cloud_download</i>
                         <span>Searching for poster images...</span>
-                        {closeButton}
                     </div>
                 )}
-                {!searching && images.length === 0 && (
+                {!searching && filteredImages.length === 0 && (
                     <div className="PosterSearch-notfound">
                         No suitable posters found.
-                        {closeButton}
                     </div>
                 )}
-                {!searching && images.length > 0 && (
+                {!searching && filteredImages.length > 0 && (
                     <div className="PosterSearch-images">
-                        {images.map(image => (
-                            <button key={image.url} type="button" className="PosterSearch-poster" onClick={() => onSelect(image.url)}>
-                                <img src={image.url} alt="Poster" />
-                            </button>
-                        ))}
+                        {filteredImages
+                            .map(image => (
+                                <button key={image.url} type="button" className="PosterSearch-poster" onClick={() => onSelect(image.url)}>
+                                    <img
+                                        src={image.url}
+                                        alt="Poster"
+                                        onError={this.onFailedImage}
+                                    />
+                                </button>
+                            ))
+                        }
                         <div className="PosterSearch-fade left" />
                         <div className="PosterSearch-fade right" />
-                        {closeButton}
                     </div>
                 )}
             </Paper>
