@@ -4,7 +4,8 @@ const initialState = {
     items: [],
     filteredItems: [],
     search: '',
-    firstLoad: true
+    firstLoad: true,
+    currentId: ''
 };
 
 export default (state = initialState, action) => {
@@ -36,6 +37,11 @@ export default (state = initialState, action) => {
         return {
             ...state,
             firstLoad: action.firstLoad
+        };
+    case types.SET_CURRENT_ID:
+        return {
+            ...state,
+            currentId: action.currentId
         };
     default:
         return state;

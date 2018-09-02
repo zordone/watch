@@ -1,0 +1,8 @@
+.ItemRow.current {
+    animation: show-current 1s ease-out 1;
+}
+
+@keyframes show-current {
+    0%   { background: #00a9ff; }
+    100% { background: inherit; }
+}

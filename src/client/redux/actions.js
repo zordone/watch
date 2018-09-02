@@ -39,3 +39,8 @@ export const setFirstLoad = firstLoad => ({
     type: types.SET_FIRST_LOAD,
     firstLoad
 });
+
+export const setCurrentId = currentId => ({
+    type: types.SET_CURRENT_ID,
+    currentId
+});

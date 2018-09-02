@@ -10,7 +10,7 @@ import ItemRow from './ItemRow';
 import './ItemTable.css';
 
 const ItemTable = props => {
-    const { items, onRowClick } = props;
+    const { items, onRowClick, currentId } = props;
     return (
         <Paper className="ItemTable-paper">
             <Table className="ItemTable">
@@ -26,7 +26,12 @@ const ItemTable = props => {
                 </TableHead>
                 <TableBody>
                     {items.map(item => (
-                        <ItemRow key={item._id} item={item} onClick={onRowClick} />
+                        <ItemRow
+                            key={item._id}
+                            item={item}
+                            onClick={onRowClick}
+                            isCurrent={item._id === currentId}
+                        />
                     ))}
                 </TableBody>
             </Table>
@@ -36,11 +41,13 @@ const ItemTable = props => {
 
 ItemTable.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
+    currentId: PropTypes.string,
     onRowClick: PropTypes.func
 };
 
 ItemTable.defaultProps = {
     items: [],
+    currentId: null,
     onRowClick: () => {}
 };
 

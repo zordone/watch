@@ -1,3 +1,5 @@
+/* globals document */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -36,6 +38,17 @@ class Home extends Component {
 
     shouldComponentUpdate(nextProps) {
         return anyChanged(['search', 'filteredItems'], this.props, nextProps);
+    }
+
+    componentDidUpdate() {
+        const { currentId, setCurrentId } = this.props;
+        if (currentId) {
+            const currentRow = document.querySelector('.ItemRow.current');
+            if (currentRow) {
+                currentRow.scrollIntoViewIfNeeded();
+            }
+        }
+        setCurrentId('');
     }
 
     componentWillUnmount() {
@@ -83,12 +96,13 @@ class Home extends Component {
     }
 
     onRowClick(id) {
-        const { history } = this.props;
+        const { history, setCurrentId } = this.props;
+        setCurrentId(id);
         history.push(`/item/${id}`);
     }
 
     render() {
-        const { filteredItems, firstLoad, search } = this.props;
+        const { filteredItems, firstLoad, search, currentId } = this.props;
         const searchField = (
             <SearchField
                 onChange={this.onSearchChanged}
@@ -105,7 +119,11 @@ class Home extends Component {
             <div className="Home">
                 <Header {...{ searchField, newButton }} />
                 <main>
-                    <ItemTable items={filteredItems} onRowClick={this.onRowClick} />
+                    <ItemTable
+                        items={filteredItems}
+                        currentId={currentId}
+                        onRowClick={this.onRowClick}
+                    />
                     <div className="Home-footer">
                         <span>{filteredItems.length} item{filteredItems.length === 1 ? '' : 's'}</span>
                         <span>v{packageJson.version}</span>
@@ -131,13 +149,15 @@ const mapStateToProps = state => ({
     items: selectors.getItems(state),
     search: selectors.getSearch(state),
     filteredItems: selectors.getFilteredItems(state),
-    firstLoad: selectors.getFirstLoad(state)
+    firstLoad: selectors.getFirstLoad(state),
+    currentId: selectors.getCurrentId(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchItems: () => dispatch(actions.fetchItems()),
     setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
-    setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad))
+    setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
+    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId))
 });
 
 export default connect(
