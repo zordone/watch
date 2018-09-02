@@ -18,6 +18,7 @@ class Home extends Component {
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
+        this.onRowClick = this.onRowClick.bind(this);
     }
 
     componentDidMount() {
@@ -81,6 +82,11 @@ class Home extends Component {
         history.push('/item/new');
     }
 
+    onRowClick(id) {
+        const { history } = this.props;
+        history.push(`/item/${id}`);
+    }
+
     render() {
         const { filteredItems, firstLoad, search } = this.props;
         const searchField = (
@@ -99,7 +105,7 @@ class Home extends Component {
             <div className="Home">
                 <Header {...{ searchField, newButton }} />
                 <main>
-                    <ItemTable items={filteredItems} />
+                    <ItemTable items={filteredItems} onRowClick={this.onRowClick} />
                     <div className="Home-footer">
                         <span>{filteredItems.length} item{filteredItems.length === 1 ? '' : 's'}</span>
                         <span>v{packageJson.version}</span>

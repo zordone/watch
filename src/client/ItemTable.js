@@ -10,7 +10,7 @@ import ItemRow from './ItemRow';
 import './ItemTable.css';
 
 const ItemTable = props => {
-    const { items } = props;
+    const { items, onRowClick } = props;
     return (
         <Paper className="ItemTable-paper">
             <Table className="ItemTable">
@@ -22,12 +22,11 @@ const ItemTable = props => {
                         <TableCell>State</TableCell>
                         <TableCell>Notes</TableCell>
                         <TableCell>Vali</TableCell>
-                        <TableCell className="ItemTable-skinny-col" />
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {items.map(item => (
-                        <ItemRow key={item._id} item={item} />
+                        <ItemRow key={item._id} item={item} onClick={onRowClick} />
                     ))}
                 </TableBody>
             </Table>
@@ -36,11 +35,13 @@ const ItemTable = props => {
 };
 
 ItemTable.propTypes = {
-    items: PropTypes.arrayOf(PropTypes.object)
+    items: PropTypes.arrayOf(PropTypes.object),
+    onRowClick: PropTypes.func
 };
 
 ItemTable.defaultProps = {
-    items: []
+    items: [],
+    onRowClick: () => {}
 };
 
 export default ItemTable;
