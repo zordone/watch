@@ -3,8 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, Paper } from '@material-ui/core';
 import * as service from './service';
 import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';

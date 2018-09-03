@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import { TableRow, TableCell } from '@material-ui/core';
 import ItemIcon from './ItemIcon';
 import StateLabel from './StateLabel';
 import { maxLength } from './utils';
