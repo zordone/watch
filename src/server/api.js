@@ -157,6 +157,19 @@ exports.updateItemById = (req, res) => {
         });
 };
 
+exports.deleteItemById = (req, res) => {
+    const { id } = req.params;
+    Item.deleteOne({ _id: id })
+        .then(() => {
+            console.log('[DeleteItemById] Deleted:', id);
+            res.sendStatus(200);
+        })
+        .catch(err => {
+            console.error('[DeleteItemById]', err);
+            res.sendStatus(404);
+        });
+};
+
 exports.searchImages = (req, res) => {
     const { query } = req.params;
     console.log('[SearchImages] Search:', query);

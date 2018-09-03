@@ -27,6 +27,7 @@ app.get('/items', api.listItems);
 app.post('/items', api.newItem);
 app.get('/items/:id', api.getItemById);
 app.put('/items/:id', api.updateItemById);
+app.delete('/items/:id', api.deleteItemById);
 app.get('/searchimages/:query', api.searchImages);
 
 // ...
