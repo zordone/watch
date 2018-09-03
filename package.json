@@ -68,7 +68,8 @@
         "server": "node ./src/server/server.js",
         "lint": "./node_modules/eslint/bin/eslint.js ./src",
         "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
-        "start-all": "node scripts/start-all.js"
+        "start-all": "node scripts/start-all.js",
+        "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css"
     },
     "jest": {
         "collectCoverageFrom": [
