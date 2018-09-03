@@ -120,20 +120,21 @@ class ItemDetails extends Component {
         const season = isMovie ? '' : ` season ${nextSeasonNum}`;
         // IMDb
         if (item.imdbId) {
-            addLink('IMDb page', `http://www.imdb.com/title/${item.imdbId}/?ref_=fn_tv_tt_1`);
+            addLink('IMDb', `http://www.imdb.com/title/${item.imdbId}/?ref_=fn_tv_tt_1`);
         } else {
             const params = isMovie ? '&s=tt&ttype=ft' : '&s=tt&ttype=tv&ref_=fn_tv';
             addLink('IMDb search', `http://www.imdb.com/find?q=${title}${params}`);
         }
-        // Subtitles
+        // Subtitles & Port.hu
         if (isCheckable && item.withVali !== ValiType.NO) {
-            addLink('Subtitle search', `https://www.feliratok.info/?search=${title}&nyelv=Magyar`);
+            addLink('Subtitles', `https://www.feliratok.info/?search=${title}&nyelv=Magyar`);
+            addLink('Port.hu', `https://port.hu/kereso?q=${title}&type=movie`); // always "movie"
         }
         // Torrent
         if (isCheckable) {
             const query = encodeURIComponent(`${item.title}${season}`);
             const type = isMovie ? 'movies' : 'tv';
-            addLink('Torrent search', `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
+            addLink('Torrents', `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
         }
         // Youtube recap
         if (!isFinished && !inProgress && !isMovie && item.lastWatched) {
@@ -149,7 +150,7 @@ class ItemDetails extends Component {
         // Poster search
         if (!item.posterUrl) {
             const query = encodeURIComponent(`${item.title} ${item.type} poster`);
-            addLink('Poster search', `https://www.google.hu/search?q=${query}&tbm=isch&tbs=isz:m`);
+            addLink('Posters', `https://www.google.hu/search?q=${query}&tbm=isch&tbs=isz:m`);
         }
         return links;
     }
