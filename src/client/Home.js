@@ -39,18 +39,8 @@ class Home extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        this.scrollToCurrent();
         return anyChanged(['search', 'filteredItems'], this.props, nextProps);
-    }
-
-    componentDidUpdate() {
-        const { currentId, setCurrentId } = this.props;
-        if (currentId) {
-            const currentRow = document.querySelector('.ItemRow.current');
-            if (currentRow) {
-                currentRow.scrollIntoViewIfNeeded();
-            }
-        }
-        setCurrentId('');
     }
 
     componentWillUnmount() {
@@ -63,6 +53,7 @@ class Home extends Component {
         const searchWords = search.split(' ').map(word => word.trim()).filter(word => word);
         if (!searchWords.length) {
             setSearch('', items);
+            this.scrollToCurrent();
             return;
         }
         const filteredItems = items.filter(item => (
@@ -101,6 +92,17 @@ class Home extends Component {
         const { history, setCurrentId } = this.props;
         setCurrentId(id);
         history.push(`/item/${id}`);
+    }
+
+    scrollToCurrent() {
+        const { currentId, setCurrentId } = this.props;
+        if (currentId) {
+            const currentRow = document.querySelector('.ItemRow.current');
+            if (currentRow) {
+                currentRow.scrollIntoViewIfNeeded();
+            }
+        }
+        setCurrentId('');
     }
 
     render() {

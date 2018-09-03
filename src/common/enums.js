@@ -42,7 +42,7 @@ const SearchKeywords = Object.freeze({
     VALI: 'vali',
     CSABA: 'csaba',
     NOPOSTER: 'noposter',
-    NOIMDB: 'noimbdb'
+    NOIMDB: 'noimdb'
 });
 
 exports.ItemType = ItemType;

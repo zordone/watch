@@ -175,6 +175,7 @@ exports.searchImages = (req, res) => {
     };
     google.list(params)
         .then(images => {
+            console.log('[SearchImages] Found:', images.length);
             const filtered = images
                 .map(image => {
                     const { width, height, url } = image;
@@ -182,9 +183,9 @@ exports.searchImages = (req, res) => {
                     return { width, height, ratio, url };
                 })
                 .filter(image => (
-                    between(image.width, 150, 600) &&
-                    between(image.height, 200, 800) &&
-                    between(image.ratio, 0.7, 0.8)
+                    between(image.width, 150, 900) &&
+                    between(image.height, 200, 1200) &&
+                    between(image.ratio, 0.65, 0.85)
                 ));
             console.log('[SearchImages] Filtered:', filtered.length);
             res.send(filtered);

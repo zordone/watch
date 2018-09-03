@@ -67,4 +67,5 @@
   background: linear-gradient(to bottom, #000F 0%, #000B 5%, #0004 30%, transparent 100%);
   bottom: -30px;
   opacity: 0.4;
+  pointer-events: none;
 }
