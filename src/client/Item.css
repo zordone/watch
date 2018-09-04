@@ -29,3 +29,13 @@
     margin: 1rem auto;
     position: relative;
 }
+
+.Item .Item-error {
+    margin-bottom: 0;
+    color: red;
+    text-align: center;
+    background: #F444;
+    padding: 0.5rem;
+    border-radius: 4px;
+    text-shadow: 0 0 4px black;
+}

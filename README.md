@@ -12,3 +12,6 @@ An app to keep track of the movies and shows I'm interested in.
 * Start backend: `npm run server`
 * Start frontend: `npm start`
 * Start all in one: `npm run start-all`
+
+# Mongo DB data folder:
+`/data/db`

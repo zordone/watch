@@ -103,7 +103,13 @@ export const updateItemById = (id, item) => {
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items/${id}`, opts)
-        .then(res => res.json())
+        .then(res => (
+            res.ok
+                ? res.json()
+                : res.text().then(err => {
+                    throw new Error(err);
+                })
+        ))
         .then(parseItem);
 };
 

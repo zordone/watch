@@ -27,7 +27,8 @@ class Item extends Component {
                 visible: false,
                 searching: false,
                 images: []
-            }
+            },
+            error: ''
         };
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
@@ -57,7 +58,7 @@ class Item extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return anyChanged(['page', 'item', 'posters'], this.state, nextState);
+        return anyChanged(['page', 'item', 'posters', 'error'], this.state, nextState);
     }
 
     componentWillUnmount() {
@@ -97,7 +98,7 @@ class Item extends Component {
             })
             .catch(err => {
                 console.error('Updating item failed.', err);
-                // TODO: show error message
+                this.setState({ error: err.message });
             });
     }
 
@@ -140,7 +141,7 @@ class Item extends Component {
     }
 
     render() {
-        const { item, page, posters } = this.state;
+        const { item, page, posters, error } = this.state;
         return (
             <div className="Item">
                 <Paper className="Item-paper">
@@ -151,6 +152,9 @@ class Item extends Component {
                         onPosterSearch={this.onPosterSearch}
                     />
                     <ItemForm item={item} onChange={this.onChange} visible={page === FORM} />
+                    {error && (
+                        <p className="Item-error">{error}</p>
+                    )}
                     <div className="Item-buttons">
                         <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
                         <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>
