@@ -50,7 +50,7 @@ class GenreField extends PureComponent {
 
     render() {
         const { onChange, className, classes, ...rest } = this.props;
-        // TODO: seems like autocomplete is not working (1.0.0-beta)
+        // TODO: seems like autocomplete is not working (1.0.0-beta.6)
         return (
             <ChipInput
                 onAdd={this.onAddGenre}
