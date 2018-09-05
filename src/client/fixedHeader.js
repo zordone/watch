@@ -9,13 +9,13 @@
  * The only way I could solve this is to:
  * - Make a separate header div, position over the original header.
  * - Create cell divs in it, by copying attributes from the original header cells.
- * - Put ResizeObservers on the original header and when it resizes,
+ * - Put ResizeObservers on the original header cells and when they resize,
  *   update the copied cell widths according the original cell widths.
  */
 
 const fixedHeaderWorkaround = () => {
-    const fragment = document.createDocumentFragment();
     const cells = document.querySelectorAll('.ItemTable-head th');
+    const fragment = document.createDocumentFragment();
     const copies = [];
     cells.forEach(cell => {
         const copy = document.createElement('div');
@@ -31,7 +31,7 @@ const fixedHeaderWorkaround = () => {
             copies[index].style.width = `${cell.clientWidth}px`;
         });
     });
-    observer.observe(header);
+    cells.forEach(cell => observer.observe(cell));
 };
 
 export default fixedHeaderWorkaround;
