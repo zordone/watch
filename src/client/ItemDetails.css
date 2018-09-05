@@ -12,12 +12,6 @@
     font-weight: 600;
 }
 
-.ItemDetails-state.ItemDetails-value {
-    margin-bottom: 0.5rem;
-    color: lime;
-    font-weight: 600;
-}
-
 .ItemDetails-grid {
     display: grid;
     grid-template-columns: 0fr 1fr;

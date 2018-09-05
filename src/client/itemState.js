@@ -49,7 +49,7 @@ const itemState = item => {
             if (item.nextType === NextType.AVAILABLE) {
                 return state(StateType.WAITING, ['Waiting. Will be available on ', nextDate.display, '.']);
             }
-            return state(StateType.WAITING, ['Waiting. Next recheck on ', nextDate.display, '.']);
+            return state(StateType.WAITING, ['Waiting. Recheck on ', nextDate.display, '.']);
         }
     }
 
@@ -78,13 +78,13 @@ const itemState = item => {
         }
         if (hasDate && !isActual) {
             if (item.nextType === NextType.START) {
-                return state(StateType.WAITING, ['Waiting. ', nextSeason, ' will start on ', nextDate.display, '.']);
+                return state(StateType.WAITING, ['Waiting for ', nextSeason, '. Will start on ', nextDate.display, '.']);
             }
             if (item.nextType === NextType.END) {
-                return state(StateType.WAITING, ['Waiting. ', nextSeason, ' will end on ', nextDate.display, '.']);
+                return state(StateType.WAITING, ['Waiting for ', nextSeason, '. Will end on ', nextDate.display, '.']);
             }
             if (item.nextType === NextType.RECHECK) {
-                return state(StateType.WAITING, ['Waiting. ', 'Next recheck on ', nextDate.display, '.']);
+                return state(StateType.WAITING, ['Waiting for ', nextSeason, '. Recheck on ', nextDate.display, '.']);
             }
         }
     }
