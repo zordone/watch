@@ -6,10 +6,11 @@ import './ItemTable.css';
 
 const ItemTable = props => {
     const { items, onRowClick, currentId } = props;
+    const isEmpty = items.length === 0;
     return (
         <Paper className="ItemTable-paper">
             <div className="ItemTable-fixedHeader">
-                <div className="ItemTable-fixedHeaderShadow" />
+                {!isEmpty && <div className="ItemTable-fixedHeaderShadow" />}
             </div>
             <Table className="ItemTable">
                 <TableHead className="ItemTable-head">
