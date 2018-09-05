@@ -35,7 +35,7 @@ class GenreField extends PureComponent {
     }
 
     render() {
-        const { onChange, className, style, ...rest } = this.props;
+        const { onChange, className, style, maxGenres, ...rest } = this.props;
         return (
             <ChipInputAutoComplete
                 onAdd={this.onAddGenre}
@@ -43,6 +43,7 @@ class GenreField extends PureComponent {
                 dataSource={data.genres}
                 className={`GenreField ${className}`}
                 containerStyle={style}
+                maxChips={maxGenres}
                 {...rest}
             />
         );
@@ -55,6 +56,7 @@ GenreField.propTypes = {
     style: PropTypes.shape({}),
     label: PropTypes.string,
     value: PropTypes.arrayOf(PropTypes.string).isRequired,
+    maxGenres: PropTypes.number,
     onChange: PropTypes.func
 };
 
@@ -63,6 +65,7 @@ GenreField.defaultProps = {
     className: '',
     style: {},
     label: undefined,
+    maxGenres: 5,
     onChange: () => {}
 };
 

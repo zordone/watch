@@ -90,6 +90,7 @@ class ItemForm extends Component {
                         label="Genres"
                         onChange={this.onFieldChange}
                         value={item.genres}
+                        maxGenres={4}
                         style={this.gridPosition(2, 2, 3)}
                     />
                     <SelectField

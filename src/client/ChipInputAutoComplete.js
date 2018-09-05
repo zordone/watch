@@ -83,12 +83,13 @@ class ChipInputAutoComplete extends PureComponent {
     }
 
     onSuggestionsFetchRequested(options) {
-        const { dataSource, value } = this.props;
+        const { dataSource, value, maxChips } = this.props;
         const prefix = options.value.toLowerCase();
         this.setState({
             suggestions: dataSource.filter(item => (
                 item.toLowerCase().startsWith(prefix) &&
-                !value.includes(item)
+                !value.includes(item) &&
+                value.length < maxChips
             ))
         });
     }
@@ -191,6 +192,7 @@ ChipInputAutoComplete.propTypes = {
     value: PropTypes.arrayOf(PropTypes.string).isRequired,
     dataSource: PropTypes.arrayOf(PropTypes.string),
     containerStyle: PropTypes.shape({}),
+    maxChips: PropTypes.number,
     onAdd: PropTypes.func,
     onDelete: PropTypes.func
 };
@@ -198,6 +200,7 @@ ChipInputAutoComplete.propTypes = {
 ChipInputAutoComplete.defaultProps = {
     dataSource: [],
     containerStyle: {},
+    maxChips: 5,
     onAdd: () => {},
     onDelete: () => {}
 };
