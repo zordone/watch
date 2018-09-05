@@ -30,6 +30,11 @@
     margin-right: 1rem;
 }
 
+.ItemDetails .nolink {
+    color: #FFF8;
+    margin-right: 1rem;
+}
+
 .ItemDetails a:hover {
     color: #FFF;
 }

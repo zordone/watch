@@ -109,7 +109,9 @@ class ItemDetails extends Component {
     getLinks(item) {
         const links = [];
         const addLink = (label, url) => links.push(
-            <a key={label} href={url} target="_blank" rel="noopener noreferrer">{label}</a>
+            url
+                ? <a key={label} href={url} target="_blank" rel="noopener noreferrer">{label}</a>
+                : <span key={label} className="nolink">{label}</span>
         );
         const isMovie = item.type === ItemType.MOVIE;
         const isFinished = item.finished === FinishedType.YES;
@@ -120,7 +122,11 @@ class ItemDetails extends Component {
         const season = isMovie ? '' : ` season ${nextSeasonNum}`;
         // IMDb
         if (item.imdbId) {
-            addLink('IMDb', `http://www.imdb.com/title/${item.imdbId}/?ref_=fn_tv_tt_1`);
+            if (['#', 'none'].includes(item.imdbId)) {
+                addLink('No IMDb');
+            } else {
+                addLink('IMDb', `http://www.imdb.com/title/${item.imdbId}/?ref_=fn_tv_tt_1`);
+            }
         } else {
             const params = isMovie ? '&s=tt&ttype=ft' : '&s=tt&ttype=tv&ref_=fn_tv';
             addLink('IMDb search', `http://www.imdb.com/find?q=${title}${params}`);
