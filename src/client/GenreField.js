@@ -1,22 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import ChipInput from 'material-ui-chip-input';
 import _ from 'lodash';
+import ChipInputAutoComplete from './ChipInputAutoComplete';
 import data from '../common/data.json';
-
-const styles = {
-    chipContainer: {
-        minHeight: 'unset',
-        // without the important, a `.chipContainer.labeled` class overrides this to 18.
-        marginTop: '16px !important',
-        display: 'inline-flex',
-        overflow: 'scroll'
-    },
-    chip: {
-        height: '26px'
-    }
-};
 
 class GenreField extends PureComponent {
     constructor(props) {
@@ -49,15 +35,14 @@ class GenreField extends PureComponent {
     }
 
     render() {
-        const { onChange, className, classes, ...rest } = this.props;
-        // TODO: seems like autocomplete is not working (1.0.0-beta.6)
+        const { onChange, className, style, ...rest } = this.props;
         return (
-            <ChipInput
+            <ChipInputAutoComplete
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
                 dataSource={data.genres}
                 className={`GenreField ${className}`}
-                classes={classes}
+                containerStyle={style}
                 {...rest}
             />
         );
@@ -81,4 +66,4 @@ GenreField.defaultProps = {
     onChange: () => {}
 };
 
-export default withStyles(styles)(GenreField);
+export default GenreField;
