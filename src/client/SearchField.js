@@ -98,7 +98,7 @@ class SearchField extends PureComponent {
                             root: 'SearchField-input',
                             focused: 'focused'
                         },
-                        spellcheck: false
+                        spellCheck: false
                     }}
                     fullWidth
                 />

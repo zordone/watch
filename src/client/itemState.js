@@ -88,7 +88,9 @@ const itemState = item => {
             }
         }
     }
-
+    if (item._id === 'new') {
+        return state(StateType.RECHECK, ['New.']);
+    }
     console.error('Unkown state', item);
     return state(StateType.RECHECK, ['Time to recheck.']);
 };

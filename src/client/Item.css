@@ -12,6 +12,7 @@
 
 .Item .Item-buttons {
     text-align: center;
+    position: relative;
 }
 
 .Item .Item-button {
@@ -38,4 +39,60 @@
     padding: 0.5rem;
     border-radius: 4px;
     text-shadow: 0 0 4px black;
+}
+
+.Item-button.delete {
+    position: absolute;
+    right: 0;
+    margin-right: 0;
+    min-width: 0;
+    background: #F00A;
+    color: #FFFA;
+    overflow: hidden;
+}
+
+.Item-button.delete:hover {
+    background: #F00;
+    color: #FFF;
+}
+
+.Item-button.delete .title {
+    width: 0;
+    transition: width 0.4s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.Item-button.delete.sure .title {
+    width: 118px;
+}
+
+.Item-button.delete svg {
+    height: 19px;
+    transform: scale(1.5) translateY(-1px);
+}
+
+.Item-button.delete .timeout {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    background: #F88;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.Item-button.delete.sure .timeout {
+    transition: opacity 0.4s ease-in-out;
+    opacity: 1;
+}
+
+.Item-button.delete.sure .timeout {
+    animation: delete-timeout 2.5s linear 1 0.5s;
+}
+
+@keyframes delete-timeout {
+    0%   { width: 100%; }
+    100% { width: 0;}
 }

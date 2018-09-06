@@ -29,6 +29,11 @@ export const updateItem = (items, newItem) => {
     };
 };
 
+export const deleteItem = (items, id) => ({
+    type: types.DELETE_ITEM,
+    items: items.filter(item => item._id !== id)
+});
+
 export const setSearch = (search, filteredItems) => ({
     type: types.SET_SEARCH,
     search,

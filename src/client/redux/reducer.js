@@ -27,6 +27,11 @@ export default (state = initialState, action) => {
             ...state,
             items: action.items
         };
+    case types.DELETE_ITEM:
+        return {
+            ...state,
+            items: action.items
+        };
     case types.SET_SEARCH:
         return {
             ...state,

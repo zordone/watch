@@ -64,6 +64,18 @@ const parseItem = item => {
     };
 };
 
+const jsonOrError = res => (
+    res.text()
+        .then(text => {
+            if (res.ok) {
+                return (!text || text === 'OK')
+                    ? 'empty response'
+                    : JSON.parse(text);
+            }
+            throw new Error(text);
+        })
+);
+
 const compareItems = (a, b) => {
     if (a.state.num < b.state.num) {
         return -1;
@@ -103,13 +115,7 @@ export const updateItemById = (id, item) => {
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items/${id}`, opts)
-        .then(res => (
-            res.ok
-                ? res.json()
-                : res.text().then(err => {
-                    throw new Error(err);
-                })
-        ))
+        .then(jsonOrError)
         .then(parseItem);
 };
 
@@ -130,8 +136,16 @@ export const saveNewItem = item => {
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items`, opts)
-        .then(res => res.json())
+        .then(jsonOrError)
         .then(parseItem);
+};
+
+export const deleteItemById = id => {
+    const opts = {
+        method: 'DELETE'
+    };
+    return fetch(`${BASE_URL}/items/${id}`, opts)
+        .then(jsonOrError);
 };
 
 export const searchImages = query =>

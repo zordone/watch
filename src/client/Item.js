@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, IconButton, Paper } from '@material-ui/core';
+import { Create, Check, DeleteForever } from '@material-ui/icons';
 import * as service from './service';
 import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';
@@ -28,7 +29,8 @@ class Item extends Component {
                 searching: false,
                 images: []
             },
-            error: ''
+            error: '',
+            deleteSure: false
         };
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
@@ -38,6 +40,7 @@ class Item extends Component {
         this.onShowDetails = this.onShowDetails.bind(this);
         this.onPosterSearch = this.onPosterSearch.bind(this);
         this.onPosterSelect = this.onPosterSelect.bind(this);
+        this.onDelete = this.onDelete.bind(this);
     }
 
     componentDidMount() {
@@ -58,7 +61,7 @@ class Item extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return anyChanged(['page', 'item', 'posters', 'error'], this.state, nextState);
+        return anyChanged(['page', 'item', 'posters', 'error', 'deleteSure'], this.state, nextState);
     }
 
     componentWillUnmount() {
@@ -71,13 +74,10 @@ class Item extends Component {
         }
     }
 
-    onChange(item) {
-        this.setState({
-            item: {
-                ...item,
-                state: itemState(item)
-            }
-        });
+    onChange(changedItem) {
+        const { page } = this.state;
+        const updateState = changedItem._id !== 'new' && page === DETAILS;
+        this.updateItemState(changedItem, updateState);
     }
 
     onSave() {
@@ -112,7 +112,9 @@ class Item extends Component {
     }
 
     onShowDetails() {
+        const { item } = this.state;
         this.setState({ page: DETAILS });
+        this.updateItemState(item, true);
     }
 
     onPosterSearch() {
@@ -140,8 +142,51 @@ class Item extends Component {
         });
     }
 
+    onDelete() {
+        const { items, deleteItem } = this.props;
+        const { deleteSure, item } = this.state;
+        if (deleteSure) {
+            clearTimeout(this.deleteTimer);
+            service.deleteItemById(item._id)
+                .then(() => {
+                    deleteItem(items, item._id);
+                    this.setState({
+                        error: '',
+                        deleteSure: false
+                    });
+                    this.onClose();
+                })
+                .catch(err => {
+                    console.error('Updating item failed.', err);
+                    this.setState({
+                        error: err.message,
+                        deleteSure: false
+                    });
+                });
+        } else {
+            this.setState({ deleteSure: true });
+            this.deleteTimer = setTimeout(() => {
+                this.setState({ deleteSure: false });
+            }, 3000);
+        }
+    }
+
+    updateItemState(changedItem, updateState = false) {
+        console.debug('update item', updateState ? ' + state' : '');
+        this.setState({
+            item: {
+                ...changedItem,
+                state: updateState
+                    ? itemState(changedItem)
+                    : changedItem.state
+            }
+        });
+    }
+
     render() {
-        const { item, page, posters, error } = this.state;
+        const { item, page, posters, error, deleteSure } = this.state;
+        const isNew = item._id === 'new';
+        const deleteClassName = `Item-button delete${deleteSure ? ' sure' : ''}`;
         return (
             <div className="Item">
                 <Paper className="Item-paper">
@@ -158,15 +203,22 @@ class Item extends Component {
                     <div className="Item-buttons">
                         <Button variant="contained" color="primary" className="Item-button" onClick={this.onSave}>Save</Button>
                         <Button variant="contained" color="default" className="Item-button" onClick={this.onClose}>Cancel</Button>
+                        {!isNew && (
+                            <Button variant="contained" color="default" className={deleteClassName} onClick={this.onDelete}>
+                                <DeleteForever />
+                                <span className="title">&nbsp;Sure to delete?</span>
+                                <div className="timeout" />
+                            </Button>
+                        )}
                     </div>
                     {page === DETAILS && (
                         <IconButton className="Item-pageButton" aria-label="Show form" onClick={this.onShowForm}>
-                            <i className="material-icons">create</i>
+                            <Create />
                         </IconButton>
                     )}
                     {page === FORM && (
                         <IconButton className="Item-pageButton" aria-label="Show details" onClick={this.onShowDetails}>
-                            <i className="material-icons">check</i>
+                            <Check />
                         </IconButton>
                     )}
                 </Paper>
@@ -196,7 +248,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     addNewItem: item => dispatch(actions.addNewItem(item)),
-    updateItem: (items, item) => dispatch(actions.updateItem(items, item))
+    updateItem: (items, item) => dispatch(actions.updateItem(items, item)),
+    deleteItem: (items, id) => dispatch(actions.deleteItem(items, id))
 });
 
 export default connect(
