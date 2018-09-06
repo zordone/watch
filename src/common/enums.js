@@ -45,9 +45,14 @@ const SearchKeywords = Object.freeze({
     NOIMDB: 'noimdb'
 });
 
+const Const = Object.freeze({
+    NEW: 'new'
+});
+
 exports.ItemType = ItemType;
 exports.NextType = NextType;
 exports.ValiType = ValiType;
 exports.StateType = StateType;
 exports.FinishedType = FinishedType;
 exports.SearchKeywords = SearchKeywords;
+exports.Const = Const;

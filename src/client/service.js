@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords } from '../common/enums';
+import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, Const } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 
@@ -122,7 +122,7 @@ export const updateItemById = (id, item) => {
 export const createNewItem = () => (
     parseItem({
         ...defaultItem,
-        _id: 'new'
+        _id: Const.NEW
     })
 );
 

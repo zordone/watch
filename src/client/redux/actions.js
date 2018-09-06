@@ -1,5 +1,6 @@
 import * as service from '../service';
 import * as types from './actionTypes';
+import { Const } from '../../common/enums';
 
 export const receiveItems = items => ({
     type: types.RECEIVE_ITEMS,
@@ -21,7 +22,7 @@ export const addNewItem = item => ({
 export const updateItem = (items, newItem) => {
     // replace the one updated item in the items array
     const newItems = items
-        .filter(oldItem => !['new', newItem._id].includes(oldItem._id))
+        .filter(oldItem => ![Const.NEW, newItem._id].includes(oldItem._id))
         .concat(newItem);
     return {
         type: types.UPDATE_ITEM,

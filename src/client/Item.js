@@ -13,6 +13,7 @@ import ItemDetails from './ItemDetails';
 import itemState from './itemState';
 import { anyChanged } from './utils';
 import PosterSearch from './PosterSearch';
+import { Const } from '../common/enums';
 import './Item.css';
 
 const FORM = 'form';
@@ -46,7 +47,7 @@ class Item extends Component {
     componentDidMount() {
         const { match } = this.props;
         const { id } = match.params;
-        if (id === 'new') {
+        if (id === Const.NEW) {
             this.setState({
                 item: service.createNewItem(),
                 page: FORM
@@ -76,14 +77,14 @@ class Item extends Component {
 
     onChange(changedItem) {
         const { page } = this.state;
-        const updateState = changedItem._id !== 'new' && page === DETAILS;
+        const updateState = changedItem._id !== Const.NEW && page === DETAILS;
         this.updateItemState(changedItem, updateState);
     }
 
     onSave() {
         const { updateItem, addNewItem, items } = this.props;
         const { item } = this.state;
-        const isNew = item._id === 'new';
+        const isNew = item._id === Const.NEW;
         if (isNew) {
             addNewItem(item);
         }
@@ -185,7 +186,7 @@ class Item extends Component {
 
     render() {
         const { item, page, posters, error, deleteSure } = this.state;
-        const isNew = item._id === 'new';
+        const isNew = item._id === Const.NEW;
         const deleteClassName = `Item-button delete${deleteSure ? ' sure' : ''}`;
         return (
             <div className="Item">
