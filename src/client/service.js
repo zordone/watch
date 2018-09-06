@@ -20,6 +20,11 @@ export const defaultItem = {
     posterUrl: ''
 };
 
+const jsonHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+};
+
 const cleanArray = array =>
     array
         .map(item => (item || '').trim().toLowerCase())
@@ -108,10 +113,7 @@ export const getItemById = id =>
 export const updateItemById = (id, item) => {
     const opts = {
         method: 'PUT',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
+        headers: jsonHeaders,
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items/${id}`, opts)
@@ -129,10 +131,7 @@ export const createNewItem = () => (
 export const saveNewItem = item => {
     const opts = {
         method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
+        headers: jsonHeaders,
         body: JSON.stringify(item)
     };
     return fetch(`${BASE_URL}/items`, opts)
