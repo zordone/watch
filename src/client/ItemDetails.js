@@ -75,6 +75,17 @@ class ItemDetails extends Component {
             }
         }
         if (item.state.type === StateType.READY) {
+            const name = isMovie ? 'movie' : seasonCode(nextSeasonNum);
+            const inProgress = isMovie ? 1 : nextSeasonNum;
+            addButton(`Start watching ${name}`, () => {
+                this.updateItem({
+                    inProgress,
+                    nextDate: '',
+                    nextType: ''
+                });
+            });
+        }
+        if (item.state.type === StateType.PROGRESS) {
             if (isMovie) {
                 addButton('Watched the movie', () => {
                     this.updateItem({
@@ -84,24 +95,15 @@ class ItemDetails extends Component {
                     });
                 });
             } else {
-                addButton(`Start watching ${seasonCode(nextSeasonNum)}`, () => {
+                addButton(`Finished ${seasonCode(item.inProgress)}`, () => {
                     this.updateItem({
-                        inProgress: nextSeasonNum,
-                        nextDate: '',
-                        nextType: ''
+                        lastWatched: item.inProgress,
+                        inProgress: '',
+                        nextDate: parseDate(new Date()).input,
+                        nextType: NextType.RECHECK
                     });
                 });
             }
-        }
-        if (item.state.type === StateType.PROGRESS && !isMovie) {
-            addButton(`Finished ${seasonCode(item.inProgress)}`, () => {
-                this.updateItem({
-                    lastWatched: item.inProgress,
-                    inProgress: '',
-                    nextDate: parseDate(new Date()).input,
-                    nextType: NextType.RECHECK
-                });
-            });
         }
         return buttons;
     }
