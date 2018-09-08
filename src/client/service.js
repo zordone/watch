@@ -5,7 +5,7 @@ import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, 
 import { parseDate } from './utils';
 import itemState from './itemState';
 
-const BASE_URL = window.location.href.replace(':3000/', ':3001');
+const BASE_URL = window.location.origin.replace(/:3000$/, ':3001');
 console.debug('Backend URL', BASE_URL);
 
 export const defaultItem = {
