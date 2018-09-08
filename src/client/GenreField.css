@@ -1,0 +1,5 @@
+/* hide unwanted scrollbar in chip container */
+.GenreField .chipContainer::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}

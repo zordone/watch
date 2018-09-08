@@ -129,6 +129,9 @@ class ChipInputAutoComplete extends PureComponent {
         return (
             <ChipInputWithStyles
                 value={chips}
+                classes={{
+                    chipContainer: 'chipContainer'
+                }}
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
                 onUpdateInput={onChange}

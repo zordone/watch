@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ChipInputAutoComplete from './ChipInputAutoComplete';
 import data from '../common/data.json';
+import './GenreField.css';
 
 class GenreField extends PureComponent {
     constructor(props) {
