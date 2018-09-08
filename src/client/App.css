@@ -30,3 +30,10 @@ body {
 .App main {
   padding: 1rem 1rem 0 1rem;
 }
+
+@media only screen and (max-width: 640px) {
+  .App main {
+    padding: 0;
+    border-radius: 0;
+  }
+}

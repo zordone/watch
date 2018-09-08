@@ -97,8 +97,14 @@ class SearchField extends PureComponent {
                         classes: {
                             root: 'SearchField-input',
                             focused: 'focused'
-                        },
-                        spellCheck: false
+                        }
+                    }}
+                    // eslint-disable-next-line react/jsx-no-duplicate-props
+                    inputProps={{
+                        autoComplete: 'off',
+                        autoCorrect: 'off',
+                        autoCapitalize: 'off',
+                        spellCheck: 'false'
                     }}
                     fullWidth
                 />

@@ -50,6 +50,7 @@
   background: #222222;
   border-radius: 4px 4px 0 0;
   border-bottom: 2px solid #1a1a1a;
+  overflow: hidden;
 }
 
 .ItemTable-fixedHeaderCell {
@@ -68,4 +69,15 @@
   bottom: -30px;
   opacity: 0.4;
   pointer-events: none;
+}
+
+@media only screen and (max-width: 640px) {
+  .Home .ItemTable-paper {
+    /* full height - collapsed header (no padding, no footer) */
+    max-height: calc(100vh - 125px);
+    border-radius: 0;
+  }
+  .Home .ItemTable-fixedHeader {
+    display: none;
+  }
 }

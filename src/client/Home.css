@@ -11,4 +11,8 @@
     float: right;
 }
 
-
+@media only screen and (max-width: 640px) {
+    .Home-footer {
+        display: none;
+    }
+}

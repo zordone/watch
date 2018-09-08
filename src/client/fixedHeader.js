@@ -1,4 +1,4 @@
-/* globals document,ResizeObserver */
+/* globals window,document,ResizeObserver */
 
 /**
  * This is just a hacky workaround to achieve a fixed table header.
@@ -14,6 +14,10 @@
  */
 
 const fixedHeaderWorkaround = () => {
+    if (!window.ResizeObserver) {
+        console.log('ResizeObserver is not supported. Fixed header disabled.');
+        return;
+    }
     const cells = document.querySelectorAll('.ItemTable-head th');
     const fragment = document.createDocumentFragment();
     const copies = [];

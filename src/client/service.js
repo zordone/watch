@@ -1,9 +1,12 @@
+/* globals window */
+
 import _ from 'lodash';
 import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, Const } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = window.location.href.replace(':3000/', ':3001');
+console.debug('Backend URL', BASE_URL);
 
 export const defaultItem = {
     title: '',
