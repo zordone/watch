@@ -24,14 +24,16 @@ const StateType = Object.freeze({
     RECHECK: 'recheck',
     WAITING: 'waiting',
     READY: 'ready',
-    PROGRESS: 'progress'
+    PROGRESS: 'progress',
+    QUIT: 'quit'
 });
 
 const FinishedType = Object.freeze({
     YES: 'yes',
     NO: 'no',
     MAYBE: 'maybe',
-    PROBABLY: 'probably'
+    PROBABLY: 'probably',
+    QUIT: 'quit'
 });
 
 const SearchKeywords = Object.freeze({

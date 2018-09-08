@@ -15,7 +15,11 @@
 }
 
 .StateLabel-finished {
-  color: #888;
+  color: hsla(0, 0%, 53%);
+}
+
+.StateLabel-quit {
+  color: hsl(0, 80%, 50%);
 }
 
 .StateLabel .bold {

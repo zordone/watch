@@ -47,8 +47,9 @@ class ItemDetails extends Component {
         };
         const isMovie = item.type === ItemType.MOVIE;
         const isWaitingOrRecheck = [StateType.WAITING, StateType.RECHECK].includes(item.state.type);
+        const isFinishedOrQuit = [FinishedType.YES, FinishedType.QUIT].includes(item.finished);
         const nextSeasonNum = getNextSeasonNum(item);
-        if (item.state.type === StateType.FINISHED) {
+        if (isFinishedOrQuit) {
             return [];
         }
         if (isWaitingOrRecheck) {
@@ -103,6 +104,15 @@ class ItemDetails extends Component {
                         nextType: NextType.RECHECK
                     });
                 });
+                addButton('Quit watching show', () => {
+                    this.updateItem({
+                        lastWatched: item.inProgress,
+                        inProgress: '',
+                        nextDate: '',
+                        nextType: '',
+                        finished: FinishedType.QUIT
+                    });
+                });
             }
         }
         return buttons;
@@ -116,7 +126,7 @@ class ItemDetails extends Component {
                 : <span key={label} className="nolink">{label}</span>
         );
         const isMovie = item.type === ItemType.MOVIE;
-        const isFinished = item.finished === FinishedType.YES;
+        const isFinishedOrQuit = [FinishedType.YES, FinishedType.QUIT].includes(item.finished);
         const inProgress = Boolean(item.inProgress);
         const title = encodeURIComponent(item.title);
         const isCheckable = this.checkableStates.includes(item.state.type);
@@ -145,12 +155,12 @@ class ItemDetails extends Component {
             addLink('Torrents', `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
         }
         // Youtube recap
-        if (!isFinished && !inProgress && !isMovie && item.lastWatched) {
+        if (!isFinishedOrQuit && !inProgress && !isMovie && item.lastWatched) {
             const query = encodeURIComponent(`${item.title} season ${item.lastWatched} recap`);
             addLink(`${seasonCode(item.lastWatched)} recap`, `https://www.youtube.com/results?search_query=${query}`);
         }
         // Youtube trailer
-        if (!isFinished && !inProgress) {
+        if (!isFinishedOrQuit && !inProgress) {
             const name = isMovie ? 'Movie' : `${seasonCode(nextSeasonNum)}`;
             const query = encodeURIComponent(`${item.title}${season} trailer`);
             addLink(`${name} trailer`, `https://www.youtube.com/results?search_query=${query}`);

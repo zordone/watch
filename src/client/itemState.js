@@ -57,6 +57,9 @@ const itemState = item => {
         if (isFinished) {
             return state(StateType.FINISHED, ['Finished.']);
         }
+        if (item.finished === FinishedType.QUIT) {
+            return state(StateType.QUIT, ['Quit.']);
+        }
         if (item.inProgress) {
             const currentSeason = seasonCode(item.inProgress);
             return state(StateType.PROGRESS, [currentSeason, ' in progress.']);

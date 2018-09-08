@@ -173,7 +173,6 @@ class Item extends Component {
     }
 
     updateItemState(changedItem, updateState = false) {
-        console.debug('update item', updateState ? ' + state' : '');
         this.setState({
             item: {
                 ...changedItem,

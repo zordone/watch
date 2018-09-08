@@ -52,7 +52,8 @@ const stateNum = {
     [StateType.READY]: 2,
     [StateType.RECHECK]: 3,
     [StateType.WAITING]: 4,
-    [StateType.FINISHED]: 5
+    [StateType.FINISHED]: 5,
+    [StateType.QUIT]: 6
 };
 
 const parseItem = item => {
