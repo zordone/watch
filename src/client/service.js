@@ -40,7 +40,7 @@ const itemSearchData = (item, state) => ({
         item.type,
         state.type,
         item.finished === FinishedType.YES ? SearchKeywords.FINISHED : SearchKeywords.UNFINISHED,
-        item.withVali === ValiType.YES ? SearchKeywords.VALI : '',
+        [ValiType.YES, ValiType.MAYBE].includes(item.withVali) ? SearchKeywords.VALI : '',
         item.withVali === ValiType.NO ? SearchKeywords.CSABA : '',
         !item.posterUrl ? SearchKeywords.NOPOSTER : '',
         !item.imdbId ? SearchKeywords.NOIMDB : ''
