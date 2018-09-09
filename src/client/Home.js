@@ -51,7 +51,10 @@ class Home extends Component {
 
     onSearchChanged(search) {
         const { items, setSearch } = this.props;
-        const searchWords = search.split(' ').map(word => word.trim()).filter(word => word);
+        const searchWords = search
+            .split(' ')
+            .map(word => word.trim())
+            .filter(word => word);
         if (!searchWords.length) {
             setSearch('', items);
             this.scrollToCurrent();

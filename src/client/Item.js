@@ -45,7 +45,7 @@ class Item extends Component {
     }
 
     componentDidMount() {
-        const { match } = this.props;
+        const { match, items, fetchItems, setFirstLoad, setCurrentId } = this.props;
         const { id } = match.params;
         if (id === Const.NEW) {
             this.setState({
@@ -59,6 +59,15 @@ class Item extends Component {
                 });
         }
         document.addEventListener('keyup', this.onKeyUp);
+        // pre-fetch items in case we reloaded the app on this page
+        const isFetched = Boolean(items.length);
+        if (!isFetched) {
+            fetchItems()
+                .then(() => {
+                    setFirstLoad(false);
+                    setCurrentId(id);
+                });
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -247,9 +256,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    fetchItems: () => dispatch(actions.fetchItems()),
     addNewItem: item => dispatch(actions.addNewItem(item)),
     updateItem: (items, item) => dispatch(actions.updateItem(items, item)),
-    deleteItem: (items, id) => dispatch(actions.deleteItem(items, id))
+    deleteItem: (items, id) => dispatch(actions.deleteItem(items, id)),
+    setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
+    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId))
 });
 
 export default connect(
