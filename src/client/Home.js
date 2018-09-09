@@ -13,6 +13,7 @@ import Loader from './Loader';
 import { anyChanged } from './utils';
 import fixedHeaderWorkaround from './fixedHeader';
 import packageJson from '../../package.json';
+import { SearchKeywords } from '../common/enums';
 import './Home.css';
 
 class Home extends Component {
@@ -59,10 +60,11 @@ class Home extends Component {
         const filteredItems = items.filter(item => (
             searchWords.every(word => {
                 const { text, starts, equals } = item.searchData;
+                const isKeyword = Object.values(SearchKeywords).includes(word);
                 return (
-                    text.includes(word) ||
-                    starts.find(keyword => keyword.startsWith(word)) ||
-                    equals.includes(word)
+                    (!isKeyword && text.includes(word)) ||
+                    (!isKeyword && starts.find(startItem => startItem.startsWith(word))) ||
+                    (isKeyword && equals.includes(word))
                 );
             })
         ));
