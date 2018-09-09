@@ -14,3 +14,10 @@ i.ItemIcon.movie {
 i.ItemIcon.show {
     line-height: 1;
 }
+
+@media only screen and (max-width: 640px) {
+    .ItemRow .title {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+}

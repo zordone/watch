@@ -17,9 +17,9 @@ const ItemTable = props => {
                     <TableRow>
                         <TableCell className="ItemTable-skinny-col">Type</TableCell>
                         <TableCell>Title</TableCell>
-                        <TableCell>Genre</TableCell>
-                        <TableCell>State</TableCell>
-                        <TableCell>Notes</TableCell>
+                        <TableCell className="only-desktop">Genre</TableCell>
+                        <TableCell className="only-desktop">State</TableCell>
+                        <TableCell className="only-desktop">Notes</TableCell>
                         <TableCell>Vali</TableCell>
                     </TableRow>
                 </TableHead>

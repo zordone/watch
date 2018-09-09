@@ -13,10 +13,14 @@ const ItemRow = ({ item, onClick, isCurrent }) => {
             <TableCell className="ItemTable-skinny-col">
                 <ItemIcon item={item} />
             </TableCell>
-            <TableCell component="th" scope="row">{item.title}</TableCell>
-            <TableCell>{item.genres.join(', ')}</TableCell>
-            <TableCell><StateLabel state={item.state} /></TableCell>
-            <TableCell>{maxLength(item.notes, 50)}</TableCell>
+            <TableCell component="th" scope="row">
+                <div className="title">{item.title}</div>
+                <div className="only-mobile">{item.genres.join(', ')}</div>
+                <StateLabel className="only-mobile" state={item.state} />
+            </TableCell>
+            <TableCell className="only-desktop">{item.genres.join(', ')}</TableCell>
+            <TableCell className="only-desktop"><StateLabel state={item.state} /></TableCell>
+            <TableCell className="only-desktop">{maxLength(item.notes, 50)}</TableCell>
             <TableCell>{item.withVali}</TableCell>
         </TableRow>
     );

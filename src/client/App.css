@@ -31,9 +31,20 @@ body {
   padding: 1rem 1rem 0 1rem;
 }
 
+/* desktop */
+@media only screen and (min-width: 641px) {
+  .App .only-mobile {
+    display: none;
+  }
+}
+
+/* mobile */
 @media only screen and (max-width: 640px) {
   .App main {
     padding: 0;
     border-radius: 0;
+  }
+  .App .only-desktop {
+    display: none;
   }
 }
