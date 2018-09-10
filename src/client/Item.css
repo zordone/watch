@@ -96,3 +96,36 @@
     0%   { width: 100%; }
     100% { width: 0;}
 }
+
+@media only screen and (max-width: 640px) {
+    .Item {
+        padding: 0;
+    }
+    .Item .Item-paper {
+        width: 100%;
+        border-radius: 0;
+    }
+    .Item .Item-buttons {
+        display: grid;
+    }
+    .Item .Item-button {
+        margin: 1rem 0 1rem 0;
+        position: relative;
+    }
+    .Item .Item-button:last-child {
+        margin-bottom: 0;
+    }
+    .Item .ItemDetails-button {
+        margin-top: 1rem;
+    }
+    .Item .Item-button,
+    .Item .ItemDetails-button {
+        font-size: 1.3rem;
+    }
+    .ItemDetails-value {
+        font-size: 1.3rem;
+    }
+    .Item-button.delete.sure .title {
+        width: 174px;
+    }
+}

@@ -2,9 +2,14 @@
     color: #888;
     font-size: 0.75rem;
 }
+
 .ItemDetails-value {
     color: #FFF;
     margin-bottom: 1rem;
+}
+
+.ItemDetails-value:last-child {
+    margin-bottom: 0;
 }
 
 .ItemDetails-title.ItemDetails-value {
@@ -42,4 +47,18 @@
     width: 100%;
     margin-top: 0.5rem;
     padding: 8px 4px;
+}
+
+@media only screen and (max-width: 640px) {
+    .ItemDetails-grid {
+        grid-template-columns: 1fr;
+    }
+    .ItemDetails-links {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    }
+    .ItemDetails-links a {
+        margin-bottom: 1rem;
+    }
 }

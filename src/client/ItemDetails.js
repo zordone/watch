@@ -201,7 +201,7 @@ class ItemDetails extends Component {
                         <DetailsRow label="Notes" value={item.notes} optional />
                         <DetailsRow label="With Vali" value={item.withVali} />
                         <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />
-                        <DetailsRow label="Links" value={links} />
+                        <DetailsRow label="Links" value={links} className="ItemDetails-links" />
                     </div>
                 </div>
             </div>
