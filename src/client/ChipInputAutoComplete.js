@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import { MenuItem, withStyles } from '@material-ui/core';
+import './ChipInputAutoComplete.css';
 
 const chipInputStyles = {
     chipContainer: {
@@ -24,10 +25,6 @@ const chipInputStyles = {
 const ChipInputWithStyles = withStyles(chipInputStyles)(ChipInput);
 
 const autoSuggestTheme = {
-    container: {
-        position: 'relative',
-        height: '48px'
-    },
     input: {
         width: '100%',
         height: '100%'
@@ -135,7 +132,7 @@ class ChipInputAutoComplete extends PureComponent {
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
                 onUpdateInput={onChange}
-                className={`GenreField ${className}`}
+                className="GenreField"
                 clearInputValueOnChange
                 {...rest}
             />
@@ -158,16 +155,13 @@ class ChipInputAutoComplete extends PureComponent {
     }
 
     render() {
-        const { value, containerStyle, onDelete, label } = this.props;
+        const { value, onDelete, label, rootClassName, className } = this.props;
         const { suggestions, inputValue } = this.state;
         return (
             <Autosuggest
                 theme={{
                     ...autoSuggestTheme,
-                    container: {
-                        ...autoSuggestTheme.container,
-                        ...containerStyle
-                    }
+                    container: `ChipInputAutoComplete-rootContainer ${rootClassName}`
                 }}
                 inputProps={{
                     value: inputValue,
@@ -177,6 +171,7 @@ class ChipInputAutoComplete extends PureComponent {
                     onDelete,
                     label
                 }}
+                className={className}
                 suggestions={suggestions}
                 getSuggestionValue={suggestion => suggestion}
                 renderInputComponent={this.renderInputComponent}
@@ -194,16 +189,18 @@ class ChipInputAutoComplete extends PureComponent {
 ChipInputAutoComplete.propTypes = {
     value: PropTypes.arrayOf(PropTypes.string).isRequired,
     dataSource: PropTypes.arrayOf(PropTypes.string),
-    containerStyle: PropTypes.shape({}),
     maxChips: PropTypes.number,
+    className: PropTypes.string,
+    rootClassName: PropTypes.string,
     onAdd: PropTypes.func,
     onDelete: PropTypes.func
 };
 
 ChipInputAutoComplete.defaultProps = {
     dataSource: [],
-    containerStyle: {},
     maxChips: 5,
+    className: '',
+    rootClassName: '',
     onAdd: () => {},
     onDelete: () => {}
 };

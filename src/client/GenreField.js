@@ -42,8 +42,8 @@ class GenreField extends PureComponent {
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
                 dataSource={data.genres}
-                className={`GenreField ${className}`}
-                containerStyle={style}
+                rootClassName={className}
+                className="GenreField"
                 maxChips={maxGenres}
                 {...rest}
             />

@@ -1,8 +1,15 @@
 .ItemForm-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    /* grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr); */
     grid-gap: 1rem;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-areas:
+        'title title title title .'
+        'type  genre genre genre vali'
+        'last  prog  ndate ntype fin'
+        'notes notes notes notes notes'
+        'imdb  postr .     .     .';
 }
 
 .ItemForm label {
@@ -25,3 +32,33 @@
 .ItemForm-empty input:not(:focus)::-webkit-datetime-edit-text {
     color: transparent;
 }
+
+.ItemForm-grid .title    { grid-area: title }
+.ItemForm-grid .type     { grid-area: type  }
+.ItemForm-grid .genres   { grid-area: genre }
+.ItemForm-grid .vali     { grid-area: vali  }
+.ItemForm-grid .last     { grid-area: last  }
+.ItemForm-grid .progress { grid-area: prog  }
+.ItemForm-grid .ndate    { grid-area: ndate }
+.ItemForm-grid .ntype    { grid-area: ntype }
+.ItemForm-grid .finished { grid-area: fin   }
+.ItemForm-grid .notes    { grid-area: notes }
+.ItemForm-grid .imdb     { grid-area: imdb  }
+.ItemForm-grid .poster   { grid-area: postr }
+
+@media only screen and (max-width: 640px) {
+    .ItemForm-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-areas:
+            'title title title title title .'
+            'type  type  type  type  type  type'
+            'genre genre genre genre genre genre'
+            'last  last  last  prog  prog  prog'
+            'ndate ndate ndate ntype ntype ntype'
+            'vali  vali  vali  fin   fin   fin'
+            'notes notes notes notes notes notes'
+            'imdb  imdb  postr postr postr postr';
+    }
+}
+
+

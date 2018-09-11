@@ -97,7 +97,7 @@
     100% { width: 0;}
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 880px) {
     .Item {
         padding: 0;
     }
@@ -105,6 +105,9 @@
         width: 100%;
         border-radius: 0;
     }
+}
+
+@media only screen and (max-width: 640px) {
     .Item .Item-buttons {
         display: grid;
     }

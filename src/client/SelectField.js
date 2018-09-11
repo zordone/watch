@@ -21,6 +21,7 @@ SelectField.propTypes = {
     style: PropTypes.shape({}),
     label: PropTypes.string,
     value: PropTypes.string.isRequired,
+    className: PropTypes.string,
     onChange: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.string)
 };
@@ -29,6 +30,7 @@ SelectField.defaultProps = {
     id: undefined,
     style: {},
     label: undefined,
+    className: '',
     onChange: () => {},
     options: ''
 };
