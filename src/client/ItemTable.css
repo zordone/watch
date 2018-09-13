@@ -2,6 +2,7 @@
   /* full height - header - top padding - footer */
   max-height: calc(100vh - 75px - 1rem - 1.5rem);
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ItemTable td,

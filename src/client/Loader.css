@@ -4,6 +4,7 @@
     left: 0;
     bottom: 0;
     right: 0;
+    height: 100%;
     z-index: 10;
     background: #1A1A1A;
     display: grid;
@@ -74,4 +75,13 @@
     0%   { transform: scale(1); }
     40%  { transform: scale(1.2); }
     100% { transform: scale(20); }
+}
+
+@media only screen and (max-width: 640px) {
+    .Loader-fg {
+        mask-size: 33% 200%;
+        animation:
+            waves 1.2s linear infinite,
+            loading 2.5s linear 1 forwards 1s;
+    }
 }
