@@ -44,7 +44,8 @@ const SearchKeywords = Object.freeze({
     VALI: 'vali',
     CSABA: 'csaba',
     NOPOSTER: 'noposter',
-    NOIMDB: 'noimdb'
+    NOIMDB: 'noimdb',
+    UNSCRAPED: 'unscraped'
 });
 
 const Const = Object.freeze({

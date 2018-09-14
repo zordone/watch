@@ -267,7 +267,7 @@ exports.imdbData = (req, res) => {
                             // TODO: collect a bunch of them
                             //   before applying the filter, or remove it?
                             // return isValid;
-                            return true;
+                            return Boolean(keyword);
                         }),
                     description: data.description,
                     released: data.datePublished

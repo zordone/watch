@@ -46,6 +46,7 @@ const itemSearchData = (item, state) => ({
         item.withVali === ValiType.NO ? SearchKeywords.CSABA : '',
         !item.posterUrl ? SearchKeywords.NOPOSTER : '',
         !item.imdbId ? SearchKeywords.NOIMDB : '',
+        (item.keywords.length || item.description.length) ? '' : SearchKeywords.UNSCRAPED,
         ...item.keywords
     ])
 });
@@ -60,12 +61,16 @@ const stateNum = {
 };
 
 const parseItem = item => {
-    const state = itemState(item);
-    state.num = stateNum[state.type];
-    const searchData = itemSearchData(item, state);
-    return {
-        // add missing fields
+    // add missing fields
+    const fullItem = {
         ...defaultItem,
+        ...item
+    };
+    const state = itemState(fullItem);
+    state.num = stateNum[state.type];
+    const searchData = itemSearchData(fullItem, state);
+    return {
+        ...fullItem,
         // default nulls to empty string
         ..._.mapValues(item, value => value || ''),
         // format dates
