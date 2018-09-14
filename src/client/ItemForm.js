@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TextField, IconButton } from '@material-ui/core';
 import { CloudDownload } from '@material-ui/icons';
 import GenreField from './GenreField';
+import ChipArrayInput from './ChipArrayInput';
 import * as service from './service';
 import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
@@ -162,20 +163,13 @@ class ItemForm extends Component {
                         onChange={this.onFieldChange}
                         value={item.description}
                     />
-                    <TextField
-                        id="keywords"
-                        className="keyw"
-                        label="Keywords"
-                        onChange={this.onFieldChange}
-                        value={item.keywords.join(', ')}
-                    />
-                    {/* <ChipInput
+                    <ChipArrayInput
                         id="keywords"
                         className="keyw"
                         label="Keywords"
                         onChange={this.onFieldChange}
                         value={item.keywords}
-                    /> */}
+                    />
                     <TextField
                         id="notes"
                         className="notes"

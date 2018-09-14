@@ -1,0 +1,16 @@
+.ChipArrayInput div.chipContainer {
+    min-height: unset;
+    margin-top: 16px;
+    display: inline-flex;
+    overflow: scroll;
+}
+
+.ChipArrayInput .chip {
+    height: 26px;
+}
+
+/* hide unwanted scrollbar in chip container */
+.ChipArrayInput .chipContainer::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
