@@ -10,6 +10,8 @@ import SelectField from './SelectField';
 import { parseDate, cachePureFunction } from './utils';
 import './ItemForm.css';
 
+const MAX_GENRES = 4;
+
 class ItemForm extends Component {
     constructor(props) {
         super(props);
@@ -64,6 +66,9 @@ class ItemForm extends Component {
                     ...item,
                     ...parsed
                 };
+                if (newItem.genres.length > MAX_GENRES) {
+                    newItem.genres = newItem.genres.slice(0, MAX_GENRES);
+                }
                 this.setState({ item: newItem });
                 onChange(newItem);
             });
@@ -103,7 +108,7 @@ class ItemForm extends Component {
                         label="Genres"
                         onChange={this.onFieldChange}
                         value={item.genres}
-                        maxGenres={4}
+                        maxGenres={MAX_GENRES}
                     />
                     <SelectField
                         id="withVali"
