@@ -167,6 +167,7 @@ class ItemForm extends Component {
                         label="Description"
                         onChange={this.onFieldChange}
                         value={item.description}
+                        multiline
                     />
                     <ChipArrayInput
                         id="keywords"
