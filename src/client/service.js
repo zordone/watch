@@ -18,6 +18,8 @@ export const defaultItem = {
     nextDate: '',
     nextType: NextType.END,
     withVali: ValiType.NO,
+    description: '',
+    keywords: [],
     notes: '',
     imdbId: '',
     posterUrl: ''
@@ -34,7 +36,7 @@ const cleanArray = array =>
         .filter(item => item);
 
 const itemSearchData = (item, state) => ({
-    text: `${item.title} ${item.notes}`.toLowerCase(),
+    text: `${item.title} ${item.notes} ${item.description}`.toLowerCase(),
     starts: cleanArray(item.genres),
     equals: cleanArray([
         item.type,
@@ -43,7 +45,8 @@ const itemSearchData = (item, state) => ({
         [ValiType.YES, ValiType.MAYBE].includes(item.withVali) ? SearchKeywords.VALI : '',
         item.withVali === ValiType.NO ? SearchKeywords.CSABA : '',
         !item.posterUrl ? SearchKeywords.NOPOSTER : '',
-        !item.imdbId ? SearchKeywords.NOIMDB : ''
+        !item.imdbId ? SearchKeywords.NOIMDB : '',
+        ...item.keywords
     ])
 });
 
@@ -167,3 +170,7 @@ export const mockSearchImages = timeout =>
         ];
         setTimeout(() => resolve(images), timeout);
     });
+
+export const imdbData = id =>
+    fetch(`${BASE_URL}/imdbdata/${id}`)
+        .then(res => res.json());

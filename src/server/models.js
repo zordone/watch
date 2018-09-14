@@ -12,6 +12,8 @@ const itemSchema = new mongoose.Schema({
     nextDate: { type: Date },
     nextType: { type: String, enum: Object.values(NextType) },
     withVali: { type: String, enum: Object.values(ValiType) },
+    description: { type: String },
+    keywords: [{ type: String }],
     notes: { type: String },
     imdbId: { type: String },
     posterUrl: { type: String },

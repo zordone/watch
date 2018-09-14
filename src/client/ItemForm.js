@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
+import { CloudDownload } from '@material-ui/icons';
 import GenreField from './GenreField';
 import * as service from './service';
 import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
@@ -16,6 +17,7 @@ class ItemForm extends Component {
         };
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onDateKeyDown = this.onDateKeyDown.bind(this);
+        this.onImdbScrape = this.onImdbScrape.bind(this);
         // cache pure stuff
         this.formStyle = cachePureFunction(this.formStyle);
         this.seasonInputProps = { min: '1', max: '99' };
@@ -47,6 +49,23 @@ class ItemForm extends Component {
             const value = parseDate(new Date()).input;
             this.onFieldChange({ target: { id, value } });
         }
+    }
+
+    onImdbScrape() {
+        const { item } = this.state;
+        const { onChange } = this.props;
+        service
+            .imdbData(item.imdbId)
+            .then(data => {
+                console.log('imdb data', data);
+                const parsed = data.parsed || {};
+                const newItem = {
+                    ...item,
+                    ...parsed
+                };
+                this.setState({ item: newItem });
+                onChange(newItem);
+            });
     }
 
     formStyle(visible) {
@@ -137,19 +156,49 @@ class ItemForm extends Component {
                         options={Object.values(FinishedType)}
                     />
                     <TextField
+                        id="description"
+                        className="descr"
+                        label="Description"
+                        onChange={this.onFieldChange}
+                        value={item.description}
+                    />
+                    <TextField
+                        id="keywords"
+                        className="keyw"
+                        label="Keywords"
+                        onChange={this.onFieldChange}
+                        value={item.keywords.join(', ')}
+                    />
+                    {/* <ChipInput
+                        id="keywords"
+                        className="keyw"
+                        label="Keywords"
+                        onChange={this.onFieldChange}
+                        value={item.keywords}
+                    /> */}
+                    <TextField
                         id="notes"
                         className="notes"
                         label="Notes"
                         onChange={this.onFieldChange}
                         value={item.notes}
                     />
-                    <TextField
-                        id="imdbId"
-                        className="imdb"
-                        label="IMDb ID"
-                        onChange={this.onFieldChange}
-                        value={item.imdbId}
-                    />
+                    <div className="imdb">
+                        <TextField
+                            id="imdbId"
+                            label="IMDb ID"
+                            onChange={this.onFieldChange}
+                            value={item.imdbId}
+                        />
+                        <IconButton
+                            className="imdb-scrape"
+                            aria-label="Fill from IMDb"
+                            onClick={this.onImdbScrape}
+                            style={{ display: item.imdbId ? 'block' : 'none' }}
+                        >
+                            <CloudDownload />
+                        </IconButton>
+                    </div>
                     <TextField
                         id="posterUrl"
                         className="poster"

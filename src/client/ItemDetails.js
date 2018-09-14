@@ -198,6 +198,8 @@ class ItemDetails extends Component {
                         <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />
                         <DetailsRow label="Type" value={item.type} />
                         <DetailsRow label="Genre" value={item.genres.join(', ') || 'Unkown'} />
+                        <DetailsRow label="Description" value={item.description} optional />
+                        <DetailsRow label="Keywords" value={item.keywords.join(', ')} optional />
                         <DetailsRow label="Notes" value={item.notes} optional />
                         <DetailsRow label="With Vali" value={item.withVali} />
                         <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />

@@ -2,9 +2,12 @@ const _ = require('lodash');
 const Scraper = require('images-scraper');
 const moment = require('moment');
 const fs = require('fs');
+const fetch = require('node-fetch');
 const { Item } = require('./models');
 const { importCsv } = require('./importCsv');
 const { IMPORT_DIR, BACKUP_DIR } = require('./config');
+const { ItemType } = require('../common/enums');
+const { genres, keywords } = require('../common/data.json');
 
 const between = (value, min, max) => (min <= value && value <= max);
 
@@ -205,6 +208,83 @@ exports.searchImages = (req, res) => {
         })
         .catch(err => {
             console.log('[SearchImages]', err);
+            res.status(500).send(err.message || 'Unknown scraper error');
+        });
+};
+
+const makeArray = value => {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    return value ? [value] : [];
+};
+
+exports.imdbData = (req, res) => {
+    const { imdbId } = req.params;
+    console.log('[ImdbData]:', imdbId);
+    fetch(`http://www.imdb.com/title/${imdbId}/?ref_=fn_tv_tt_1`)
+        .then(imdbRes => imdbRes.text())
+        .then(html => {
+            const imdbDataRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
+            const json = (imdbDataRegex.exec(html) || [])[1];
+            // console.log(json);
+            // console.log('\n\n');
+            const data = JSON.parse(json);
+            const parsed = {
+                parsed: {
+                    type: data['@type'] === 'TVSeries'
+                        ? ItemType.SHOW
+                        : ItemType.MOVIE,
+                    title: data.name || '',
+                    genres: makeArray(data.genre)
+                        .map(genre => genre.toLowerCase())
+                        .filter(genre => {
+                            const isValid = genres.includes(genre);
+                            if (!isValid) {
+                                console.warn('[ImdbData] Invalid genre:', genre);
+                            }
+                            return isValid;
+                        }),
+                    posterUrl: data.image || '',
+                    // TODO make use of these
+                    actors: makeArray(data.actor)
+                        .filter(actor => actor['@type'] === 'Person')
+                        .map(actor => actor.name),
+                    creators: makeArray(data.creator)
+                        .filter(creator => creator['@type'] === 'Person')
+                        .map(creator => creator.name),
+                    directors: makeArray(data.director)
+                        .filter(director => director['@type'] === 'Person')
+                        .map(director => director.name),
+                    keywords: (data.keywords || '')
+                        .split(',')
+                        .map(keyword => keyword.trim().toLowerCase())
+                        .filter(keyword => {
+                            const isValid = keywords.includes(keyword);
+                            if (!isValid) {
+                                console.warn('[ImdbData] Invalid keyword:', keyword);
+                            }
+                            // TODO: collect a bunch of them
+                            //   before applying the filter, or remove it?
+                            // return isValid;
+                            return true;
+                        }),
+                    description: data.description,
+                    released: data.datePublished
+                        ? `${data.datePublished}T00:00:00.000Z`
+                        : '',
+                    rating: (data.aggregateRating || {}).ratingValue || '',
+                    ratingCount: ((data.aggregateRating || {}).ratingCount || 0).toString()
+                    // ...
+                    // duration?
+                },
+                // TODO: remove raw
+                raw: data
+            };
+            res.send(parsed);
+        })
+        .catch(err => {
+            console.log('[ImdbData]', err);
             res.status(500).send(err.message || 'Unknown scraper error');
         });
 };

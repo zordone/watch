@@ -8,12 +8,27 @@
         'title title title title .'
         'type  genre genre genre vali'
         'last  prog  ndate ntype fin'
+        'descr descr descr descr descr'
+        'keyw  keyw  keyw  keyw  keyw'
         'notes notes notes notes notes'
         'imdb  postr .     .     .';
 }
 
 .ItemForm label {
     color: #888;
+}
+
+.ItemForm-grid .imdb {
+    position: relative;
+    display: flex;
+}
+
+.ItemForm-grid .imdb-scrape {
+    position: absolute;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    bottom: 2px;
 }
 
 /* hide number/date spin buttons */
@@ -42,6 +57,8 @@
 .ItemForm-grid .ndate    { grid-area: ndate }
 .ItemForm-grid .ntype    { grid-area: ntype }
 .ItemForm-grid .finished { grid-area: fin   }
+.ItemForm-grid .descr    { grid-area: descr }
+.ItemForm-grid .keyw     { grid-area: keyw  }
 .ItemForm-grid .notes    { grid-area: notes }
 .ItemForm-grid .imdb     { grid-area: imdb  }
 .ItemForm-grid .poster   { grid-area: postr }
@@ -56,6 +73,8 @@
             'last  last  last  prog  prog  prog'
             'ndate ndate ndate ntype ntype ntype'
             'vali  vali  vali  fin   fin   fin'
+            'descr descr descr descr descr descr'
+            'keyw  keyw  keyw  keyw  keyw  keyw'
             'notes notes notes notes notes notes'
             'imdb  imdb  postr postr postr postr';
     }

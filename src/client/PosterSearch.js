@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Paper } from '@material-ui/core';
+import { CloudDownload } from '@material-ui/icons';
 import './PosterSearch.css';
 
 class PosterSearch extends PureComponent {
@@ -33,7 +34,7 @@ class PosterSearch extends PureComponent {
                 {searching && (
                     <div className="PosterSearch-searching">
                         <div className="PosterSearch-searching-bg" />
-                        <i className="material-icons">cloud_download</i>
+                        <CloudDownload />
                         <span>Searching for poster images...</span>
                     </div>
                 )}

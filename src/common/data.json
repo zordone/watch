@@ -5,19 +5,51 @@
         "animation",
         "anime",
         "bike",
+
         "bio",
+        "biography",
+
         "comedy",
         "crime",
         "documentary",
         "drama",
         "fantasy",
+        "family",
+        "history",
         "horror",
+
         "mistery",
+        "mystery",
+
         "music",
         "romance",
         "sci-fi",
         "standup",
         "thriller",
         "war"
+    ],
+    "keywords": [
+        "bipolar disorder",
+        "cia",
+        "terrorist",
+        "female lead",
+        "marine",
+        "assassin",
+        "redemption",
+        "suspense",
+        "kidnapping",
+        "neighbor",
+        "nerd",
+        "sitcom",
+        "adult humor",
+        "diner",
+        "shootout",
+        "martial arts",
+        "agent",
+        "special forces",
+        "criminal gang",
+        "artificial intelligence","anime","japan","future",
+        "mind control","strong female lead","private detective","marvel cinematic universe","marvel comics",
+        "social anxiety disorder","schizophrenia","drug addict","anarchist","introvert"
     ]
 }

@@ -29,6 +29,7 @@ app.get('/items/:id', api.getItemById);
 app.put('/items/:id', api.updateItemById);
 app.delete('/items/:id', api.deleteItemById);
 app.get('/searchimages/:query', api.searchImages);
+app.get('/imdbdata/:imdbId', api.imdbData);
 
 // ...
 

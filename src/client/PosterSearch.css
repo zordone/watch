@@ -35,6 +35,11 @@
     line-height: 33px;
 }
 
+.PosterSearch-searching>svg {
+    height: 33px;
+    margin-right: 8px;
+}
+
 .PosterSearch-searching>i {
     position: relative;
     margin-right: 0.8rem;
