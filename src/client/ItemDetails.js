@@ -150,8 +150,11 @@ class ItemDetails extends Component {
         }
         // Torrent
         if (isCheckable) {
-            const query = encodeURIComponent(`${item.title}${season}`);
             const type = isMovie ? 'movies' : 'tv';
+            const year = isMovie && item.releaseYear
+                ? ` ${item.releaseYear}`
+                : '';
+            const query = encodeURIComponent(`${item.title}${season}${year}`);
             addLink('Torrents', `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
         }
         // Youtube recap
@@ -196,13 +199,13 @@ class ItemDetails extends Component {
                     </div>
                     <div className="ItemDetails-fields">
                         <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />
+                        <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />
                         <DetailsRow label="Type" value={item.type} />
                         <DetailsRow label="Genre" value={item.genres.join(', ') || 'Unkown'} />
                         <DetailsRow label="Description" value={item.description} optional />
                         <DetailsRow label="Keywords" value={item.keywords.join(', ')} optional />
                         <DetailsRow label="Notes" value={item.notes} optional />
                         <DetailsRow label="With Vali" value={item.withVali} />
-                        <DetailsRow label="State" value={stateLabel} className="ItemDetails-state" />
                         <DetailsRow label="Links" value={links} className="ItemDetails-links" />
                     </div>
                 </div>

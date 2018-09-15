@@ -24,6 +24,7 @@ class ItemForm extends Component {
         // cache pure stuff
         this.formStyle = cachePureFunction(this.formStyle);
         this.seasonInputProps = { min: '1', max: '99' };
+        this.releaseYearInputProps = { min: '1900', max: '2100' };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +69,15 @@ class ItemForm extends Component {
                 };
                 if (newItem.genres.length > MAX_GENRES) {
                     newItem.genres = newItem.genres.slice(0, MAX_GENRES);
+                }
+                const fillNextDate = (
+                    !newItem.nextDate &&
+                    !newItem.lastWatched &&
+                    !newItem.input
+                );
+                if (fillNextDate) {
+                    newItem.nextDate = parsed.released;
+                    newItem.nextType = NextType.RELEASE;
                 }
                 this.setState({ item: newItem });
                 onChange(newItem);
@@ -205,6 +215,15 @@ class ItemForm extends Component {
                         label="Poster URL"
                         onChange={this.onFieldChange}
                         value={item.posterUrl}
+                    />
+                    <TextField
+                        id="releaseYear"
+                        className="relyr"
+                        label="Release year"
+                        type="number"
+                        inputProps={this.releaseYearInputProps}
+                        onChange={this.onFieldChange}
+                        value={item.releaseYear}
                     />
                 </div>
             </form>

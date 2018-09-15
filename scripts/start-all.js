@@ -10,6 +10,7 @@ const spawnPipe = (command, args = [], prefix = '', onLine = () => {}) => {
     const db = spawn(command, args, {stdio: ['ignore', 'pipe', process.stderr]});
     db.stdout.on('data', data => {
         data.toString()
+            .replace(/\n+$/, '')
             .split('\n')
             .forEach(line => {
                 console.log(prefix, line);

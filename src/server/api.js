@@ -221,16 +221,14 @@ const makeArray = value => {
 
 exports.imdbData = (req, res) => {
     const { imdbId } = req.params;
-    console.log('[ImdbData]:', imdbId);
+    console.log('[ImdbData] IMDb ID:', imdbId);
     fetch(`http://www.imdb.com/title/${imdbId}/?ref_=fn_tv_tt_1`)
         .then(imdbRes => imdbRes.text())
         .then(html => {
             const imdbDataRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
             const json = (imdbDataRegex.exec(html) || [])[1];
-            // console.log(json);
-            // console.log('\n\n');
             const data = JSON.parse(json);
-            const parsed = {
+            const result = {
                 parsed: {
                     type: data['@type'] === 'TVSeries'
                         ? ItemType.SHOW
@@ -245,17 +243,7 @@ exports.imdbData = (req, res) => {
                             }
                             return isValid;
                         }),
-                    posterUrl: data.image || '',
-                    // TODO make use of these
-                    actors: makeArray(data.actor)
-                        .filter(actor => actor['@type'] === 'Person')
-                        .map(actor => actor.name),
-                    creators: makeArray(data.creator)
-                        .filter(creator => creator['@type'] === 'Person')
-                        .map(creator => creator.name),
-                    directors: makeArray(data.director)
-                        .filter(director => director['@type'] === 'Person')
-                        .map(director => director.name),
+                    description: data.description,
                     keywords: (data.keywords || '')
                         .split(',')
                         .map(keyword => keyword.trim().toLowerCase())
@@ -269,19 +257,30 @@ exports.imdbData = (req, res) => {
                             // return isValid;
                             return Boolean(keyword);
                         }),
-                    description: data.description,
+                    posterUrl: data.image || '',
                     released: data.datePublished
-                        ? `${data.datePublished}T00:00:00.000Z`
+                        ? data.datePublished
                         : '',
+                    releaseYear: data.datePublished
+                        ? parseInt(data.datePublished.substr(0, 4), 10)
+                        : null,
+                    // TODO make use of these (?)
+                    actors: makeArray(data.actor)
+                        .filter(actor => actor['@type'] === 'Person')
+                        .map(actor => actor.name),
+                    creators: makeArray(data.creator)
+                        .filter(creator => creator['@type'] === 'Person')
+                        .map(creator => creator.name),
+                    directors: makeArray(data.director)
+                        .filter(director => director['@type'] === 'Person')
+                        .map(director => director.name),
                     rating: (data.aggregateRating || {}).ratingValue || '',
                     ratingCount: ((data.aggregateRating || {}).ratingCount || 0).toString()
-                    // ...
-                    // duration?
                 },
                 // TODO: remove raw
                 raw: data
             };
-            res.send(parsed);
+            res.send(result);
         })
         .catch(err => {
             console.log('[ImdbData]', err);

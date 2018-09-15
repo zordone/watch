@@ -16,13 +16,14 @@ export const defaultItem = {
     lastWatched: '',
     inProgress: '',
     nextDate: '',
-    nextType: NextType.END,
+    nextType: NextType.EMPTY,
     withVali: ValiType.NO,
     description: '',
     keywords: [],
     notes: '',
     imdbId: '',
-    posterUrl: ''
+    posterUrl: '',
+    releaseYear: ''
 };
 
 const jsonHeaders = {

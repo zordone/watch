@@ -17,6 +17,7 @@ const itemSchema = new mongoose.Schema({
     notes: { type: String },
     imdbId: { type: String },
     posterUrl: { type: String },
+    releaseYear: { type: Number },
     created: { type: Date, required: true },
     updated: { type: Date, required: true }
 });
