@@ -1,23 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'material-ui-chip-input';
 import _ from 'lodash';
 import './ChipArrayInput.css';
-
-// TODO: move to css like in ChipArrayInput
-const styles = {
-    chipContainer: {
-        minHeight: 'unset',
-        // without the important, a `.chipContainer.labeled` class overrides this to 18.
-        marginTop: '16px !important',
-        display: 'inline-flex',
-        overflow: 'scroll'
-    },
-    chip: {
-        height: '26px'
-    }
-};
 
 class ChipArrayInput extends PureComponent {
     constructor(props) {
@@ -58,7 +43,8 @@ class ChipArrayInput extends PureComponent {
                 className={`ChipArrayInput ${className}`}
                 classes={{
                     chipContainer: 'chipContainer',
-                    chip: 'chip'
+                    chip: 'chip',
+                    label: 'label'
                 }}
                 {...rest}
             />
@@ -83,4 +69,4 @@ ChipArrayInput.defaultProps = {
     onChange: () => {}
 };
 
-export default withStyles(styles)(ChipArrayInput);
+export default ChipArrayInput;

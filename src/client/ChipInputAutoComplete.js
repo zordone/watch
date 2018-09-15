@@ -1,28 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { MenuItem } from '@material-ui/core';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
-import { MenuItem, withStyles } from '@material-ui/core';
 import './ChipInputAutoComplete.css';
-
-const chipInputStyles = {
-    chipContainer: {
-        minHeight: 'unset',
-        // without the important, a `.chipContainer.labeled` class overrides this to 18.
-        marginTop: '16px !important',
-        display: 'inline-flex',
-        whiteSpace: 'nowrap',
-        overflow: 'scroll hidden'
-    },
-    chip: {
-        height: '26px'
-    },
-    label: {
-        top: 0
-    }
-};
-
-const ChipInputWithStyles = withStyles(chipInputStyles)(ChipInput);
 
 const autoSuggestTheme = {
     input: {
@@ -124,10 +105,12 @@ class ChipInputAutoComplete extends PureComponent {
     renderInputComponent(inputProps) {
         const { chips, value, onChange, className, classes, dataSource, ...rest } = inputProps;
         return (
-            <ChipInputWithStyles
+            <ChipInput
                 value={chips}
                 classes={{
-                    chipContainer: 'chipContainer'
+                    chipContainer: 'chipContainer',
+                    chip: 'chip',
+                    label: 'label'
                 }}
                 onAdd={this.onAddGenre}
                 onDelete={this.onDeleteGenre}
