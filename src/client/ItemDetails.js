@@ -187,14 +187,18 @@ class ItemDetails extends Component {
 
     render() {
         const { item, buttons, links } = this.state;
-        const { visible, onPosterSearch } = this.props;
+        const { visible, onPosterSearch, posterScraping } = this.props;
         const display = visible ? 'block' : 'none';
         const stateLabel = <StateLabel state={item.state} />;
         return (
             <div className="ItemDetails" style={{ display }}>
                 <div className="ItemDetails-grid">
                     <div className="ItemDetails-sidebar">
-                        <Poster item={item} onPosterSearch={onPosterSearch} />
+                        <Poster
+                            item={item}
+                            onPosterSearch={onPosterSearch}
+                            posterScraping={posterScraping}
+                        />
                         {buttons}
                     </div>
                     <div className="ItemDetails-fields">
@@ -218,11 +222,13 @@ ItemDetails.propTypes = {
     item: PropTypes.shape({}).isRequired,
     onChange: PropTypes.func.isRequired,
     onPosterSearch: PropTypes.func,
+    posterScraping: PropTypes.bool,
     visible: PropTypes.bool
 };
 
 ItemDetails.defaultProps = {
     visible: true,
+    posterScraping: false,
     onPosterSearch: () => {}
 };
 

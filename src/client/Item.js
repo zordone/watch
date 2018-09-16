@@ -30,6 +30,7 @@ class Item extends Component {
                 searching: false,
                 images: []
             },
+            posterScraping: false,
             error: '',
             deleteSure: false
         };
@@ -130,15 +131,23 @@ class Item extends Component {
     onPosterSearch() {
         const { item } = this.state;
         this.setState({
-            posters: { visible: true, searching: true, images: [] }
+            posters: { visible: true, searching: true, images: [] },
+            posterScraping: true
         });
         const query = `${item.title} ${item.type} poster portrait official`;
         service.searchImages(query)
         // service.mockSearchImages(3000)
             .then(images => {
                 this.setState({
-                    posters: { visible: true, searching: false, images }
+                    posters: { visible: true, searching: false, images },
+                    posterScraping: false
                 });
+            })
+            .catch(err => {
+                this.setState({
+                    posterScraping: false
+                });
+                throw err;
             });
     }
 
@@ -193,7 +202,7 @@ class Item extends Component {
     }
 
     render() {
-        const { item, page, posters, error, deleteSure } = this.state;
+        const { item, page, posters, error, deleteSure, posterScraping } = this.state;
         const isNew = item._id === Const.NEW;
         const deleteClassName = `Item-button delete${deleteSure ? ' sure' : ''}`;
         return (
@@ -204,6 +213,7 @@ class Item extends Component {
                         onChange={this.onChange}
                         visible={page === DETAILS}
                         onPosterSearch={this.onPosterSearch}
+                        posterScraping={posterScraping}
                     />
                     <ItemForm item={item} onChange={this.onChange} visible={page === FORM} />
                     {error && (

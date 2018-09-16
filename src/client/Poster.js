@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
-import { CloudDownload } from '@material-ui/icons';
 import { ItemType } from '../common/enums';
 import ItemIcon from './ItemIcon';
+import ScrapeButton from './ScrapeButton';
 import './Poster.css';
 
-const Poster = ({ item, onPosterSearch }) => {
+const Poster = ({ item, onPosterSearch, posterScraping }) => {
     const style = {};
     if (item.posterUrl) {
         style.background = `url(${item.posterUrl}) no-repeat center / cover`;
@@ -15,9 +14,12 @@ const Poster = ({ item, onPosterSearch }) => {
         <div className="Poster">
             <ItemIcon className="Poster-fallback" item={item} />
             <div className="Poster-image" style={style} />
-            <IconButton className="Poster-search" aria-label="Poster search" onClick={onPosterSearch}>
-                <CloudDownload />
-            </IconButton>
+            <ScrapeButton
+                className="Poster-search"
+                ariaLabel="Poster search"
+                inProgress={posterScraping}
+                onClick={onPosterSearch}
+            />
         </div>
     );
 };
@@ -26,10 +28,12 @@ Poster.propTypes = {
     item: PropTypes.shape({
         type: PropTypes.oneOf(Object.values(ItemType))
     }).isRequired,
+    posterScraping: PropTypes.bool,
     onPosterSearch: PropTypes.func
 };
 
 Poster.defaultProps = {
+    posterScraping: false,
     onPosterSearch: () => {}
 };
 

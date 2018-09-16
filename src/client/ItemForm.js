@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, IconButton } from '@material-ui/core';
-import { CloudDownload } from '@material-ui/icons';
+import { TextField } from '@material-ui/core';
 import GenreField from './GenreField';
 import ChipArrayInput from './ChipArrayInput';
 import * as service from './service';
 import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction } from './utils';
+import ScrapeButton from './ScrapeButton';
 import './ItemForm.css';
 
 const MAX_GENRES = 4;
@@ -16,7 +16,8 @@ class ItemForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: { ...service.defaultItem }
+            item: { ...service.defaultItem },
+            imdbScraping: false
         };
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onDateKeyDown = this.onDateKeyDown.bind(this);
@@ -58,6 +59,7 @@ class ItemForm extends Component {
     onImdbScrape() {
         const { item } = this.state;
         const { onChange } = this.props;
+        this.setState({ imdbScraping: true });
         service
             .imdbData(item.imdbId)
             .then(data => {
@@ -79,8 +81,15 @@ class ItemForm extends Component {
                     newItem.nextDate = parsed.released;
                     newItem.nextType = NextType.RELEASE;
                 }
-                this.setState({ item: newItem });
+                this.setState({
+                    item: newItem,
+                    imdbScraping: false
+                });
                 onChange(newItem);
+            })
+            .catch(err => {
+                this.setState({ imdbScraping: false });
+                throw err;
             });
     }
 
@@ -91,7 +100,7 @@ class ItemForm extends Component {
     }
 
     render() {
-        const { item } = this.state;
+        const { item, imdbScraping } = this.state;
         const { visible } = this.props;
         return (
             <form noValidate autoComplete="off" className="ItemForm" style={this.formStyle(visible)}>
@@ -200,14 +209,13 @@ class ItemForm extends Component {
                             onChange={this.onFieldChange}
                             value={item.imdbId}
                         />
-                        <IconButton
+                        <ScrapeButton
                             className="imdb-scrape"
-                            aria-label="Fill from IMDb"
+                            ariaLabel="Fill from IMDb"
+                            visible={Boolean(item.imdbId)}
+                            inProgress={imdbScraping}
                             onClick={this.onImdbScrape}
-                            style={{ display: item.imdbId ? 'block' : 'none' }}
-                        >
-                            <CloudDownload />
-                        </IconButton>
+                        />
                     </div>
                     <TextField
                         id="posterUrl"

@@ -53,6 +53,13 @@
     color: transparent;
 }
 
+/* transparent date picker button */
+.ItemForm input[type="date"]::-webkit-calendar-picker-indicator,
+.ItemForm .ItemForm-grid input[type="date"]::-webkit-clear-button {
+    background: transparent;
+    color: #FFF;
+}
+
 .ItemForm-grid .title    { grid-area: title }
 .ItemForm-grid .type     { grid-area: type  }
 .ItemForm-grid .genres   { grid-area: genre }
