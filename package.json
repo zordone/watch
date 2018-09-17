@@ -74,6 +74,7 @@
         "lint": "./node_modules/eslint/bin/eslint.js ./src",
         "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
         "start-all": "node scripts/start-all.js",
+        "start-all-prod": "node scripts/start-all.js --prod",
         "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css",
         "analyze": "source-map-explorer build/static/js/main.*"
     },

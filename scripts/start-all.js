@@ -1,10 +1,11 @@
 // - Starts the database
 // - Waits until it's ready for connections
 // - Starts the server
-// - Starts the client
+// - Starts the client (dev/prod)
 // - Opens the client in the default browser
 
 const spawn = require('child_process').spawn;
+const isProduction = process.argv[2] === '--prod';
 
 const spawnPipe = (command, args = [], prefix = '', onLine = () => {}) => {
     const db = spawn(command, args, {stdio: ['ignore', 'pipe', process.stderr]});
@@ -19,8 +20,16 @@ const spawnPipe = (command, args = [], prefix = '', onLine = () => {}) => {
     });
 };
 
-let isAllStarted = false;
+// log title & mode
+const green = '\x1b[32m';
+const red = '\x1b[31m';
+const reset = '\x1b[0m';
+const color = isProduction ? green : red;
+const mode = isProduction ? 'PRODUCTION' : 'DEVELOPMENT';
+console.log(`\n🍿 Watch - ${color}${mode}${reset}\n\n`);
 
+// start db, then server & client
+let isAllStarted = false;
 spawnPipe('mongod', [], '[DB]', line => {
     if (isAllStarted) {
         return;
@@ -29,8 +38,15 @@ spawnPipe('mongod', [], '[DB]', line => {
     const isAlreadyRunning = line.includes('Another mongod instance is already running');
     if (isStarted || isAlreadyRunning) {
         spawnPipe('npm', ['run', 'server'], '[BE]');
-        spawnPipe('npm', ['start'], '[FE]');
-        console.log('\nAll processes started.\n');
+        if (isProduction) {
+            // TODO: instead of this harcoded timeout, we should wait for "Listening on port X" from the server.
+            setTimeout(() => {
+                spawnPipe('http-server', ['./build', '-p3000', '-o', '-s'], '[FE]');
+            }, 3000);
+        } else {
+            spawnPipe('npm', ['start'], '[FE]');
+        }
+        console.log(`\n${green}All processes started.${reset}\n`);
         isAllStarted = true;
     }
 });
