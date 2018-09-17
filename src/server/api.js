@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const omit = require('lodash/omit');
 const Scraper = require('images-scraper');
 const moment = require('moment');
 const fs = require('fs');
@@ -94,7 +94,7 @@ exports.listItems = (req, res) => {
 };
 
 exports.newItem = (req, res) => {
-    const body = _.omit((req && req.body) || {}, Item.dontUpdateFields);
+    const body = omit((req && req.body) || {}, Item.dontUpdateFields);
     const now = new Date();
     const model = new Item({
         ...body,
@@ -133,7 +133,7 @@ exports.getItemById = (req, res) => {
 
 exports.updateItemById = (req, res) => {
     const { id } = req.params;
-    const body = _.omit((req && req.body) || {}, Item.dontUpdateFields);
+    const body = omit((req && req.body) || {}, Item.dontUpdateFields);
     body.updated = new Date();
     Item.findById(id)
         .then(item => {

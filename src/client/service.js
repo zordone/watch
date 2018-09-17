@@ -1,9 +1,9 @@
 /* globals window */
 
-import _ from 'lodash';
 import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, Const } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
+import _ from '../common/lodashReduced';
 
 const BASE_URL = window.location.origin.replace(/:3000$/, ':3001');
 console.debug('Backend URL', BASE_URL);

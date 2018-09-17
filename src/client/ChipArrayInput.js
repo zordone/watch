@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ChipInput from 'material-ui-chip-input';
-import _ from 'lodash';
+import _ from '../common/lodashReduced';
 import './ChipArrayInput.css';
 
 class ChipArrayInput extends PureComponent {

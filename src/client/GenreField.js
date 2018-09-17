@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import ChipInputAutoComplete from './ChipInputAutoComplete';
+import _ from '../common/lodashReduced';
 import data from '../common/data.json';
 import './GenreField.css';
 

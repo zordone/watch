@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from '../../common/lodashReduced';
 
 export const getItems = state => state.items;
 export const getItemById = (state, id) => _.find(state.items, { _id: id });
