@@ -3,7 +3,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { TextField, InputAdornment } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { SearchKeywords } from '../common/enums';
 import './SearchField.css';
 

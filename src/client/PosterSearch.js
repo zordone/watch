@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Paper } from '@material-ui/core';
-import { CloudDownload } from '@material-ui/icons';
+import Paper from '@material-ui/core/Paper';
+import CloudDownload from '@material-ui/icons/CloudDownload';
 import './PosterSearch.css';
 
 class PosterSearch extends PureComponent {

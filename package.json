@@ -63,7 +63,8 @@
         "eslint-loader": "1.9.0",
         "eslint-plugin-import": "^2.13.0",
         "eslint-plugin-jsx-a11y": "^6.1.1",
-        "eslint-plugin-react": "^7.10.0"
+        "eslint-plugin-react": "^7.10.0",
+        "source-map-explorer": "^1.6.0"
     },
     "scripts": {
         "start": "node scripts/start.js",
@@ -73,7 +74,8 @@
         "lint": "./node_modules/eslint/bin/eslint.js ./src",
         "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
         "start-all": "node scripts/start-all.js",
-        "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css"
+        "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css",
+        "analyze": "source-map-explorer build/static/js/main.*"
     },
     "jest": {
         "collectCoverageFrom": [

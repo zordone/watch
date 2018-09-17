@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
-import { CloudDownload } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import CloudDownload from '@material-ui/icons/CloudDownload';
 import './ScrapeButton.css';
 
 class ScrapeButton extends PureComponent {

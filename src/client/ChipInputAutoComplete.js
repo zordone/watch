@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem } from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import './ChipInputAutoComplete.css';

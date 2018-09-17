@@ -3,8 +3,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, IconButton, Paper } from '@material-ui/core';
-import { Create, Check, DeleteForever } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Create from '@material-ui/icons/Create';
+import Check from '@material-ui/icons/Check';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 import * as service from './service';
 import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';

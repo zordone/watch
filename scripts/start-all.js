@@ -41,3 +41,10 @@ process.on('SIGTERM', () => {
     process.exit(0);
     // TODO: do we need to close the sub processes as well?
 });
+
+process.on('SIGINT', () => {
+    console.info('\nSIGINT received.');
+    console.log('Exiting.');
+    process.exit(0);
+    // TODO: do we need to close the sub processes as well?
+});
