@@ -12,7 +12,7 @@
     grid-template-rows: 1fr;
     align-items: center;
     justify-items: center;
-    animation: hide 500ms ease-in 1 forwards 3.7s;
+    animation: hide 500ms ease-in 1 forwards 2.7s;
     pointer-events: none;
     overflow: hidden;
 }
@@ -24,8 +24,8 @@
     width: 50%;
     height: 200px;
     animation:
-        hide 500ms ease-in 1 forwards 3.7s,
-        zoom 500ms ease-in 1 forwards 3.7s;
+        hide 500ms ease-in 1 forwards 2.7s,
+        zoom 500ms ease-in 1 forwards 2.7s;
 }
 
 .Loader-image {
@@ -49,7 +49,7 @@
     mask-position: 0 0%;
     animation:
         waves 7s linear infinite,
-        loading 2.5s linear 1 forwards 1s;
+        loading 1.5s linear 1 forwards 1s;
 }
 
 @keyframes waves {
@@ -82,6 +82,6 @@
         mask-size: 33% 200%;
         animation:
             waves 1.2s linear infinite,
-            loading 2.5s linear 1 forwards 1s;
+            loading 1.5s linear 1 forwards 1s;
     }
 }
