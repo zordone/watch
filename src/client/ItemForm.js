@@ -8,6 +8,7 @@ import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction } from './utils';
 import ScrapeButton from './ScrapeButton';
+import _ from '../common/lodashReduced';
 import './ItemForm.css';
 
 const MAX_GENRES = 4;
@@ -17,8 +18,11 @@ class ItemForm extends Component {
         super(props);
         this.state = {
             item: { ...service.defaultItem },
+            sameTitle: undefined,
             imdbScraping: false
         };
+        this.onTitleChange = this.onTitleChange.bind(this);
+        this.onTitleChange = _.debounce(this.onTitleChange, 1000);
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onDateKeyDown = this.onDateKeyDown.bind(this);
         this.onImdbScrape = this.onImdbScrape.bind(this);
@@ -34,6 +38,19 @@ class ItemForm extends Component {
         });
     }
 
+    onTitleChange() {
+        const { findByTitle } = this.props;
+        const { item, sameTitle } = this.state;
+        const other = findByTitle(item._id, item.title);
+        if (other !== sameTitle) {
+            const { _id: id, title } = other || {};
+            if (id) {
+                this.sameTitleLink = <a href={`/item/${id}`} target="_blank" rel="noopener noreferrer">{title}</a>;
+            }
+            this.setState({ sameTitle: other });
+        }
+    }
+
     onFieldChange(event) {
         const { item } = this.state;
         const { onChange } = this.props;
@@ -46,6 +63,9 @@ class ItemForm extends Component {
             item: newItem
         });
         onChange(newItem);
+        if (item.title !== newItem.title) {
+            this.onTitleChange();
+        }
     }
 
     onDateKeyDown(event) {
@@ -100,19 +120,25 @@ class ItemForm extends Component {
     }
 
     render() {
-        const { item, imdbScraping } = this.state;
+        const { item, imdbScraping, sameTitle } = this.state;
         const { visible } = this.props;
         return (
             <form noValidate autoComplete="off" className="ItemForm" style={this.formStyle(visible)}>
                 <div className="ItemForm-grid">
-                    <TextField
-                        id="title"
-                        className="title"
-                        label="Title"
-                        onChange={this.onFieldChange}
-                        value={item.title}
-                        autoFocus
-                    />
+                    <div className="title">
+                        <TextField
+                            id="title"
+                            label="Title"
+                            className="title-field"
+                            onChange={this.onFieldChange}
+                            value={item.title}
+                            fullWidth
+                            autoFocus
+                        />
+                        <div className={`same-title ${sameTitle ? 'show' : ''}`}>
+                            This title is already taken by: {this.sameTitleLink}
+                        </div>
+                    </div>
                     <SelectField
                         id="type"
                         className="type"
@@ -242,10 +268,12 @@ class ItemForm extends Component {
 ItemForm.propTypes = {
     item: PropTypes.shape({}).isRequired,
     onChange: PropTypes.func.isRequired,
+    findByTitle: PropTypes.func,
     visible: PropTypes.bool
 };
 
 ItemForm.defaultProps = {
+    findByTitle: () => undefined,
     visible: true
 };
 

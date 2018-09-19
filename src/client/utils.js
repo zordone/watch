@@ -72,3 +72,9 @@ export const anyChanged = (names, prev, next, debugName = '') => {
     }
     return changedNames.length > 0;
 };
+
+export const slugify = str => str
+    .toLowerCase()
+    .replace(/[^\w\x80-\xFF]/g, ' ')
+    .trim()
+    .replace(/\s+/g, '-');

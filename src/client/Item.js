@@ -15,7 +15,7 @@ import * as selectors from './redux/selectors';
 import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import itemState from './itemState';
-import { anyChanged } from './utils';
+import { anyChanged, slugify } from './utils';
 import PosterSearch from './PosterSearch';
 import { Const } from '../common/enums';
 import './Item.css';
@@ -38,6 +38,7 @@ class Item extends Component {
             error: '',
             deleteSure: false
         };
+        this.findByTitle = this.findByTitle.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onClose = this.onClose.bind(this);
@@ -205,6 +206,12 @@ class Item extends Component {
         });
     }
 
+    findByTitle(id, title) {
+        const { items } = this.props;
+        const titleSlug = slugify(title);
+        return items.find(item => item.id !== id && slugify(item.title) === titleSlug);
+    }
+
     render() {
         const { item, page, posters, error, deleteSure, posterScraping } = this.state;
         const isNew = item._id === Const.NEW;
@@ -219,7 +226,12 @@ class Item extends Component {
                         onPosterSearch={this.onPosterSearch}
                         posterScraping={posterScraping}
                     />
-                    <ItemForm item={item} onChange={this.onChange} visible={page === FORM} />
+                    <ItemForm
+                        item={item}
+                        onChange={this.onChange}
+                        visible={page === FORM}
+                        findByTitle={this.findByTitle}
+                    />
                     {error && (
                         <p className="Item-error">{error}</p>
                     )}

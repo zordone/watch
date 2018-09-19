@@ -18,9 +18,52 @@
     color: #888;
 }
 
+.ItemForm-grid .title {
+    position: relative;
+}
+
 .ItemForm-grid .title input {
     font-size: 1.5rem;
     font-weight: 600;
+}
+.ItemForm-grid .title-field {
+    z-index: 2;
+    background: #424242;
+}
+
+.ItemForm-grid .same-title {
+    position: absolute;
+    height: 1.4rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #B66;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 7px -3px #0008;
+    color: #800F;
+    font-size: 0.8rem;
+    text-align: center;
+    z-index: 1;
+    bottom: 0.5rem;
+    transition: bottom 1s cubic-bezier(0.22, 0.61, 0.36, 1);;
+}
+
+.ItemForm-grid .same-title.show {
+    bottom: -1.4rem;
+}
+
+.ItemForm-grid .same-title a,
+.ItemForm-grid .same-title a:visited {
+    color: #800B;
+    padding-left: 0.5rem;
+    font-weight: 600;
+    outline: none;
+}
+
+.ItemForm-grid .same-title a:hover,
+.ItemForm-grid .same-title a:focus {
+    color: #B00;
 }
 
 .ItemForm-grid .imdb {
