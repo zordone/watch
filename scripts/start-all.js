@@ -41,7 +41,7 @@ spawnPipe('mongod', [], '[DB]', line => {
         if (isProduction) {
             // TODO: instead of this harcoded timeout, we should wait for "Listening on port X" from the server.
             setTimeout(() => {
-                spawnPipe('http-server', ['./build', '-p3000', '-o', '-s'], '[FE]');
+                spawnPipe('npm', ['run', 'start-prod'], '[FE]');
             }, 3000);
         } else {
             spawnPipe('npm', ['start'], '[FE]');
