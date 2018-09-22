@@ -254,8 +254,10 @@ exports.imdbData = (req, res) => {
                         : '',
                     releaseYear: data.datePublished
                         ? parseInt(data.datePublished.substr(0, 4), 10)
-                        : null,
-                    // TODO make use of these or remove
+                        : null
+                },
+                // TODO make use of these or remove
+                extra: {
                     actors: makeArray(data.actor)
                         .filter(actor => actor['@type'] === 'Person')
                         .map(actor => actor.name),
