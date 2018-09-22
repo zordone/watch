@@ -6,3 +6,4 @@ export const DELETE_ITEM = 'delete-item';
 export const SET_SEARCH = 'set-search';
 export const SET_FIRST_LOAD = 'set-first-load';
 export const SET_CURRENT_ID = 'set-current-id';
+export const SET_SORT = 'set-sort';

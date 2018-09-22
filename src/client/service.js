@@ -1,6 +1,6 @@
 /* globals window */
 
-import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, Const } from '../common/enums';
+import { ItemType, NextType, ValiType, FinishedType, StateType, SearchKeywords, Const, SortComparators } from '../common/enums';
 import { parseDate } from './utils';
 import itemState from './itemState';
 import _ from '../common/lodashReduced';
@@ -34,7 +34,7 @@ const jsonHeaders = {
 const cleanArray = array =>
     array
         .map(item => (item || '').trim().toLowerCase())
-        .filter(item => item);
+        .filter(Boolean);
 
 const itemSearchData = (item, state) => ({
     text: `${item.title} ${item.notes} ${item.description}`.toLowerCase(),
@@ -94,23 +94,39 @@ const jsonOrError = res => (
         })
 );
 
-const compareItems = (a, b) => {
-    if (a.state.num < b.state.num) {
-        return -1;
+const compareValues = (a, b, asc = true) => {
+    if (a < b) {
+        return asc ? -1 : 1;
     }
-    if (a.state.num > b.state.num) {
-        return 1;
-    }
-    if (a.title < b.title) {
-        return -1;
-    }
-    if (a.title > b.title) {
-        return 1;
+    if (a > b) {
+        return asc ? 1 : -1;
     }
     return 0;
 };
 
-export const sortItems = items => items.sort(compareItems);
+const compareItemsDefault = (a, b) => (
+    compareValues(a.state.num, b.state.num, true) ||
+    compareValues(a.title, b.title, true)
+);
+
+const compareItemsCreated = (a, b) => (
+    compareValues(a.created, b.created, false) ||
+    compareValues(a.title, b.title, true)
+);
+
+const compareItemsUpdated = (a, b) => (
+    compareValues(a.updated, b.updated, false) ||
+    compareValues(a.title, b.title, true)
+);
+
+const sortComparators = {
+    [SortComparators.DEFAULT]: compareItemsDefault,
+    [SortComparators.CREATED]: compareItemsCreated,
+    [SortComparators.UPDATED]: compareItemsUpdated
+};
+
+export const sortItems = (items, sort = SortComparators.DEFAULT) =>
+    [...items.sort(sortComparators[sort])];
 
 export const listItems = () =>
     fetch(`${BASE_URL}/items`)

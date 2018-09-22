@@ -15,10 +15,9 @@ import * as selectors from './redux/selectors';
 import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import itemState from './itemState';
-import { anyChanged, slugify } from './utils';
+import { anyChanged, slugify, noop } from './utils';
 import PosterSearch from './PosterSearch';
-import { Const } from '../common/enums';
-import _ from '../common/lodashReduced';
+import { Const, SortComparators } from '../common/enums';
 import './Item.css';
 
 const FORM = 'form';
@@ -49,7 +48,7 @@ class Item extends Component {
         this.onPosterSearch = this.onPosterSearch.bind(this);
         this.onPosterSelect = this.onPosterSelect.bind(this);
         this.onDelete = this.onDelete.bind(this);
-        this.updateItemState = _.throttle(this.updateItemState, 3000);
+        this.updateItemState = this.updateItemState;
     }
 
     componentDidMount() {
@@ -79,6 +78,13 @@ class Item extends Component {
                     setFirstLoad(false);
                     setCurrentId(id);
                 });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { items, setSort, sort, resort } = nextProps;
+        if (resort) {
+            setSort(items, sort);
         }
     }
 
@@ -278,13 +284,32 @@ Item.propTypes = {
     history: PropTypes.shape({
         goBack: PropTypes.func.isRequired
     }).isRequired,
-    addNewItem: PropTypes.func.isRequired,
-    updateItem: PropTypes.func.isRequired,
-    items: PropTypes.arrayOf(PropTypes.object).isRequired
+    items: PropTypes.arrayOf(PropTypes.object).isRequired,
+    sort: PropTypes.oneOf(Object.values(SortComparators)),
+    resort: PropTypes.bool,
+    addNewItem: PropTypes.func,
+    updateItem: PropTypes.func,
+    deleteItem: PropTypes.func,
+    setFirstLoad: PropTypes.func,
+    setCurrentId: PropTypes.func,
+    setSort: PropTypes.func
+};
+
+Item.defaultProps = {
+    sort: PropTypes.oneOf(Object.values(SortComparators)),
+    resort: false,
+    addNewItem: noop,
+    updateItem: noop,
+    deleteItem: noop,
+    setFirstLoad: noop,
+    setCurrentId: noop,
+    setSort: noop
 };
 
 const mapStateToProps = state => ({
-    items: selectors.getItems(state)
+    items: selectors.getItems(state),
+    sort: selectors.getSort(state),
+    resort: selectors.getResort(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -293,7 +318,8 @@ const mapDispatchToProps = dispatch => ({
     updateItem: (items, item) => dispatch(actions.updateItem(items, item)),
     deleteItem: (items, id) => dispatch(actions.deleteItem(items, id)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
-    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId))
+    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId)),
+    setSort: (items, sort) => dispatch(actions.setSort(items, sort))
 });
 
 export default connect(

@@ -26,7 +26,7 @@ export const updateItem = (items, newItem) => {
         .concat(newItem);
     return {
         type: types.UPDATE_ITEM,
-        items: service.sortItems(newItems)
+        items: newItems
     };
 };
 
@@ -49,4 +49,10 @@ export const setFirstLoad = firstLoad => ({
 export const setCurrentId = currentId => ({
     type: types.SET_CURRENT_ID,
     currentId
+});
+
+export const setSort = (items, sort) => ({
+    type: types.SET_SORT,
+    items: service.sortItems(items, sort),
+    sort
 });

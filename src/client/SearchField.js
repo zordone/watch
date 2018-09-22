@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Search from '@material-ui/icons/Search';
 import { SearchKeywords } from '../common/enums';
 import _ from '../common/lodashReduced';
 import './SearchField.css';
@@ -89,7 +90,7 @@ class SearchField extends PureComponent {
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
-                                <i className="material-icons">search</i>
+                                <Search />
                             </InputAdornment>
                         ),
                         style: {

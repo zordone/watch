@@ -4,21 +4,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
+import Add from '@material-ui/icons/Add';
 import ItemTable from './ItemTable';
 import Header from './Header';
 import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';
 import SearchField from './SearchField';
 import Loader from './Loader';
-import { anyChanged } from './utils';
+import { anyChanged, noop } from './utils';
 import fixedHeaderWorkaround from './fixedHeader';
 import packageJson from '../../package.json';
-import { SearchKeywords } from '../common/enums';
+import { SearchKeywords, SortComparators } from '../common/enums';
 import './Home.css';
 
 class Home extends Component {
     constructor(props) {
         super(props);
+        this.currentSearch = '';
         this.onImdbPaste = this.onImdbPaste.bind(this);
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onShortcut = this.onShortcut.bind(this);
@@ -58,10 +60,11 @@ class Home extends Component {
 
     onSearchChanged(search) {
         const { items, setSearch } = this.props;
+        this.currentSearch = search;
         const searchWords = search
             .split(' ')
             .map(word => word.trim())
-            .filter(word => word);
+            .filter(Boolean);
         if (!searchWords.length) {
             setSearch('', items);
             this.scrollToCurrent();
@@ -82,12 +85,25 @@ class Home extends Component {
     }
 
     onShortcut(code, inSearch) {
+        const { filteredItems, history, items, sort, setSort, setSearch } = this.props;
         if (code === 'Enter') {
             // open first item
-            const { filteredItems, history } = this.props;
             const item = filteredItems[0];
             if (item) {
                 history.push(`/item/${item._id}`);
+                return;
+            }
+            // set sort
+            if (this.currentSearch.startsWith('sort:')) {
+                const newSort = this.currentSearch.replace('sort:', '').toLowerCase() || SortComparators.DEFAULT;
+                const isValid = Object.values(SortComparators).includes(newSort);
+                if (!isValid) {
+                    return;
+                }
+                if (sort !== newSort) {
+                    setSort(items, newSort);
+                }
+                setSearch('', items);
             }
         } else if (code === 'KeyN' && !inSearch) {
             // add new item
@@ -129,7 +145,7 @@ class Home extends Component {
         );
         const newButton = (
             <IconButton className="NewButton" aria-label="Add new item" onClick={this.onAddNew}>
-                <i className="material-icons">add</i>
+                <Add />
             </IconButton>
         );
         return (
@@ -157,9 +173,27 @@ Home.propTypes = {
         goBack: PropTypes.func.isRequired
     }).isRequired,
     items: PropTypes.arrayOf(PropTypes.object).isRequired,
-    fetchItems: PropTypes.func.isRequired,
     search: PropTypes.string.isRequired,
-    filteredItems: PropTypes.arrayOf(PropTypes.object).isRequired
+    filteredItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+    firstLoad: PropTypes.bool,
+    currentId: PropTypes.string,
+    sort: PropTypes.oneOf(Object.values(SortComparators)),
+    fetchItems: PropTypes.func,
+    setSearch: PropTypes.func,
+    setFirstLoad: PropTypes.func,
+    setCurrentId: PropTypes.func,
+    setSort: PropTypes.func
+};
+
+Home.defaultProps = {
+    firstLoad: false,
+    currentId: '',
+    sort: SortComparators.DEFAULT,
+    fetchItems: noop,
+    setSearch: noop,
+    setFirstLoad: noop,
+    setCurrentId: noop,
+    setSort: noop
 };
 
 const mapStateToProps = state => ({
@@ -167,14 +201,16 @@ const mapStateToProps = state => ({
     search: selectors.getSearch(state),
     filteredItems: selectors.getFilteredItems(state),
     firstLoad: selectors.getFirstLoad(state),
-    currentId: selectors.getCurrentId(state)
+    currentId: selectors.getCurrentId(state),
+    sort: selectors.getSort(state)
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchItems: () => dispatch(actions.fetchItems()),
     setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
-    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId))
+    setCurrentId: currentId => dispatch(actions.setCurrentId(currentId)),
+    setSort: (items, sort) => dispatch(actions.setSort(items, sort))
 });
 
 export default connect(

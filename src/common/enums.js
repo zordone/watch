@@ -48,6 +48,12 @@ const SearchKeywords = Object.freeze({
     UNSCRAPED: 'unscraped'
 });
 
+const SortComparators = Object.freeze({
+    DEFAULT: 'default',
+    CREATED: 'created',
+    UPDATED: 'updated'
+});
+
 const Const = Object.freeze({
     NEW: 'new'
 });
@@ -58,4 +64,5 @@ exports.ValiType = ValiType;
 exports.StateType = StateType;
 exports.FinishedType = FinishedType;
 exports.SearchKeywords = SearchKeywords;
+exports.SortComparators = SortComparators;
 exports.Const = Const;

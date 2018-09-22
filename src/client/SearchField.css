@@ -8,23 +8,23 @@
   background: #0084ffab;
 }
 
-.SearchField-input i {
+.SearchField-input svg {
   margin-left: 0.5rem;
   font-size: 2.2rem;
 }
 
 .SearchField-input input,
-.SearchField-input i {
+.SearchField-input svg {
   color: #FFF2;
   transform: translateY(1px);
 }
 .SearchField-input.focused input,
-.SearchField-input.focused i {
+.SearchField-input.focused svg {
   color: #FFF;
 }
 
 .SearchField.not-empty input,
-.SearchField.not-empty i {
+.SearchField.not-empty svg {
   color: #00a9ff;
 }
 
