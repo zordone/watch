@@ -93,9 +93,6 @@ class SearchField extends PureComponent {
                                 <Search />
                             </InputAdornment>
                         ),
-                        style: {
-                            fontSize: '1.5rem' // TODO: move this to css?
-                        },
                         disableUnderline: true,
                         classes: {
                             root: 'SearchField-input',

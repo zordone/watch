@@ -4,6 +4,10 @@
   border-radius: 4px;
 }
 
+.SearchField .SearchField-input  {
+  font-size: 1.5rem;
+}
+
 .SearchField-input input::selection {
   background: #0084ffab;
 }
