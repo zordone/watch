@@ -27,7 +27,7 @@ const App = () => (
             <div className="App">
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/item/:id" component={Item} />
+                    <Route exact path="/item/:id/:imdbId?" component={Item} />
                 </Switch>
             </div>
         </BrowserRouter>

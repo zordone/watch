@@ -19,6 +19,7 @@ import './Home.css';
 class Home extends Component {
     constructor(props) {
         super(props);
+        this.onImdbPaste = this.onImdbPaste.bind(this);
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
@@ -27,6 +28,7 @@ class Home extends Component {
 
     componentDidMount() {
         fixedHeaderWorkaround();
+        document.addEventListener('imdbPaste', this.onImdbPaste);
         const { fetchItems, items, search } = this.props;
         const isFetched = Boolean(items.length);
         const itemsPromise = isFetched
@@ -47,6 +49,11 @@ class Home extends Component {
     componentWillUnmount() {
         const { setFirstLoad } = this.props;
         setFirstLoad(false);
+        document.removeEventListener('imdbPaste', this.onImdbPaste);
+    }
+
+    onImdbPaste(event) {
+        this.onAddNew(event, event.detail.imdbId);
     }
 
     onSearchChanged(search) {
@@ -88,9 +95,10 @@ class Home extends Component {
         }
     }
 
-    onAddNew() {
+    onAddNew(event, imdbId) {
         const { history } = this.props;
-        history.push('/item/new');
+        const imdbParam = imdbId ? `/${imdbId}` : '';
+        history.push(`/item/new${imdbParam}`);
     }
 
     onRowClick(id) {

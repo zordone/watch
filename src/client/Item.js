@@ -52,10 +52,14 @@ class Item extends Component {
 
     componentDidMount() {
         const { match, items, fetchItems, setFirstLoad, setCurrentId } = this.props;
-        const { id } = match.params;
+        const { id, imdbId } = match.params;
         if (id === Const.NEW) {
+            const item = service.createNewItem();
+            if (id === Const.NEW && imdbId) {
+                item.imdbId = imdbId;
+            }
             this.setState({
-                item: service.createNewItem(),
+                item,
                 page: FORM
             });
         } else {
@@ -209,7 +213,7 @@ class Item extends Component {
     findByTitle(id, title) {
         const { items } = this.props;
         const titleSlug = slugify(title);
-        return items.find(item => item.id !== id && slugify(item.title) === titleSlug);
+        return items.find(item => item._id !== id && slugify(item.title) === titleSlug);
     }
 
     render() {

@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import GenreField from './GenreField';
 import ChipArrayInput from './ChipArrayInput';
 import * as service from './service';
-import { ItemType, ValiType, NextType, FinishedType } from '../common/enums';
+import { ItemType, ValiType, NextType, FinishedType, Const } from '../common/enums';
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction } from './utils';
 import ScrapeButton from './ScrapeButton';
@@ -36,6 +36,16 @@ class ItemForm extends Component {
         this.setState({
             item: { ...nextProps.item }
         });
+    }
+
+    componentDidUpdate() {
+        const { item, imdbScraping } = this.state;
+        const isNew = item._id === Const.NEW;
+        const hasTitle = Boolean(item.title);
+        const hasImdb = Boolean(item.imdbId);
+        if (isNew && !hasTitle && hasImdb && !imdbScraping) {
+            this.onImdbScrape();
+        }
     }
 
     onTitleChange() {
@@ -106,6 +116,7 @@ class ItemForm extends Component {
                     imdbScraping: false
                 });
                 onChange(newItem);
+                this.onTitleChange();
             })
             .catch(err => {
                 this.setState({ imdbScraping: false });
