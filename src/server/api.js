@@ -7,7 +7,7 @@ const { Item } = require('./models');
 const { importCsv } = require('./importCsv');
 const { IMPORT_DIR, BACKUP_DIR } = require('./config');
 const { ItemType } = require('../common/enums');
-const { genres, keywords } = require('../common/data.json');
+const { genres } = require('../common/data.json');
 
 const between = (value, min, max) => (min <= value && value <= max);
 
@@ -247,16 +247,7 @@ exports.imdbData = (req, res) => {
                     keywords: (data.keywords || '')
                         .split(',')
                         .map(keyword => keyword.trim().toLowerCase())
-                        .filter(keyword => {
-                            const isValid = keywords.includes(keyword);
-                            if (!isValid) {
-                                console.warn('[ImdbData] Invalid keyword:', keyword);
-                            }
-                            // TODO: collect a bunch of them
-                            //   before applying the filter, or remove it?
-                            // return isValid;
-                            return Boolean(keyword);
-                        }),
+                        .filter(Boolean),
                     posterUrl: data.image || '',
                     released: data.datePublished
                         ? data.datePublished
@@ -264,7 +255,7 @@ exports.imdbData = (req, res) => {
                     releaseYear: data.datePublished
                         ? parseInt(data.datePublished.substr(0, 4), 10)
                         : null,
-                    // TODO make use of these (?)
+                    // TODO make use of these or remove
                     actors: makeArray(data.actor)
                         .filter(actor => actor['@type'] === 'Person')
                         .map(actor => actor.name),
