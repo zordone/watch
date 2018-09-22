@@ -18,6 +18,7 @@ import itemState from './itemState';
 import { anyChanged, slugify } from './utils';
 import PosterSearch from './PosterSearch';
 import { Const } from '../common/enums';
+import _ from '../common/lodashReduced';
 import './Item.css';
 
 const FORM = 'form';
@@ -48,6 +49,7 @@ class Item extends Component {
         this.onPosterSearch = this.onPosterSearch.bind(this);
         this.onPosterSelect = this.onPosterSelect.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.updateItemState = _.throttle(this.updateItemState, 3000);
     }
 
     componentDidMount() {
@@ -96,7 +98,7 @@ class Item extends Component {
 
     onChange(changedItem) {
         const { page } = this.state;
-        const updateState = changedItem._id !== Const.NEW && page === DETAILS;
+        const updateState = page === DETAILS;
         this.updateItemState(changedItem, updateState);
     }
 
