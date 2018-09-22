@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import './PosterSearch.css';
+import { noop } from './utils';
 
 class PosterSearch extends PureComponent {
     constructor(props) {
@@ -80,7 +81,7 @@ PosterSearch.defaultProps = {
     visible: true,
     searching: false,
     images: [],
-    onSelect: () => {}
+    onSelect: noop
 };
 
 export default PosterSearch;

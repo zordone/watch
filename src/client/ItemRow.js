@@ -4,7 +4,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import ItemIcon from './ItemIcon';
 import StateLabel from './StateLabel';
-import { maxLength } from './utils';
+import { maxLength, noop } from './utils';
 import './ItemRow.css';
 
 const ItemRow = ({ item, onClick, isCurrent }) => {
@@ -35,7 +35,7 @@ ItemRow.propTypes = {
 
 ItemRow.defaultProps = {
     isCurrent: false,
-    onClick: () => {}
+    onClick: noop
 };
 
 export default ItemRow;

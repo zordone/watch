@@ -18,7 +18,7 @@ const csvSeason = seasonStr => (
 const csvGenres = genresStr =>
     (genresStr || '').split(',')
         .map(genre => genre.trim())
-        .filter(genre => Boolean(genre));
+        .filter(Boolean);
 
 const csvNextType = nextStr => (
     nextStr === 'check'

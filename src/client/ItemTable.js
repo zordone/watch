@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ItemRow from './ItemRow';
 import './ItemTable.css';
+import { noop } from './utils';
 
 const ItemTable = props => {
     const { items, onRowClick, currentId } = props;
@@ -52,7 +53,7 @@ ItemTable.propTypes = {
 ItemTable.defaultProps = {
     items: [],
     currentId: null,
-    onRowClick: () => {}
+    onRowClick: noop
 };
 
 export default ItemTable;

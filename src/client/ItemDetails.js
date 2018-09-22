@@ -6,7 +6,7 @@ import Poster from './Poster';
 import './ItemDetails.css';
 import StateLabel from './StateLabel';
 import { ItemType, FinishedType, StateType, NextType, ValiType } from '../common/enums';
-import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum } from './utils';
+import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from './utils';
 
 const DetailsRow = ({ label, value, className = '', optional = false }) => {
     if (optional && !value) {
@@ -229,7 +229,7 @@ ItemDetails.propTypes = {
 ItemDetails.defaultProps = {
     visible: true,
     posterScraping: false,
-    onPosterSearch: () => {}
+    onPosterSearch: noop
 };
 
 export default ItemDetails;

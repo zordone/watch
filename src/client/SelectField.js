@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
+import { noop } from './utils';
 
 const SelectField = ({ options, ...props }) => (
     <TextField
@@ -31,7 +32,7 @@ SelectField.defaultProps = {
     style: {},
     label: undefined,
     className: '',
-    onChange: () => {},
+    onChange: noop,
     options: ''
 };
 

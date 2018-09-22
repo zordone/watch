@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import './ScrapeButton.css';
+import { noop } from './utils';
 
 class ScrapeButton extends PureComponent {
     render() {
@@ -33,7 +34,7 @@ ScrapeButton.defaultProps = {
     className: '',
     visible: true,
     inProgress: false,
-    onClick: () => {}
+    onClick: noop
 };
 
 export default ScrapeButton;

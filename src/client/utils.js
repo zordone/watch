@@ -1,6 +1,8 @@
 import moment from 'moment';
 import { ItemType } from '../common/enums';
 
+export const noop = () => {};
+
 export const parseDate = date => {
     const mom = date && (typeof date === 'string'
         ? moment(date, moment.ISO_8601)

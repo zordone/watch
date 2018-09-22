@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { SearchKeywords } from '../common/enums';
 import _ from '../common/lodashReduced';
 import './SearchField.css';
+import { noop } from './utils';
 
 class SearchField extends PureComponent {
     constructor(props) {
@@ -121,8 +122,8 @@ SearchField.propTypes = {
 };
 
 SearchField.defaultProps = {
-    onChange: () => {},
-    onShortcut: () => {},
+    onChange: noop,
+    onShortcut: noop,
     value: ''
 };
 

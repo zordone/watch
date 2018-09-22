@@ -4,6 +4,7 @@ import ChipInputAutoComplete from './ChipInputAutoComplete';
 import _ from '../common/lodashReduced';
 import data from '../common/data.json';
 import './GenreField.css';
+import { noop } from './utils';
 
 class GenreField extends PureComponent {
     constructor(props) {
@@ -67,7 +68,7 @@ GenreField.defaultProps = {
     style: {},
     label: undefined,
     maxGenres: 5,
-    onChange: () => {}
+    onChange: noop
 };
 
 export default GenreField;
