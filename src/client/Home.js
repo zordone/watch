@@ -61,6 +61,10 @@ class Home extends Component {
     onSearchChanged(search) {
         const { items, setSearch } = this.props;
         this.currentSearch = search;
+        if (search.startsWith('sort:')) {
+            setSearch(search, items);
+            return;
+        }
         const searchWords = search
             .split(' ')
             .map(word => word.trim())
