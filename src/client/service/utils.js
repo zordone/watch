@@ -78,5 +78,6 @@ export const anyChanged = (names, prev, next, debugName = '') => {
 export const slugify = str => str
     .toLowerCase()
     .replace(/[^\w\x80-\xFF]/g, ' ')
+    .replace(/\b(the|a|an)\b/g, '')
     .trim()
     .replace(/\s+/g, '-');
