@@ -1,5 +1,5 @@
 import React from 'react';
-import { ItemType, NextType, StateType, FinishedType, ValiType, Const } from '../common/enums';
+import { ItemType, NextType, StateType, FinishedType, ValiType, Const } from '../../common/enums';
 import { parseDate, seasonCode, getNextSeasonNum } from './utils';
 
 const boldRegex = /^(s\d{2}|\d{4}. \d{2}. \d{2})$/i;

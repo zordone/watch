@@ -11,8 +11,8 @@ import * as actions from './redux/actions';
 import * as selectors from './redux/selectors';
 import SearchField from './SearchField';
 import Loader from './Loader';
-import { anyChanged, noop } from './utils';
-import fixedHeaderWorkaround from './fixedHeader';
+import { anyChanged, noop } from './service/utils';
+import fixedHeaderWorkaround from './service/fixedHeader';
 import packageJson from '../../package.json';
 import { SearchKeywords, SortComparators } from '../common/enums';
 import './Home.css';
@@ -93,12 +93,13 @@ class Home extends Component {
         if (code === 'Enter') {
             // open first item
             const item = filteredItems[0];
-            if (item) {
+            const isSortCommand = this.currentSearch.startsWith('sort:');
+            if (item && !isSortCommand) {
                 history.push(`/item/${item._id}`);
                 return;
             }
             // set sort
-            if (this.currentSearch.startsWith('sort:')) {
+            if (isSortCommand) {
                 const newSort = this.currentSearch.replace('sort:', '').toLowerCase() || SortComparators.DEFAULT;
                 const isValid = Object.values(SortComparators).includes(newSort);
                 if (!isValid) {

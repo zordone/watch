@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ChipInput from 'material-ui-chip-input';
 import _ from '../common/lodashReduced';
 import './ChipArrayInput.css';
-import { noop } from './utils';
+import { noop } from './service/utils';
 
 class ChipArrayInput extends PureComponent {
     constructor(props) {

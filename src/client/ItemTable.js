@@ -7,8 +7,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ItemRow from './ItemRow';
+import { noop } from './service/utils';
 import './ItemTable.css';
-import { noop } from './utils';
 
 const ItemTable = props => {
     const { items, onRowClick, currentId } = props;

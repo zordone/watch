@@ -7,8 +7,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 import { SearchKeywords } from '../common/enums';
 import _ from '../common/lodashReduced';
+import { noop } from './service/utils';
 import './SearchField.css';
-import { noop } from './utils';
 
 class SearchField extends PureComponent {
     constructor(props) {

@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import './ChipInputAutoComplete.css';
-import { noop } from './utils';
+import { noop } from './service/utils';
 
 const autoSuggestTheme = {
     input: {

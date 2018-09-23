@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import CloudDownload from '@material-ui/icons/CloudDownload';
+import { noop } from './service/utils';
 import './PosterSearch.css';
-import { noop } from './utils';
 
 class PosterSearch extends PureComponent {
     constructor(props) {

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { ItemType } from '../common/enums';
+import { ItemType } from '../../common/enums';
 
 export const noop = () => {};
 

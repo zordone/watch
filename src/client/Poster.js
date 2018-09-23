@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { ItemType } from '../common/enums';
 import ItemIcon from './ItemIcon';
 import ScrapeButton from './ScrapeButton';
+import { noop } from './service/utils';
 import './Poster.css';
-import { noop } from './utils';
 
 const Poster = ({ item, onPosterSearch, posterScraping }) => {
     const style = {};

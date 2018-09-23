@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import * as service from './service';
+import * as service from './service/service';
 import Poster from './Poster';
 import './ItemDetails.css';
 import StateLabel from './StateLabel';
 import { ItemType, FinishedType, StateType, NextType, ValiType } from '../common/enums';
-import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from './utils';
+import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from './service/utils';
 
 const DetailsRow = ({ label, value, className = '', optional = false }) => {
     if (optional && !value) {

@@ -1,4 +1,4 @@
-import * as service from '../service';
+import * as service from '../service/service';
 import * as types from './actionTypes';
 import { Const } from '../../common/enums';
 
