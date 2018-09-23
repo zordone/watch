@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StateType } from '../common/enums';
+import { StateType } from '../../common/enums';
 import './StateLabel.css';
 
 const StateLabel = ({ state, className }) => {

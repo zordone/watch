@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ItemType } from '../common/enums';
+import { ItemType } from '../../common/enums';
 
 const ItemIcon = ({ item }) => (
     <i className={`ItemIcon material-icons ${item.type}`}>

@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ChipInputAutoComplete from './ChipInputAutoComplete';
-import _ from '../common/lodashReduced';
-import data from '../common/data.json';
+import _ from '../../common/lodashReduced';
+import data from '../../common/data.json';
+import { noop } from '../service/utils';
 import './GenreField.css';
-import { noop } from './service/utils';
 
 class GenreField extends PureComponent {
     constructor(props) {

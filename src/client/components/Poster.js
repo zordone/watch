@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ItemType } from '../common/enums';
+import { ItemType } from '../../common/enums';
 import ItemIcon from './ItemIcon';
 import ScrapeButton from './ScrapeButton';
-import { noop } from './service/utils';
+import { noop } from '../service/utils';
 import './Poster.css';
 
 const Poster = ({ item, onPosterSearch, posterScraping }) => {

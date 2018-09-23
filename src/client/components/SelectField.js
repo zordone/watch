@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import { noop } from './service/utils';
+import { noop } from '../service/utils';
 
 const SelectField = ({ options, ...props }) => (
     <TextField

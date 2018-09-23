@@ -7,15 +7,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Add from '@material-ui/icons/Add';
 import ItemTable from './ItemTable';
 import Header from './Header';
-import * as actions from './redux/actions';
-import * as selectors from './redux/selectors';
+import * as actions from '../redux/actions';
+import * as selectors from '../redux/selectors';
 import SearchField from './SearchField';
 import Loader from './Loader';
-import { anyChanged, noop } from './service/utils';
-import fixedHeaderWorkaround from './service/fixedHeader';
-import packageJson from '../../package.json';
-import { SearchKeywords, SortComparators } from '../common/enums';
-import _ from '../common/lodashReduced';
+import { anyChanged, noop } from '../service/utils';
+import fixedHeaderWorkaround from '../service/fixedHeader';
+import packageJson from '../../../package.json';
+import { SearchKeywords, SortComparators } from '../../common/enums';
+import _ from '../../common/lodashReduced';
 import './Home.css';
 
 class Home extends Component {

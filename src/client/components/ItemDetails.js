@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Poster from './Poster';
-import './ItemDetails.css';
 import StateLabel from './StateLabel';
-import { ItemType, FinishedType, StateType, NextType, ValiType } from '../common/enums';
-import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from './service/utils';
-import { defaultItem } from './service/serviceUtils';
+import { ItemType, FinishedType, StateType, NextType, ValiType } from '../../common/enums';
+import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from '../service/utils';
+import { defaultItem } from '../service/serviceUtils';
+import './ItemDetails.css';
 
 const DetailsRow = ({ label, value, className = '', optional = false }) => {
     if (optional && !value) {

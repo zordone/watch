@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import GenreField from './GenreField';
 import ChipArrayInput from './ChipArrayInput';
-import * as service from './service/service';
-import { ItemType, ValiType, NextType, FinishedType, Const } from '../common/enums';
+import * as service from '../service/service';
+import { ItemType, ValiType, NextType, FinishedType, Const } from '../../common/enums';
 import SelectField from './SelectField';
-import { parseDate, cachePureFunction } from './service/utils';
-import { defaultItem } from './service/serviceUtils';
+import { parseDate, cachePureFunction } from '../service/utils';
+import { defaultItem } from '../service/serviceUtils';
 import ScrapeButton from './ScrapeButton';
-import _ from '../common/lodashReduced';
+import _ from '../../common/lodashReduced';
 import './ItemForm.css';
 
 const MAX_GENRES = 4;

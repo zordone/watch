@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import whyDidYouUpdate from 'why-did-you-update';
 import configureStore from './redux/configureStore';
-import App from './App';
+import App from './components/App';
 import './index.css';
 
 const WHY_UPDATE_ON = false;

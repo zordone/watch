@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
-import { SearchKeywords } from '../common/enums';
-import { noop } from './service/utils';
+import { SearchKeywords } from '../../common/enums';
+import { noop } from '../service/utils';
 import './SearchField.css';
 
 class SearchField extends PureComponent {

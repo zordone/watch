@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownload from '@material-ui/icons/CloudDownload';
-import { noop } from './service/utils';
+import { noop } from '../service/utils';
 import './ScrapeButton.css';
 
 class ScrapeButton extends PureComponent {
