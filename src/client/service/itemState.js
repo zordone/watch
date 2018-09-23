@@ -4,8 +4,18 @@ import { parseDate, seasonCode, getNextSeasonNum } from './utils';
 
 const boldRegex = /^(s\d{2}|\d{4}. \d{2}. \d{2})$/i;
 
+const stateNum = {
+    [StateType.PROGRESS]: 1,
+    [StateType.READY]: 2,
+    [StateType.RECHECK]: 3,
+    [StateType.WAITING]: 4,
+    [StateType.FINISHED]: 5,
+    [StateType.QUIT]: 6
+};
+
 const state = (type, parts) => ({
     type,
+    num: stateNum[type],
     message: parts.join(''),
     children: parts.map(part => (
         boldRegex.exec(part)

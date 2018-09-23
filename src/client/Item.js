@@ -16,6 +16,7 @@ import ItemForm from './ItemForm';
 import ItemDetails from './ItemDetails';
 import itemState from './service/itemState';
 import { anyChanged, slugify, noop } from './service/utils';
+import { defaultItem } from './service/serviceUtils';
 import PosterSearch from './PosterSearch';
 import { Const, SortComparators } from '../common/enums';
 import './Item.css';
@@ -27,7 +28,7 @@ class Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: { ...service.defaultItem },
+            item: { ...defaultItem },
             page: DETAILS,
             posters: {
                 visible: false,

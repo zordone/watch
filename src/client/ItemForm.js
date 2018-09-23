@@ -7,6 +7,7 @@ import * as service from './service/service';
 import { ItemType, ValiType, NextType, FinishedType, Const } from '../common/enums';
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction } from './service/utils';
+import { defaultItem } from './service/serviceUtils';
 import ScrapeButton from './ScrapeButton';
 import _ from '../common/lodashReduced';
 import './ItemForm.css';
@@ -17,7 +18,7 @@ class ItemForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: { ...service.defaultItem },
+            item: { ...defaultItem },
             sameTitle: undefined,
             imdbScraping: false
         };

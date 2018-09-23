@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import * as service from './service/service';
 import Poster from './Poster';
 import './ItemDetails.css';
 import StateLabel from './StateLabel';
 import { ItemType, FinishedType, StateType, NextType, ValiType } from '../common/enums';
 import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from './service/utils';
+import { defaultItem } from './service/serviceUtils';
 
 const DetailsRow = ({ label, value, className = '', optional = false }) => {
     if (optional && !value) {
@@ -22,7 +22,7 @@ class ItemDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: { ...service.defaultItem }
+            item: { ...defaultItem }
         };
         this.checkableStates = [StateType.READY, StateType.PROGRESS, StateType.RECHECK];
     }
