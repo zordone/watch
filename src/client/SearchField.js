@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 import { SearchKeywords } from '../common/enums';
-import _ from '../common/lodashReduced';
 import { noop } from './service/utils';
 import './SearchField.css';
 
@@ -16,8 +15,6 @@ class SearchField extends PureComponent {
         this.state = {
             value: ''
         };
-        const { onChange } = props;
-        this.onChangeDebounced = _.debounce(value => onChange(value), 200);
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -48,8 +45,9 @@ class SearchField extends PureComponent {
 
     onFieldChange(event) {
         const { value } = event.target;
+        const { onChange } = this.props;
         const cleaned = value.trimStart().replace(/\s+/g, ' ');
-        this.onChangeDebounced(cleaned);
+        onChange(cleaned);
         this.setState({ value: cleaned });
     }
 

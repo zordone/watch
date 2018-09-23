@@ -15,6 +15,7 @@ import { anyChanged, noop } from './service/utils';
 import fixedHeaderWorkaround from './service/fixedHeader';
 import packageJson from '../../package.json';
 import { SearchKeywords, SortComparators } from '../common/enums';
+import _ from '../common/lodashReduced';
 import './Home.css';
 
 class Home extends Component {
@@ -26,6 +27,7 @@ class Home extends Component {
         this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
         this.onRowClick = this.onRowClick.bind(this);
+        this.updateSearch = _.throttle(this.updateSearch, 1000);
     }
 
     componentDidMount() {
@@ -58,11 +60,55 @@ class Home extends Component {
         this.onAddNew(event, event.detail.imdbId);
     }
 
+    onShortcut(code, inSearch) {
+        const { filteredItems, history, items, sort, setSort } = this.props;
+        if (code === 'Enter') {
+            // open first item
+            const item = filteredItems[0];
+            const isSortCommand = this.currentSearch.startsWith('sort:');
+            if (item && !isSortCommand) {
+                history.push(`/item/${item._id}`);
+                return;
+            }
+            // set sort
+            if (isSortCommand) {
+                const newSort = this.currentSearch.replace('sort:', '').toLowerCase() || SortComparators.DEFAULT;
+                const isValid = Object.values(SortComparators).includes(newSort);
+                if (!isValid) {
+                    return;
+                }
+                if (sort !== newSort) {
+                    setSort(items, newSort);
+                }
+                this.updateSearch('');
+            }
+        } else if (code === 'KeyN' && !inSearch) {
+            // add new item
+            this.onAddNew();
+        }
+    }
+
+    onAddNew(event, imdbId) {
+        const { history } = this.props;
+        const imdbParam = imdbId ? `/${imdbId}` : '';
+        history.push(`/item/new${imdbParam}`);
+    }
+
+    onRowClick(id) {
+        const { history, setCurrentId } = this.props;
+        setCurrentId(id);
+        history.push(`/item/${id}`);
+    }
+
     onSearchChanged(search) {
-        const { items, setSearch } = this.props;
         this.currentSearch = search;
+        this.updateSearch(search);
+    }
+
+    updateSearch(search) {
+        const { items, setSearch } = this.props;
         if (search.startsWith('sort:')) {
-            setSearch(search, items);
+            this.updateSearch.cancel();
             return;
         }
         const searchWords = search
@@ -86,46 +132,6 @@ class Home extends Component {
             })
         ));
         setSearch(search, filteredItems);
-    }
-
-    onShortcut(code, inSearch) {
-        const { filteredItems, history, items, sort, setSort, setSearch } = this.props;
-        if (code === 'Enter') {
-            // open first item
-            const item = filteredItems[0];
-            const isSortCommand = this.currentSearch.startsWith('sort:');
-            if (item && !isSortCommand) {
-                history.push(`/item/${item._id}`);
-                return;
-            }
-            // set sort
-            if (isSortCommand) {
-                const newSort = this.currentSearch.replace('sort:', '').toLowerCase() || SortComparators.DEFAULT;
-                const isValid = Object.values(SortComparators).includes(newSort);
-                if (!isValid) {
-                    return;
-                }
-                if (sort !== newSort) {
-                    setSort(items, newSort);
-                }
-                setSearch('', items);
-            }
-        } else if (code === 'KeyN' && !inSearch) {
-            // add new item
-            this.onAddNew();
-        }
-    }
-
-    onAddNew(event, imdbId) {
-        const { history } = this.props;
-        const imdbParam = imdbId ? `/${imdbId}` : '';
-        history.push(`/item/new${imdbParam}`);
-    }
-
-    onRowClick(id) {
-        const { history, setCurrentId } = this.props;
-        setCurrentId(id);
-        history.push(`/item/${id}`);
     }
 
     scrollToCurrent() {
