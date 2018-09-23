@@ -112,6 +112,7 @@ class Home extends Component {
             return;
         }
         const searchWords = search
+            .toLowerCase()
             .split(' ')
             .map(word => word.trim())
             .filter(Boolean);

@@ -1,4 +1,5 @@
 import { ValiType, FinishedType, SearchKeywords } from '../../common/enums';
+import { replaceRomanNumbers } from './utils';
 
 const cleanArray = array =>
     array
@@ -6,7 +7,7 @@ const cleanArray = array =>
         .filter(Boolean);
 
 const itemSearchData = (item, state) => ({
-    text: `${item.title} ${item.notes} ${item.description}`.toLowerCase(),
+    text: `${replaceRomanNumbers(item.title, true)} ${item.notes} ${item.description}`.toLowerCase(),
     starts: cleanArray(item.genres),
     equals: cleanArray([
         item.type,
