@@ -93,7 +93,7 @@ class ItemForm extends Component {
         service
             .imdbData(item.imdbId)
             .then(data => {
-                console.log('imdb data', data);
+                console.debug('IMDb data', data);
                 const parsed = data.parsed || {};
                 const newItem = {
                     ...item,

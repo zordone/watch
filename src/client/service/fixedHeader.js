@@ -15,7 +15,7 @@
 
 const fixedHeaderWorkaround = () => {
     if (!window.ResizeObserver) {
-        console.log('ResizeObserver is not supported. Fixed header disabled.');
+        console.debug('ResizeObserver is not supported. Fixed header disabled.');
         return;
     }
     const cells = document.querySelectorAll('.ItemTable-head th');

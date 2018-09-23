@@ -31,8 +31,6 @@ app.delete('/items/:id', api.deleteItemById);
 app.get('/searchimages/:query', api.searchImages);
 app.get('/imdbdata/:imdbId', api.imdbData);
 
-// ...
-
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}.`);
 });
