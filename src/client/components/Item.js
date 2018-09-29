@@ -113,15 +113,15 @@ class Item extends Component {
         const { updateItem, addNewItem, setCurrentId, items, setSnack } = this.props;
         const { item } = this.state;
         const isNew = item._id === Const.NEW;
-        if (isNew) {
-            addNewItem(item);
-        }
         const promise = isNew
             ? service.saveNewItem(item)
             : service.updateItemById(item._id, item);
         promise
             .then(saved => {
                 this.setState({ item: saved });
+                if (isNew) {
+                    addNewItem(saved);
+                }
                 updateItem(items, saved);
                 this.onClose();
                 setSnack(true, 'Item updated.');
