@@ -8,3 +8,5 @@ export const getFirstLoad = state => state.firstLoad;
 export const getCurrentId = state => state.currentId;
 export const getSort = state => state.sort;
 export const getResort = state => state.resort;
+export const getSnackOpen = state => state.snackOpen;
+export const getSnackText = state => state.snackText;

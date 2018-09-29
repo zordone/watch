@@ -110,7 +110,7 @@ class Item extends Component {
     }
 
     onSave() {
-        const { updateItem, addNewItem, items } = this.props;
+        const { updateItem, addNewItem, items, setSnack } = this.props;
         const { item } = this.state;
         const isNew = item._id === Const.NEW;
         if (isNew) {
@@ -124,6 +124,7 @@ class Item extends Component {
                 this.setState({ item: saved });
                 updateItem(items, saved);
                 this.onClose();
+                setSnack(true, 'Item updated.');
             })
             .catch(err => {
                 console.error('Updating item failed.', err);
@@ -180,7 +181,7 @@ class Item extends Component {
     }
 
     onDelete() {
-        const { items, deleteItem } = this.props;
+        const { items, deleteItem, setSnack } = this.props;
         const { deleteSure, item } = this.state;
         if (deleteSure) {
             clearTimeout(this.deleteTimer);
@@ -192,6 +193,7 @@ class Item extends Component {
                         deleteSure: false
                     });
                     this.onClose();
+                    setSnack(true, 'Item deleted.');
                 })
                 .catch(err => {
                     console.error('Updating item failed.', err);
@@ -320,7 +322,8 @@ const mapDispatchToProps = dispatch => ({
     deleteItem: (items, id) => dispatch(actions.deleteItem(items, id)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
     setCurrentId: currentId => dispatch(actions.setCurrentId(currentId)),
-    setSort: (items, sort) => dispatch(actions.setSort(items, sort))
+    setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
+    setSnack: (open, text) => dispatch(actions.setSnack(open, text))
 });
 
 export default connect(

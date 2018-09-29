@@ -56,3 +56,9 @@ export const setSort = (items, sort) => ({
     items: service.sortItems(items, sort),
     sort
 });
+
+export const setSnack = (snackOpen, snackText) => ({
+    type: types.SET_SNACK,
+    snackOpen,
+    snackText
+});

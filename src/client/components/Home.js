@@ -4,7 +4,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
 import Add from '@material-ui/icons/Add';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 import ItemTable from './ItemTable';
 import Header from './Header';
 import * as actions from '../redux/actions';
@@ -15,6 +17,7 @@ import { anyChanged, noop } from '../service/utils';
 import fixedHeaderWorkaround from '../service/fixedHeader';
 import packageJson from '../../../package.json';
 import { SearchKeywords, SortComparators } from '../../common/enums';
+import { sortTitles } from '../service/sort';
 import _ from '../../common/lodashReduced';
 import './Home.css';
 
@@ -27,6 +30,7 @@ class Home extends Component {
         this.onShortcut = this.onShortcut.bind(this);
         this.onAddNew = this.onAddNew.bind(this);
         this.onRowClick = this.onRowClick.bind(this);
+        this.onSnackClose = this.onSnackClose.bind(this);
         this.updateSearch = _.throttle(this.updateSearch, 1000);
     }
 
@@ -47,7 +51,7 @@ class Home extends Component {
 
     shouldComponentUpdate(nextProps) {
         this.scrollToCurrent();
-        return anyChanged(['search', 'filteredItems'], this.props, nextProps);
+        return anyChanged(['search', 'filteredItems', 'snackOpen'], this.props, nextProps);
     }
 
     componentWillUnmount() {
@@ -61,7 +65,7 @@ class Home extends Component {
     }
 
     onShortcut(code, inSearch) {
-        const { filteredItems, history, items, sort, setSort } = this.props;
+        const { filteredItems, history, items, sort, setSort, setSnack } = this.props;
         if (code === 'Enter') {
             // open first item
             const item = filteredItems[0];
@@ -79,6 +83,7 @@ class Home extends Component {
                 }
                 if (sort !== newSort) {
                     setSort(items, newSort);
+                    setSnack(true, `Sorted by ${sortTitles[newSort]}.`);
                 }
                 this.updateSearch('');
             }
@@ -103,6 +108,11 @@ class Home extends Component {
     onSearchChanged(search) {
         this.currentSearch = search;
         this.updateSearch(search);
+    }
+
+    onSnackClose() {
+        const { setSnack } = this.props;
+        setSnack(false);
     }
 
     updateSearch(search) {
@@ -147,7 +157,8 @@ class Home extends Component {
     }
 
     render() {
-        const { filteredItems, firstLoad, search, currentId } = this.props;
+        const { filteredItems, firstLoad, search, currentId, snackOpen, snackText } = this.props;
+        // TODO: don't always rerender these buttons
         const searchField = (
             <SearchField
                 onChange={this.onSearchChanged}
@@ -175,6 +186,28 @@ class Home extends Component {
                     </div>
                 </main>
                 {firstLoad && <Loader progress={0} />}
+                <Snackbar
+                    open={snackOpen}
+                    autoHideDuration={3000}
+                    onClose={this.onSnackClose}
+                    message={(
+                        <span>
+                            <CheckCircle />
+                            {snackText}
+                        </span>
+                    )}
+                    ContentProps={{
+                        classes: {
+                            root: 'Home-snack',
+                            message: 'Home-snackMessage'
+                        }
+                    }}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    transitionDuration={500}
+                />
             </div>
         );
     }
@@ -190,6 +223,8 @@ Home.propTypes = {
     firstLoad: PropTypes.bool,
     currentId: PropTypes.string,
     sort: PropTypes.oneOf(Object.values(SortComparators)),
+    snackOpen: PropTypes.bool,
+    snackText: PropTypes.string,
     fetchItems: PropTypes.func,
     setSearch: PropTypes.func,
     setFirstLoad: PropTypes.func,
@@ -201,6 +236,8 @@ Home.defaultProps = {
     firstLoad: false,
     currentId: '',
     sort: SortComparators.DEFAULT,
+    snackOpen: false,
+    snackText: '',
     fetchItems: noop,
     setSearch: noop,
     setFirstLoad: noop,
@@ -214,7 +251,9 @@ const mapStateToProps = state => ({
     filteredItems: selectors.getFilteredItems(state),
     firstLoad: selectors.getFirstLoad(state),
     currentId: selectors.getCurrentId(state),
-    sort: selectors.getSort(state)
+    sort: selectors.getSort(state),
+    snackOpen: selectors.getSnackOpen(state),
+    snackText: selectors.getSnackText(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -222,7 +261,8 @@ const mapDispatchToProps = dispatch => ({
     setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
     setCurrentId: currentId => dispatch(actions.setCurrentId(currentId)),
-    setSort: (items, sort) => dispatch(actions.setSort(items, sort))
+    setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
+    setSnack: (open, text) => dispatch(actions.setSnack(open, text))
 });
 
 export default connect(

@@ -7,7 +7,9 @@ const initialState = {
     firstLoad: true,
     currentId: '',
     sort: 'default',
-    resort: false
+    resort: false,
+    snackOpen: false,
+    snackText: ''
 };
 
 export default (state = initialState, action) => {
@@ -70,6 +72,16 @@ export default (state = initialState, action) => {
             // we no longer need to re-sort the items
             resort: false
         };
+    case types.SET_SNACK:
+        return {
+            ...state,
+            // is the snackbar open?
+            snackOpen: action.snackOpen,
+            // we only update the text if the snackbar is open
+            // (leave it there during hide transition)
+            snackText: action.snackOpen ? action.snackText : state.snackText
+        };
+
     default:
         return state;
     }

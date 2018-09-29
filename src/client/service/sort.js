@@ -25,6 +25,12 @@ const compareItemsUpdated = (a, b) => (
     compareValues(a.title, b.title, true)
 );
 
+export const sortTitles = Object.freeze({
+    [SortComparators.DEFAULT]: 'item state',
+    [SortComparators.CREATED]: 'creation date',
+    [SortComparators.UPDATED]: 'last update date'
+});
+
 export default {
     [SortComparators.DEFAULT]: compareItemsDefault,
     [SortComparators.CREATED]: compareItemsCreated,
