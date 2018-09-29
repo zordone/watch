@@ -138,7 +138,7 @@ class Home extends Component {
                 return (
                     (!isKeyword && text.includes(word)) ||
                     (!isKeyword && starts.find(startItem => startItem.startsWith(word))) ||
-                    (isKeyword && equals.includes(word))
+                    equals.includes(word)
                 );
             })
         ));
