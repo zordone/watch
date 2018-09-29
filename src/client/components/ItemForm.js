@@ -117,7 +117,9 @@ class ItemForm extends Component {
                 );
                 if (fillNextDate) {
                     newItem.nextDate = parsed.released;
-                    newItem.nextType = NextType.RELEASE;
+                    newItem.nextType = newItem.type === ItemType.MOVIE
+                        ? NextType.RELEASE
+                        : NextType.START;
                 }
                 this.setState({
                     item: newItem,
