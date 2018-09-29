@@ -6,7 +6,7 @@ import ChipArrayInput from './ChipArrayInput';
 import * as service from '../service/service';
 import { ItemType, ValiType, NextType, FinishedType, Const } from '../../common/enums';
 import SelectField from './SelectField';
-import { parseDate, cachePureFunction } from '../service/utils';
+import { parseDate, cachePureFunction, mergeArrays } from '../service/utils';
 import { defaultItem } from '../service/serviceUtils';
 import ScrapeButton from './ScrapeButton';
 import _ from '../../common/lodashReduced';
@@ -98,7 +98,14 @@ class ItemForm extends Component {
                 const parsed = data.parsed || {};
                 const newItem = {
                     ...item,
-                    ...parsed
+                    type: parsed.type || item.type,
+                    title: parsed.title || item.title,
+                    genres: mergeArrays(parsed.genres, item.genres),
+                    description: parsed.description || item.description,
+                    keywords: mergeArrays(parsed.keywords, item.keywords),
+                    posterUrl: parsed.posterUrl || item.posterUrl,
+                    released: parsed.released || item.released,
+                    releaseYear: parsed.releaseYear || item.releaseYear
                 };
                 if (newItem.genres.length > MAX_GENRES) {
                     newItem.genres = newItem.genres.slice(0, MAX_GENRES);
