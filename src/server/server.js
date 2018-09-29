@@ -1,12 +1,10 @@
 const express = require('express');
 const api = require('./api');
 const db = require('./database');
+const backups = require('./backups');
 const { PORT } = require('./config');
 
-db.connect()
-    // TODO: when the server will be running non-stop, this won't be enough.
-    // we should do daily backups.
-    .then(() => api.adminBackup({ isAutoBackup: true }));
+db.connect().then(backups.startPeriodicBackups);
 
 // middleware
 const app = express();
