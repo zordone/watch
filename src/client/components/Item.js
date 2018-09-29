@@ -110,7 +110,7 @@ class Item extends Component {
     }
 
     onSave() {
-        const { updateItem, addNewItem, items, setSnack } = this.props;
+        const { updateItem, addNewItem, setCurrentId, items, setSnack } = this.props;
         const { item } = this.state;
         const isNew = item._id === Const.NEW;
         if (isNew) {
@@ -125,6 +125,7 @@ class Item extends Component {
                 updateItem(items, saved);
                 this.onClose();
                 setSnack(true, 'Item updated.');
+                setCurrentId(saved._id);
             })
             .catch(err => {
                 console.error('Updating item failed.', err);
