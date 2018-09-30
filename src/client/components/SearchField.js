@@ -7,6 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 import { SearchKeywords } from '../../common/enums';
 import { noop } from '../service/utils';
+import events, { Events } from '../service/events';
 import './SearchField.css';
 
 class SearchField extends PureComponent {
@@ -22,8 +23,8 @@ class SearchField extends PureComponent {
     }
 
     componentDidMount() {
-        document.addEventListener('keyup', this.onKeyUp);
-        document.addEventListener('keydown', this.onKeyDown);
+        events.addListener(Events.KEYUP, this.onKeyUp);
+        events.addListener(Events.KEYDOWN, this.onKeyDown);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -35,8 +36,8 @@ class SearchField extends PureComponent {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keyup', this.onKeyUp);
-        document.removeEventListener('keydown', this.onKeyDown);
+        events.removeListener(Events.KEYUP, this.onKeyUp);
+        events.removeListener(Events.KEYDOWN, this.onKeyDown);
     }
 
     onSetInputRef(ref) {

@@ -18,6 +18,7 @@ import fixedHeaderWorkaround from '../service/fixedHeader';
 import packageJson from '../../../package.json';
 import { SearchKeywords, SortComparators } from '../../common/enums';
 import { sortTitles } from '../service/sort';
+import events, { Events } from '../service/events';
 import _ from '../../common/lodashReduced';
 import './Home.css';
 
@@ -36,7 +37,7 @@ class Home extends Component {
 
     componentDidMount() {
         fixedHeaderWorkaround();
-        document.addEventListener('imdbPaste', this.onImdbPaste);
+        events.addListener(Events.IMDB_PASTE, this.onImdbPaste);
         const { fetchItems, items, search } = this.props;
         const isFetched = Boolean(items.length);
         const itemsPromise = isFetched
@@ -57,7 +58,7 @@ class Home extends Component {
     componentWillUnmount() {
         const { setFirstLoad } = this.props;
         setFirstLoad(false);
-        document.removeEventListener('imdbPaste', this.onImdbPaste);
+        events.removeListener(Events.IMDB_PASTE, this.onImdbPaste);
     }
 
     onImdbPaste(event) {

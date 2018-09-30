@@ -1,4 +1,4 @@
-/* globals document,CustomEvent */
+/* globals document */
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -19,6 +19,7 @@ import { anyChanged, slugify, noop } from '../service/utils';
 import { defaultItem } from '../service/serviceUtils';
 import PosterSearch from './PosterSearch';
 import { Const, SortComparators } from '../../common/enums';
+import events, { Events } from '../service/events';
 import './Item.css';
 
 const FORM = 'form';
@@ -70,7 +71,7 @@ class Item extends Component {
                     this.setState({ item });
                 });
         }
-        document.addEventListener('keyup', this.onKeyUp);
+        events.addListener(Events.KEYUP, this.onKeyUp);
         // pre-fetch items in case we reloaded the app on this page
         const isFetched = Boolean(items.length);
         if (!isFetched) {
@@ -94,7 +95,7 @@ class Item extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keyup', this.onKeyUp);
+        events.removeListener(Events.KEYUP, this.onKeyUp);
     }
 
     onKeyUp(event) {
@@ -106,7 +107,7 @@ class Item extends Component {
             this.setState({ page: page === DETAILS ? FORM : DETAILS });
         } else if (!inInput && event.code === 'KeyI') {
             this.setState({ page: FORM });
-            document.dispatchEvent(new CustomEvent('imdbScrape'));
+            events.dispatch(Events.IMDB_SCRAPE);
         }
     }
 

@@ -8,6 +8,7 @@ import { ItemType, ValiType, NextType, FinishedType, Const } from '../../common/
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction, mergeArrays } from '../service/utils';
 import { defaultItem } from '../service/serviceUtils';
+import events, { Events } from '../service/events';
 import ScrapeButton from './ScrapeButton';
 import _ from '../../common/lodashReduced';
 import './ItemForm.css';
@@ -33,6 +34,10 @@ class ItemForm extends Component {
         this.releaseYearInputProps = { min: '1900', max: '2100' };
     }
 
+    componentWillMount() {
+        events.addListener(Events.IMDB_SCRAPE, this.onImdbScrape);
+    }
+
     componentWillReceiveProps(nextProps) {
         this.setState({
             item: { ...nextProps.item }
@@ -47,6 +52,10 @@ class ItemForm extends Component {
         if (isNew && !hasTitle && hasImdb && !imdbScraping) {
             this.onImdbScrape();
         }
+    }
+
+    componentWillUnmount() {
+        events.removeListener(Events.IMDB_SCRAPE, this.onImdbScrape);
     }
 
     onTitleChange() {
