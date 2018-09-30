@@ -1,4 +1,4 @@
-/* globals document */
+/* globals document,CustomEvent */
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -98,8 +98,15 @@ class Item extends Component {
     }
 
     onKeyUp(event) {
+        const inInput = 'INPUT,SELECT,TEXTAREA'.includes(document.activeElement.tagName);
         if (event.code === 'Escape') {
             this.onClose();
+        } else if (!inInput && event.code === 'KeyE') {
+            const { page } = this.state;
+            this.setState({ page: page === DETAILS ? FORM : DETAILS });
+        } else if (!inInput && event.code === 'KeyI') {
+            this.setState({ page: FORM });
+            document.dispatchEvent(new CustomEvent('imdbScrape'));
         }
     }
 
