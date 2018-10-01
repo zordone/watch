@@ -13,9 +13,9 @@ This is an app I made to store and manage the movies and tv shows I'm interested
 * Automatic daily backups.
 
 ## Screenshots
-* Home page ![Home page](https://preview.ibb.co/kjAAUK/watched_home.png)
-* Item details ![Item details](https://preview.ibb.co/cv22bz/watched_details.png)
-* Item form ![Item form](https://preview.ibb.co/mmpn9K/watched_form.png)
+* Home page <br/> ![Home page](https://preview.ibb.co/kjAAUK/watched_home.png)
+* Item details <br/> ![Item details](https://preview.ibb.co/cv22bz/watched_details.png)
+* Item form <br/> ![Item form](https://preview.ibb.co/mmpn9K/watched_form.png)
 
 ## Architecture
 * Database: MongoDB
