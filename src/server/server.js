@@ -1,4 +1,5 @@
 const express = require('express');
+const shrinkRay = require('shrink-ray');
 const api = require('./api');
 const db = require('./database');
 const backups = require('./backups');
@@ -8,6 +9,7 @@ db.connect().then(backups.startPeriodicBackups);
 
 // middleware
 const app = express();
+app.use(shrinkRay());
 app.use(express.json());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
