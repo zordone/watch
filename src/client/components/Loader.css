@@ -37,14 +37,14 @@
 }
 
 .Loader-bg {
-    background: url('/app-logo-bg.png') no-repeat center center / contain;
+    background: url('/app-logo-bg.webp') no-repeat center center / contain;
     opacity: 0.5;
     filter: drop-shadow(0 0 7px #080808);
 }
 
 .Loader-fg {
-    background: url('/app-logo.png') no-repeat center center / contain;
-    mask: url(/wave-mask.png);
+    background: url('/app-logo.webp') no-repeat center center / contain;
+    mask: url('/wave-mask.webp');
     mask-size: 8% 200%;
     mask-position: 0 0%;
     animation:
