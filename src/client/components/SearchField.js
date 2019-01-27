@@ -64,7 +64,7 @@ class SearchField extends PureComponent {
     onKeyDown(event) {
         const { onShortcut } = this.props;
         const inSearch = document.activeElement === this.inputRef;
-        onShortcut(event.code, inSearch);
+        onShortcut(event.code, inSearch, Boolean(event.metaKey));
     }
 
     renderWord(word, index) {

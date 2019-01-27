@@ -65,7 +65,7 @@ class Home extends Component {
         this.onAddNew(event, event.detail.imdbId);
     }
 
-    onShortcut(code, inSearch) {
+    onShortcut(code, inSearch, cmdKey) {
         const { filteredItems, history, items, sort, setSort, setSnack } = this.props;
         if (code === 'Enter') {
             // open first item
@@ -91,6 +91,9 @@ class Home extends Component {
         } else if (code === 'KeyN' && !inSearch) {
             // add new item
             this.onAddNew();
+        } else if (code === 'ArrowUp' && cmdKey) {
+            // home
+            this.scrollToTop();
         }
     }
 
@@ -155,6 +158,13 @@ class Home extends Component {
             }
         }
         setCurrentId('');
+    }
+
+    scrollToTop() {
+        const firstRow = document.querySelector('.ItemRow');
+        if (firstRow) {
+            firstRow.scrollIntoViewIfNeeded();
+        }
     }
 
     render() {
