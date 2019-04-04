@@ -41,3 +41,7 @@ This is an app I made to store and manage the movies and tv shows I'm interested
 * Start all in one: `npm run start-all`
 * Make build: `npm run build`
 * Start build: `npm run start-all-prod`
+
+## All-in-one scripts
+* Dev: `node scripts/start-all.js`
+* Prod: `node scripts/start-all.js --prod`
