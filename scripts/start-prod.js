@@ -12,7 +12,7 @@ process.on('unhandledRejection', err => {
 const openBrowser = require('react-dev-utils/openBrowser');
 const express = require('express');
 const path = require('path');
-const shrinkRay = require('shrink-ray');
+const shrinkRay = require('shrink-ray-current');
 
 // Ensure environment variables are read.
 require('../config/env');

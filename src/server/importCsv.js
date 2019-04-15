@@ -1,7 +1,7 @@
 const csv = require('csvtojson');
 const moment = require('moment');
 const { Item } = require('./models');
-const { ItemType, ValiType, NextType, FinishedType } = require('../common/enums');
+const { ItemType, ValiType, NextType, FinishedType } = require('../common/enums-node');
 
 const csvDate = dateStr => (
     dateStr

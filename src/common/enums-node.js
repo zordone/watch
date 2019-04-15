@@ -1,11 +1,9 @@
-// TODO: find a way so we can use this from both node and browser. (remove enums-node.js)
-
-export const ItemType = Object.freeze({
+const ItemType = Object.freeze({
     MOVIE: 'movie',
     SHOW: 'show'
 });
 
-export const NextType = Object.freeze({
+const NextType = Object.freeze({
     EMPTY: '',
     RECHECK: 'recheck',
     START: 'start',
@@ -14,14 +12,14 @@ export const NextType = Object.freeze({
     AVAILABLE: 'available'
 });
 
-export const ValiType = Object.freeze({
+const ValiType = Object.freeze({
     EMPTY: '',
     YES: 'yes',
     NO: 'no',
     MAYBE: 'maybe'
 });
 
-export const StateType = Object.freeze({
+const StateType = Object.freeze({
     FINISHED: 'finished',
     RECHECK: 'recheck',
     WAITING: 'waiting',
@@ -30,7 +28,7 @@ export const StateType = Object.freeze({
     QUIT: 'quit'
 });
 
-export const FinishedType = Object.freeze({
+const FinishedType = Object.freeze({
     YES: 'yes',
     NO: 'no',
     MAYBE: 'maybe',
@@ -38,7 +36,7 @@ export const FinishedType = Object.freeze({
     QUIT: 'quit'
 });
 
-export const SearchKeywords = Object.freeze({
+const SearchKeywords = Object.freeze({
     ...ItemType,
     ...StateType,
     FINISHED: 'finished',
@@ -50,12 +48,21 @@ export const SearchKeywords = Object.freeze({
     UNSCRAPED: 'unscraped'
 });
 
-export const SortComparators = Object.freeze({
+const SortComparators = Object.freeze({
     DEFAULT: 'default',
     CREATED: 'created',
     UPDATED: 'updated'
 });
 
-export const Const = Object.freeze({
+const Const = Object.freeze({
     NEW: 'new'
 });
+
+exports.ItemType = ItemType;
+exports.NextType = NextType;
+exports.ValiType = ValiType;
+exports.StateType = StateType;
+exports.FinishedType = FinishedType;
+exports.SearchKeywords = SearchKeywords;
+exports.SortComparators = SortComparators;
+exports.Const = Const;

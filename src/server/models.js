@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const data = require('../common/data.json');
-const { ItemType, NextType, ValiType, FinishedType } = require('../common/enums');
+const { ItemType, NextType, ValiType, FinishedType } = require('../common/enums-node');
 
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },

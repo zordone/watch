@@ -1,5 +1,5 @@
 const express = require('express');
-const shrinkRay = require('shrink-ray');
+const shrinkRay = require('shrink-ray-current');
 const api = require('./api');
 const db = require('./database');
 const backups = require('./backups');

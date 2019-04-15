@@ -6,8 +6,8 @@ const fetch = require('node-fetch');
 const { Item } = require('./models');
 const { importCsv } = require('./importCsv');
 const { IMPORT_DIR, BACKUP_DIR } = require('./config');
-const { ItemType } = require('../common/enums');
 const { genres } = require('../common/data.json');
+const { ItemType } = require('../common/enums-node');
 
 const between = (value, min, max) => (min <= value && value <= max);
 
