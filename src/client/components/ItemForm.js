@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import GenreField from './GenreField';
 import ChipArrayInput from './ChipArrayInput';
 import * as service from '../service/service';
-import { ItemType, ValiType, NextType, FinishedType, Const } from '../../common/enums';
+import { ItemType, ValiType, NextType, FinishedType, Const, RatingType } from '../../common/enums';
 import SelectField from './SelectField';
 import { parseDate, cachePureFunction, mergeArrays } from '../service/utils';
 import { defaultItem } from '../service/serviceUtils';
@@ -288,6 +288,14 @@ class ItemForm extends Component {
                         inputProps={this.releaseYearInputProps}
                         onChange={this.onFieldChange}
                         value={item.releaseYear}
+                    />
+                    <SelectField
+                        id="rating"
+                        className="ratin"
+                        label="Rating"
+                        onChange={this.onFieldChange}
+                        value={item.rating}
+                        options={Object.values(RatingType)}
                     />
                 </div>
             </form>

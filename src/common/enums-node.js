@@ -36,6 +36,13 @@ const FinishedType = Object.freeze({
     QUIT: 'quit'
 });
 
+const RatingType = Object.freeze({
+    EMPTY: '',
+    DISLIKE: 'dislike',
+    LIKE: 'like',
+    FAVORITE: 'favorite'
+});
+
 const SearchKeywords = Object.freeze({
     ...ItemType,
     ...StateType,
@@ -63,6 +70,7 @@ exports.NextType = NextType;
 exports.ValiType = ValiType;
 exports.StateType = StateType;
 exports.FinishedType = FinishedType;
+exports.RatingType = RatingType;
 exports.SearchKeywords = SearchKeywords;
 exports.SortComparators = SortComparators;
 exports.Const = Const;

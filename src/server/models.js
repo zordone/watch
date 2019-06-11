@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const data = require('../common/data.json');
-const { ItemType, NextType, ValiType, FinishedType } = require('../common/enums-node');
+const { ItemType, NextType, ValiType, FinishedType, RatingType } = require('../common/enums-node');
 
 const itemSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -12,6 +12,7 @@ const itemSchema = new mongoose.Schema({
     nextDate: { type: Date },
     nextType: { type: String, enum: Object.values(NextType) },
     withVali: { type: String, enum: Object.values(ValiType) },
+    rating: { type: String, enum: Object.values(RatingType) },
     description: { type: String },
     keywords: [{ type: String }],
     notes: { type: String },

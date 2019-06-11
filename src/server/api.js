@@ -20,6 +20,41 @@ const removeAllItems = () =>
             console.error('[RemoveAllItems]', err);
         });
 
+const makeArray = value => {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    return value ? [value] : [];
+};
+
+const updateItemById = (id, fields) => {
+    const body = omit(fields || {}, Item.dontUpdateFields);
+    body.updated = new Date();
+    return new Promise((resolve, reject) => {
+        Item.findById(id)
+            .then(item => {
+                if (!item) {
+                    console.log('[UpdateItemById] Not found.');
+                    reject(new Error('not found'));
+                }
+                item.set(body);
+                item.save((err, saved) => {
+                    if (err) {
+                        console.error('[UpdateItemById] Item is not updated.', err);
+                        reject(err);
+                    } else {
+                        console.log('[UpdateItemById] Item is updated.');
+                        resolve(saved);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error('[UpdateItemById]', err);
+                reject(err);
+            });
+    });
+};
+
 exports.adminImport = (req, res) => {
     removeAllItems()
         .then(() => {
@@ -133,31 +168,9 @@ exports.getItemById = (req, res) => {
 
 exports.updateItemById = (req, res) => {
     const { id } = req.params;
-    const body = omit((req && req.body) || {}, Item.dontUpdateFields);
-    body.updated = new Date();
-    Item.findById(id)
-        .then(item => {
-            if (!item) {
-                console.log('[UpdateItemById] Not found.');
-                res.sendStatus(404);
-                return;
-            }
-            console.log('[UpdateItemById] Found.');
-            item.set(body);
-            item.save((err, saved) => {
-                if (err) {
-                    console.error('[UpdateItemById] Item is not updated.', err);
-                    res.status(400).send(err.message);
-                } else {
-                    console.log('[UpdateItemById] Item is updated.');
-                    res.send(saved);
-                }
-            });
-        })
-        .catch(err => {
-            console.error('[UpdateItemById]', err);
-            res.sendStatus(500);
-        });
+    return updateItemById(id, req.body)
+        .then(saved => res.send(saved))
+        .catch(err => res.status(500).send(err.message));
 };
 
 exports.deleteItemById = (req, res) => {
@@ -210,13 +223,6 @@ exports.searchImages = (req, res) => {
             console.log('[SearchImages]', err);
             res.status(500).send(err.message || 'Unknown scraper error');
         });
-};
-
-const makeArray = value => {
-    if (Array.isArray(value)) {
-        return value;
-    }
-    return value ? [value] : [];
 };
 
 exports.imdbData = (req, res) => {

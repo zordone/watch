@@ -19,7 +19,8 @@ export const defaultItem = {
     notes: '',
     imdbId: '',
     posterUrl: '',
-    releaseYear: ''
+    releaseYear: '',
+    rating: ''
 };
 
 export const jsonHeaders = {

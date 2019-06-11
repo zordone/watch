@@ -1,0 +1,33 @@
+.RatingButton,
+.RatingButton button,
+.RatingButton button:hover {
+    background: transparent;
+}
+
+.RatingButton {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-between;
+    justify-items: center;
+    margin-top: 0.5rem;
+}
+
+.RatingButton button {
+    color: white;
+    opacity: 0.2;
+}
+
+.RatingButton button.active {
+    opacity: 1;
+}
+
+.RatingButton .active.dislike  { color: #0bb3f9; }
+.RatingButton .active.like     { color: #33ff33; }
+.RatingButton .active.favorite { color: #ff2020; }
+
+.RatingButton .dislike  { margin-top: 0.1rem; }
+.RatingButton .like     { margin-top: -0.1rem; }
+
+.RatingButton svg {
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}

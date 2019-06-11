@@ -7,6 +7,7 @@ import { ItemType, FinishedType, StateType, NextType, ValiType } from '../../com
 import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from '../service/utils';
 import { defaultItem } from '../service/serviceUtils';
 import './ItemDetails.css';
+import RatingButton from './RatingButton';
 
 const DetailsRow = ({ label, value, className = '', optional = false }) => {
     if (optional && !value) {
@@ -37,6 +38,10 @@ class ItemDetails extends Component {
             links
         });
     }
+
+    onRatingChange = value => {
+        this.updateItem({ rating: value });
+    };
 
     getButtons(item) {
         const buttons = [];
@@ -200,6 +205,7 @@ class ItemDetails extends Component {
                             posterScraping={posterScraping}
                         />
                         {buttons}
+                        <RatingButton value={item.rating} onChange={this.onRatingChange} />
                     </div>
                     <div className="ItemDetails-fields">
                         <DetailsRow label="Title" value={item.title} className="ItemDetails-title" />

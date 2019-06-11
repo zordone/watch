@@ -38,6 +38,13 @@ export const FinishedType = Object.freeze({
     QUIT: 'quit'
 });
 
+export const RatingType = Object.freeze({
+    EMPTY: '',
+    DISLIKE: 'dislike',
+    LIKE: 'like',
+    FAVORITE: 'favorite'
+});
+
 export const SearchKeywords = Object.freeze({
     ...ItemType,
     ...StateType,
