@@ -12,10 +12,6 @@ const itemSearchData = (item, state) => ({
     equals: cleanArray([
         item.type,
         state.type,
-        // finished?
-        item.finished === FinishedType.YES
-            ? SearchKeywords.FINISHED
-            : SearchKeywords.UNFINISHED,
         // vali?
         [ValiType.YES, ValiType.MAYBE].includes(item.withVali)
             ? SearchKeywords.VALI
@@ -24,6 +20,10 @@ const itemSearchData = (item, state) => ({
         item.withVali === ValiType.NO
             ? SearchKeywords.CSABA
             : '',
+        // finished?
+        item.finished === FinishedType.YES
+            ? SearchKeywords.FINISHED
+            : SearchKeywords.UNFINISHED,
         // no poster?
         !item.posterUrl
             ? SearchKeywords.NOPOSTER
@@ -36,6 +36,10 @@ const itemSearchData = (item, state) => ({
         (item.keywords.length || item.description.length)
             ? ''
             : SearchKeywords.UNSCRAPED,
+        // rating?
+        !item.rating
+            ? ''
+            : `#${item.rating}`,
         // + all the keywords from imdb
         ...item.keywords
     ])

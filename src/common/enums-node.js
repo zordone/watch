@@ -44,15 +44,20 @@ const RatingType = Object.freeze({
 });
 
 const SearchKeywords = Object.freeze({
+    // primary keywords (without prefix)
     ...ItemType,
     ...StateType,
-    FINISHED: 'finished',
-    UNFINISHED: 'unfinished',
     VALI: 'vali',
     CSABA: 'csaba',
-    NOPOSTER: 'noposter',
-    NOIMDB: 'noimdb',
-    UNSCRAPED: 'unscraped'
+    // secondary keywors (with # prefix)
+    FINISHED: '#finished',
+    UNFINISHED: '#unfinished',
+    NOPOSTER: '#noposter',
+    NOIMDB: '#noimdb',
+    UNSCRAPED: '#unscraped',
+    DISLIKE: `#${RatingType.DISLIKE}`,
+    LIKE: `#${RatingType.LIKE}`,
+    FAVORITE: `#${RatingType.FAVORITE}`
 });
 
 const SortComparators = Object.freeze({
