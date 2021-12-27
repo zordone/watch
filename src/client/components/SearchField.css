@@ -1,10 +1,10 @@
 .SearchField {
   position: relative;
-  background: #FFF1;
+  background: #fff1;
   border-radius: 4px;
 }
 
-.SearchField .SearchField-input  {
+.SearchField .SearchField-input {
   font-size: 1.5rem;
 }
 
@@ -19,12 +19,12 @@
 
 .SearchField-input input,
 .SearchField-input svg {
-  color: #FFF2;
+  color: #fff2;
   transform: translateY(1px);
 }
 .SearchField-input.focused input,
 .SearchField-input.focused svg {
-  color: #FFF;
+  color: #fff;
 }
 
 .SearchField.not-empty input,
@@ -49,13 +49,7 @@
 
 .SearchField-keyword {
   color: #0062ff;
-  text-shadow:
-    0 0 1px currentColor,
-    0 0 1px currentColor,
-    0 0 1px currentColor,
-    0 0 2px currentColor,
-    0 0 2px currentColor,
-    0 0 3px currentColor,
-    0 0 5px currentColor,
+  text-shadow: 0 0 1px currentColor, 0 0 1px currentColor, 0 0 1px currentColor,
+    0 0 2px currentColor, 0 0 2px currentColor, 0 0 3px currentColor, 0 0 5px currentColor,
     0 0 8px currentColor;
 }

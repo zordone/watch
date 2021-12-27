@@ -1,25 +1,25 @@
 {
-    "genres": [
-        "action",
-        "adventure",
-        "animation",
-        "anime",
-        "bike",
-        "biography",
-        "comedy",
-        "crime",
-        "documentary",
-        "drama",
-        "fantasy",
-        "family",
-        "history",
-        "horror",
-        "mystery",
-        "music",
-        "romance",
-        "sci-fi",
-        "standup",
-        "thriller",
-        "war"
-    ]
+  "genres": [
+    "action",
+    "adventure",
+    "animation",
+    "anime",
+    "bike",
+    "biography",
+    "comedy",
+    "crime",
+    "documentary",
+    "drama",
+    "fantasy",
+    "family",
+    "history",
+    "horror",
+    "mystery",
+    "music",
+    "romance",
+    "sci-fi",
+    "standup",
+    "thriller",
+    "war"
+  ]
 }

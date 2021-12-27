@@ -1,134 +1,138 @@
 .Item {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .Item .Item-paper {
-    padding: 1rem;
-    width: 850px;
-    margin: 0 auto;
-    position: relative;
-    box-sizing: border-box;
+  padding: 1rem;
+  width: 850px;
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .Item .Item-buttons {
-    text-align: center;
-    position: relative;
+  text-align: center;
+  position: relative;
 }
 
 .Item .Item-button {
-    margin: 1rem 0.5rem 0 0.5rem;
+  margin: 1rem 0.5rem 0 0.5rem;
 }
 
 .Item .Item-pageButton {
-    top: 1rem;
-    right: 1rem;
-    position: absolute;
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
 }
 
 .Item .PosterSearch {
-    width: 850px;
-    margin: 1rem auto;
-    position: relative;
+  width: 850px;
+  margin: 1rem auto;
+  position: relative;
 }
 
 .Item .Item-error {
-    margin-bottom: 0;
-    color: red;
-    text-align: center;
-    background: #F444;
-    padding: 0.5rem;
-    border-radius: 4px;
-    text-shadow: 0 0 4px black;
+  margin-bottom: 0;
+  color: red;
+  text-align: center;
+  background: #f444;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-shadow: 0 0 4px black;
 }
 
 .Item-button.delete {
-    position: absolute;
-    right: 0;
-    margin-right: 0;
-    min-width: 0;
-    background: #F00A;
-    color: #FFFA;
-    overflow: hidden;
+  position: absolute;
+  right: 0;
+  margin-right: 0;
+  min-width: 0;
+  background: #f00a;
+  color: #fffa;
+  overflow: hidden;
 }
 
 .Item-button.delete:hover {
-    background: #F00;
-    color: #FFF;
+  background: #f00;
+  color: #fff;
 }
 
 .Item-button.delete .title {
-    width: 0;
-    transition: width 0.4s ease-in-out;
-    white-space: nowrap;
-    overflow: hidden;
+  width: 0;
+  transition: width 0.4s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .Item-button.delete.sure .title {
-    width: 118px;
+  width: 118px;
 }
 
 .Item-button.delete svg {
-    height: 19px;
-    transform: scale(1.5) translateY(-1px);
+  height: 19px;
+  transform: scale(1.5) translateY(-1px);
 }
 
 .Item-button.delete .timeout {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 4px;
-    background: #F88;
-    width: 100%;
-    opacity: 0;
-    pointer-events: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background: #f88;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .Item-button.delete.sure .timeout {
-    transition: opacity 0.4s ease-in-out;
-    opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+  opacity: 1;
 }
 
 .Item-button.delete.sure .timeout {
-    animation: delete-timeout 2.5s linear 1 0.5s;
+  animation: delete-timeout 2.5s linear 1 0.5s;
 }
 
 @keyframes delete-timeout {
-    0%   { width: 100%; }
-    100% { width: 0;}
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
 }
 
 @media only screen and (max-width: 880px) {
-    .Item {
-        padding: 0;
-    }
-    .Item .Item-paper {
-        width: 100%;
-        border-radius: 0;
-    }
+  .Item {
+    padding: 0;
+  }
+  .Item .Item-paper {
+    width: 100%;
+    border-radius: 0;
+  }
 }
 
 @media only screen and (max-width: 640px) {
-    .Item .Item-buttons {
-        display: grid;
-    }
-    .Item .Item-button {
-        margin: 1rem 0 1rem 0;
-        position: relative;
-    }
-    .Item .Item-button:last-child {
-        margin-bottom: 0;
-    }
-    .Item .ItemDetails-button {
-        margin-top: 1rem;
-    }
-    .Item .Item-button,
-    .Item .ItemDetails-button {
-        font-size: 1.3rem;
-    }
-    .ItemDetails-value {
-        font-size: 1.3rem;
-    }
-    .Item-button.delete.sure .title {
-        width: 174px;
-    }
+  .Item .Item-buttons {
+    display: grid;
+  }
+  .Item .Item-button {
+    margin: 1rem 0 1rem 0;
+    position: relative;
+  }
+  .Item .Item-button:last-child {
+    margin-bottom: 0;
+  }
+  .Item .ItemDetails-button {
+    margin-top: 1rem;
+  }
+  .Item .Item-button,
+  .Item .ItemDetails-button {
+    font-size: 1.3rem;
+  }
+  .ItemDetails-value {
+    font-size: 1.3rem;
+  }
+  .Item-button.delete.sure .title {
+    width: 174px;
+  }
 }

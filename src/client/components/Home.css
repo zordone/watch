@@ -1,39 +1,39 @@
 .Home div.Home-snack {
-    background: #9FA;
-    color: #090;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    padding: 0.5rem;
+  background: #9fa;
+  color: #090;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding: 0.5rem;
 }
 
 .Home div.Home-snackMessage {
-    padding: 0;
+  padding: 0;
 }
 
 .Home div.Home-snackMessage span {
-    display: flex;
+  display: flex;
 }
 
 .Home div.Home-snackMessage svg {
-    margin-right: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .Home-footer {
-    font-size: 0.8rem;
-    opacity: 0.2;
-    padding: 0.4rem 0.4rem 0 0.4rem;
-    height: 1.5rem;
-    box-sizing: border-box;
-    overflow-y: hidden;
+  font-size: 0.8rem;
+  opacity: 0.2;
+  padding: 0.4rem 0.4rem 0 0.4rem;
+  height: 1.5rem;
+  box-sizing: border-box;
+  overflow-y: hidden;
 }
 
 .Home-footer span:last-child {
-    float: right;
+  float: right;
 }
 
 @media only screen and (max-width: 640px) {
-    .Home-footer {
-        display: none;
-    }
+  .Home-footer {
+    display: none;
+  }
 }

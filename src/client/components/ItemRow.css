@@ -1,23 +1,27 @@
 .ItemRow.current {
-    animation: show-current 1.5s ease-out 1;
+  animation: show-current 1.5s ease-out 1;
 }
 
 @keyframes show-current {
-    0%   { background: #00a9ff; }
-    100% { background: inherit; }
+  0% {
+    background: #00a9ff;
+  }
+  100% {
+    background: inherit;
+  }
 }
 
 i.ItemIcon.movie {
-    line-height: 1.5;
+  line-height: 1.5;
 }
 
 i.ItemIcon.show {
-    line-height: 1;
+  line-height: 1;
 }
 
 @media only screen and (max-width: 640px) {
-    .ItemRow .title {
-        font-weight: 600;
-        font-size: 1.2rem;
-    }
+  .ItemRow .title {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
 }

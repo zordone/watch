@@ -1,143 +1,154 @@
 .PosterSearch {
-    padding: 0;
-    overflow: hidden;
+  padding: 0;
+  overflow: hidden;
 }
 
 .PosterSearch-searching,
 .PosterSearch-notfound {
-    display: flex;
-    padding: 1rem;
-    position: relative;
+  display: flex;
+  padding: 1rem;
+  position: relative;
 }
 
 .PosterSearch-searching-bg {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    left: 100%;
-    background: linear-gradient(-45deg,
-        transparent 0%, transparent 20%,
-        #00a9ff80 40%, #00a9ff 46%, #00a9ff 54%, #00a9ff80 60%,
-        transparent 80%, transparent 100%);
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  left: 100%;
+  background: linear-gradient(
+    -45deg,
+    transparent 0%,
+    transparent 20%,
+    #00a9ff80 40%,
+    #00a9ff 46%,
+    #00a9ff 54%,
+    #00a9ff80 60%,
+    transparent 80%,
+    transparent 100%
+  );
 
-    animation: searching 2s infinite linear;
-    opacity: 0.2;
+  animation: searching 2s infinite linear;
+  opacity: 0.2;
 }
 
 @keyframes searching {
-    0%  { left: 200%; }
-    100% { left: -200%; }
+  0% {
+     left: 200%;
+  }
+  100% {
+    left: -200%;
+  }
 }
 
-.PosterSearch-searching>i,
+.PosterSearch-searching > i,
 .PosterSearch-searching span {
-    line-height: 33px;
+  line-height: 33px;
 }
 
-.PosterSearch-searching>svg {
-    height: 33px;
-    margin-right: 8px;
+.PosterSearch-searching > svg {
+  height: 33px;
+  margin-right: 8px;
 }
 
-.PosterSearch-searching>svg {
-    position: relative;
-    margin-right: 0.8rem;
-    font-size: 1.9rem;
-    width: 33px;
-    height: 33px;
-    display: inline-block;
-    animation: progress 0.6s infinite alternate ease-out;
+.PosterSearch-searching > svg {
+  position: relative;
+  margin-right: 0.8rem;
+  font-size: 1.9rem;
+  width: 33px;
+  height: 33px;
+  display: inline-block;
+  animation: progress 0.6s infinite alternate ease-out;
 }
 
 @keyframes progress {
-    0%   { opacity: 0.2; transform: scale(0.8); }
-    100% { opacity: 1.0; transform: scale(1.0); }
+  0% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .PosterSearch-images {
-    white-space: nowrap;
-    padding: 1rem;
-    overflow-x: scroll;
+  white-space: nowrap;
+  padding: 1rem;
+  overflow-x: scroll;
 }
 
 .PosterSearch-images::-webkit-scrollbar {
-    background: none;
-    height: 0.5rem;
+  background: none;
+  height: 0.5rem;
 }
 
 .PosterSearch-images::-webkit-scrollbar-thumb {
-    background: #FFF2;
-    border-radius: 0.25rem;
+  background: #fff2;
+  border-radius: 0.25rem;
 }
 
 .PosterSearch-poster {
-    position: relative;
-    background: none;
-    border: none;
-    font-size: 0;
-    padding: 0;
-    outline: none;
-    overflow: hidden;
-    border-radius: 4px;
-    margin-right: 1rem;
-    /* TODO: material button shadow. make a reusable class for this. */
-    box-shadow:
-        0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-        0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-        0px 3px 1px -2px rgba(0, 0, 0, 0.12);
-    transition:
-        transform 100ms ease-out,
-        opacity 100ms ease-out;
-    opacity: 0.8;
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 0;
+  padding: 0;
+  outline: none;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-right: 1rem;
+  /* TODO: material button shadow. make a reusable class for this. */
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+  transition: transform 100ms ease-out, opacity 100ms ease-out;
+  opacity: 0.8;
 }
 
 .PosterSearch-poster img {
-    height: 230px;
+  height: 230px;
 }
 
 .PosterSearch-poster:last-of-type {
-    margin: 0;
+  margin: 0;
 }
 
 .PosterSearch-poster:hover {
-    opacity: 1.0;
-    transform: scale(1.1);
-    z-index: 10;
-    box-shadow:
-        0px 1px 25px 0px rgba(0, 0, 0, 0.4),
-        0px 2px 15px 0px rgba(0, 0, 0, 0.34),
-        0px 3px 10px -2px rgba(0, 0, 0, 0.32)
+  opacity: 1;
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0px 1px 25px 0px rgba(0, 0, 0, 0.4), 0px 2px 15px 0px rgba(0, 0, 0, 0.34),
+    0px 3px 10px -2px rgba(0, 0, 0, 0.32);
 }
 
 .PosterSearch-fade {
-    position: absolute;
-    top: 0;
-    bottom: 0.5rem;
-    width: 3rem;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0.5rem;
+  width: 3rem;
+  pointer-events: none;
 }
 
 .PosterSearch-fade.left {
-    left: 0;
-    background: linear-gradient(to right, #424242 0%, transparent 100%);
+  left: 0;
+  background: linear-gradient(to right, #424242 0%, transparent 100%);
 }
 
 .PosterSearch-fade.right {
-    right: 0;
-    background: linear-gradient(to left, #424242 0%, transparent 100%);
+  right: 0;
+  background: linear-gradient(to left, #424242 0%, transparent 100%);
 }
 
 .PosterSearch .PosterSearch-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 24px;
-    height: 24px;
-    background: none;
-    opacity: 0.5;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background: none;
+  opacity: 0.5;
 }
 
 .PosterSearch .PosterSearch-close:hover {
-    opacity: 1;
+  opacity: 1;
 }

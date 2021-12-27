@@ -1,44 +1,42 @@
 .Poster {
-    position: relative;
-    background-color: #666;
-    height: 200px;
-    width: 150px;
-    border-radius: 4px;
-    box-shadow:
-        0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-        0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-        0px 3px 1px -2px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
+  position: relative;
+  background-color: #666;
+  height: 200px;
+  width: 150px;
+  border-radius: 4px;
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
 .Poster .Poster-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .Poster .ItemIcon {
-    display: inline-block;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    font-size: 100px;
-    opacity: 0.05;
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  opacity: 0.05;
 }
 
 .Poster .Poster-search {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 32px;
-    height: 32px;
-    display: none;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 32px;
+  height: 32px;
+  display: none;
 }
 
 .Poster:hover .Poster-search,
 .Poster .Poster-search.progress {
-    display: block;
+  display: block;
 }

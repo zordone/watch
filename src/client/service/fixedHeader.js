@@ -14,28 +14,28 @@
  */
 
 const fixedHeaderWorkaround = () => {
-    if (!window.ResizeObserver) {
-        console.debug('ResizeObserver is not supported. Fixed header disabled.');
-        return;
-    }
-    const cells = document.querySelectorAll('.ItemTable-head th');
-    const fragment = document.createDocumentFragment();
-    const copies = [];
-    cells.forEach(cell => {
-        const copy = document.createElement('div');
-        copy.className = 'ItemTable-fixedHeaderCell';
-        copy.innerHTML = cell.innerHTML;
-        fragment.appendChild(copy);
-        copies.push(copy);
+  if (!window.ResizeObserver) {
+    console.debug("ResizeObserver is not supported. Fixed header disabled.");
+    return;
+  }
+  const cells = document.querySelectorAll(".ItemTable-head th");
+  const fragment = document.createDocumentFragment();
+  const copies = [];
+  cells.forEach((cell) => {
+    const copy = document.createElement("div");
+    copy.className = "ItemTable-fixedHeaderCell";
+    copy.innerHTML = cell.innerHTML;
+    fragment.appendChild(copy);
+    copies.push(copy);
+  });
+  const header = document.querySelector(".ItemTable-fixedHeader");
+  header.appendChild(fragment);
+  const observer = new ResizeObserver(() => {
+    cells.forEach((cell, index) => {
+      copies[index].style.width = `${cell.clientWidth}px`;
     });
-    const header = document.querySelector('.ItemTable-fixedHeader');
-    header.appendChild(fragment);
-    const observer = new ResizeObserver(() => {
-        cells.forEach((cell, index) => {
-            copies[index].style.width = `${cell.clientWidth}px`;
-        });
-    });
-    cells.forEach(cell => observer.observe(cell));
+  });
+  cells.forEach((cell) => observer.observe(cell));
 };
 
 export default fixedHeaderWorkaround;

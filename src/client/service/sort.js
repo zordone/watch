@@ -1,38 +1,32 @@
-import { SortComparators } from '../../common/enums';
+import { SortComparators } from "../../common/enums";
 
 const compareValues = (a, b, asc = true) => {
-    if (a < b) {
-        return asc ? -1 : 1;
-    }
-    if (a > b) {
-        return asc ? 1 : -1;
-    }
-    return 0;
+  if (a < b) {
+    return asc ? -1 : 1;
+  }
+  if (a > b) {
+    return asc ? 1 : -1;
+  }
+  return 0;
 };
 
-const compareItemsDefault = (a, b) => (
-    compareValues(a.state.num, b.state.num, true) ||
-    compareValues(a.title, b.title, true)
-);
+const compareItemsDefault = (a, b) =>
+  compareValues(a.state.num, b.state.num, true) || compareValues(a.title, b.title, true);
 
-const compareItemsCreated = (a, b) => (
-    compareValues(a.created, b.created, false) ||
-    compareValues(a.title, b.title, true)
-);
+const compareItemsCreated = (a, b) =>
+  compareValues(a.created, b.created, false) || compareValues(a.title, b.title, true);
 
-const compareItemsUpdated = (a, b) => (
-    compareValues(a.updated, b.updated, false) ||
-    compareValues(a.title, b.title, true)
-);
+const compareItemsUpdated = (a, b) =>
+  compareValues(a.updated, b.updated, false) || compareValues(a.title, b.title, true);
 
 export const sortTitles = Object.freeze({
-    [SortComparators.DEFAULT]: 'item state',
-    [SortComparators.CREATED]: 'creation date',
-    [SortComparators.UPDATED]: 'last update date'
+  [SortComparators.DEFAULT]: "item state",
+  [SortComparators.CREATED]: "creation date",
+  [SortComparators.UPDATED]: "last update date",
 });
 
 export default {
-    [SortComparators.DEFAULT]: compareItemsDefault,
-    [SortComparators.CREATED]: compareItemsCreated,
-    [SortComparators.UPDATED]: compareItemsUpdated
+  [SortComparators.DEFAULT]: compareItemsDefault,
+  [SortComparators.CREATED]: compareItemsCreated,
+  [SortComparators.UPDATED]: compareItemsUpdated,
 };

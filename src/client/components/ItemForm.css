@@ -1,87 +1,87 @@
 .ItemForm-grid {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-areas:
-        'title title title title .'
-        'type  genre genre genre vali'
-        'last  prog  ndate ntype fin'
-        'descr descr descr descr descr'
-        'keyw  keyw  keyw  keyw  keyw'
-        'notes notes notes notes notes'
-        'imdb  postr relyr ratin .';
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    "title title title title ."
+    "type  genre genre genre vali"
+    "last  prog  ndate ntype fin"
+    "descr descr descr descr descr"
+    "keyw  keyw  keyw  keyw  keyw"
+    "notes notes notes notes notes"
+    "imdb  postr relyr ratin .";
 }
 
 .ItemForm label {
-    color: #888;
+  color: #888;
 }
 
 .ItemForm-grid .title {
-    position: relative;
+  position: relative;
 }
 
 .ItemForm-grid .title input {
-    font-size: 1.5rem;
-    font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 .ItemForm-grid .title-field {
-    z-index: 2;
-    background: #424242;
+  z-index: 2;
+  background: #424242;
 }
 
 .ItemForm-grid .same-title {
-    position: absolute;
-    height: 1.4rem;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #B66;
-    border-radius: 0 0 4px 4px;
-    box-shadow: 0 2px 7px -3px #0008;
-    color: #800F;
-    font-size: 0.8rem;
-    text-align: center;
-    z-index: 1;
-    bottom: 0.5rem;
-    transition: bottom 1s cubic-bezier(0.22, 0.61, 0.36, 1);;
+  position: absolute;
+  height: 1.4rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #b66;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 7px -3px #0008;
+  color: #800f;
+  font-size: 0.8rem;
+  text-align: center;
+  z-index: 1;
+  bottom: 0.5rem;
+  transition: bottom 1s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .ItemForm-grid .same-title.show {
-    bottom: -1.4rem;
+  bottom: -1.4rem;
 }
 
 .ItemForm-grid .same-title a,
 .ItemForm-grid .same-title a:visited {
-    color: #800B;
-    padding-left: 0.5rem;
-    font-weight: 600;
-    outline: none;
+  color: #800b;
+  padding-left: 0.5rem;
+  font-weight: 600;
+  outline: none;
 }
 
 .ItemForm-grid .same-title a:hover,
 .ItemForm-grid .same-title a:focus {
-    color: #B00;
+  color: #b00;
 }
 
 .ItemForm-grid .imdb {
-    position: relative;
-    display: flex;
+  position: relative;
+  display: flex;
 }
 
 .ItemForm-grid .imdb-scrape {
-    position: absolute;
-    right: 0;
-    width: 32px;
-    height: 32px;
-    bottom: 2px;
+  position: absolute;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  bottom: 2px;
 }
 
 /* hide number/date spin buttons */
-.ItemForm input[type=number]::-webkit-inner-spin-button,
-.ItemForm input[type=number]::-webkit-outer-spin-button,
-.ItemForm input[type=date]::-webkit-inner-spin-button,
-.ItemForm input[type=date]::-webkit-outer-spin-button {
+.ItemForm input[type="number"]::-webkit-inner-spin-button,
+.ItemForm input[type="number"]::-webkit-outer-spin-button,
+.ItemForm input[type="date"]::-webkit-inner-spin-button,
+.ItemForm input[type="date"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -91,49 +91,79 @@
 .ItemForm-empty input:not(:focus)::-webkit-datetime-edit-month-field,
 .ItemForm-empty input:not(:focus)::-webkit-datetime-edit-day-field,
 .ItemForm-empty input:not(:focus)::-webkit-datetime-edit-text {
-    color: transparent;
+  color: transparent;
 }
 
 /* transparent date picker button */
 .ItemForm input[type="date"]::-webkit-calendar-picker-indicator,
 .ItemForm .ItemForm-grid input[type="date"]::-webkit-clear-button {
-    background: transparent;
-    color: #FFF;
+  background: transparent;
+  color: #fff;
 }
 
-.ItemForm-grid .title    { grid-area: title }
-.ItemForm-grid .type     { grid-area: type  }
-.ItemForm-grid .genres   { grid-area: genre }
-.ItemForm-grid .vali     { grid-area: vali  }
-.ItemForm-grid .last     { grid-area: last  }
-.ItemForm-grid .progress { grid-area: prog  }
-.ItemForm-grid .ndate    { grid-area: ndate }
-.ItemForm-grid .ntype    { grid-area: ntype }
-.ItemForm-grid .finished { grid-area: fin   }
-.ItemForm-grid .descr    { grid-area: descr }
-.ItemForm-grid .keyw     { grid-area: keyw  }
-.ItemForm-grid .notes    { grid-area: notes }
-.ItemForm-grid .imdb     { grid-area: imdb  }
-.ItemForm-grid .poster   { grid-area: postr }
-.ItemForm-grid .relyr    { grid-area: relyr }
-.ItemForm-grid .ratin    { grid-area: ratin }
+.ItemForm-grid .title {
+  grid-area: title;
+}
+.ItemForm-grid .type {
+  grid-area: type;
+}
+.ItemForm-grid .genres {
+  grid-area: genre;
+}
+.ItemForm-grid .vali {
+  grid-area: vali;
+}
+.ItemForm-grid .last {
+  grid-area: last;
+}
+.ItemForm-grid .progress {
+  grid-area: prog;
+}
+.ItemForm-grid .ndate {
+  grid-area: ndate;
+}
+.ItemForm-grid .ntype {
+  grid-area: ntype;
+}
+.ItemForm-grid .finished {
+  grid-area: fin;
+}
+.ItemForm-grid .descr {
+  grid-area: descr;
+}
+.ItemForm-grid .keyw {
+  grid-area: keyw;
+}
+.ItemForm-grid .notes {
+  grid-area: notes;
+}
+.ItemForm-grid .imdb {
+  grid-area: imdb;
+}
+.ItemForm-grid .poster {
+  grid-area: postr;
+}
+.ItemForm-grid .relyr {
+  grid-area: relyr;
+}
+.ItemForm-grid .ratin {
+  grid-area: ratin;
+}
 
 @media only screen and (max-width: 640px) {
-    .ItemForm-grid {
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-areas:
-            'title title title title title .'
-            'type  type  type  type  type  type'
-            'genre genre genre genre genre genre'
-            'last  last  last  prog  prog  prog'
-            'ndate ndate ndate ntype ntype ntype'
-            'vali  vali  vali  fin   fin   fin'
-            'descr descr descr descr descr descr'
-            'keyw  keyw  keyw  keyw  keyw  keyw'
-            'notes notes notes notes notes notes'
-            'imdb  imdb  postr postr relyr relyr'
-            'ratin ratin';
-    }
+  .ItemForm-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-areas:
+      "title title title title title ."
+      "type  type  type  type  type  type"
+      "genre genre genre genre genre genre"
+      "last  last  last  prog  prog  prog"
+      "ndate ndate ndate ntype ntype ntype"
+      "vali  vali  vali  fin   fin   fin"
+      "descr descr descr descr descr descr"
+      "keyw  keyw  keyw  keyw  keyw  keyw"
+      "notes notes notes notes notes notes"
+      "imdb  imdb  postr postr relyr relyr"
+      "ratin ratin";
+  }
 }
-
-

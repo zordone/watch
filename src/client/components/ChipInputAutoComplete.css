@@ -1,29 +1,29 @@
 .ChipInputAutoComplete-rootContainer {
-    position: relative;
-    height: 48px;
+  position: relative;
+  height: 48px;
 }
 
 .ChipInputAutoComplete-rootContainer div.chipContainer {
-    min-height: unset;
-    margin-top: 16px;
-    display: inline-flex;
-    overflow: scroll hidden;
-    white-space: nowrap;
+  min-height: unset;
+  margin-top: 16px;
+  display: inline-flex;
+  overflow: scroll hidden;
+  white-space: nowrap;
 }
 
 .ChipInputAutoComplete-rootContainer .chip {
-    height: 26px;
-    margin-right: 4px;
+  height: 26px;
+  margin-right: 4px;
 }
 
 .ChipInputAutoComplete-rootContainer .chip span {
-    padding: 0 9px 0 8px;
+  padding: 0 9px 0 8px;
 }
 
 .ChipInputAutoComplete-rootContainer .chip svg {
-    margin-right: 2px;
+  margin-right: 2px;
 }
 
 .ChipInputAutoComplete-rootContainer .label {
-    top: 0;
+  top: 0;
 }
