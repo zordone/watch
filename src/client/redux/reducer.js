@@ -10,6 +10,7 @@ const initialState = {
   resort: false,
   snackOpen: false,
   snackText: "",
+  isFetched: false,
 };
 
 export default (state = initialState, action) => {
@@ -80,6 +81,11 @@ export default (state = initialState, action) => {
         // we only update the text if the snackbar is open
         // (leave it there during hide transition)
         snackText: action.snackOpen ? action.snackText : state.snackText,
+      };
+    case types.SET_IS_FETCHED:
+      return {
+        ...state,
+        isFetched: action.isFetched,
       };
 
     default:

@@ -10,3 +10,4 @@ export const getSort = (state) => state.sort;
 export const getResort = (state) => state.resort;
 export const getSnackOpen = (state) => state.snackOpen;
 export const getSnackText = (state) => state.snackText;
+export const getIsFetched = (state) => state.isFetched;

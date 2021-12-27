@@ -58,3 +58,8 @@ export const setSnack = (snackOpen, snackText) => ({
   snackOpen,
   snackText,
 });
+
+export const setIsFetched = (isFetched) => ({
+  type: types.SET_IS_FETCHED,
+  isFetched,
+});

@@ -8,3 +8,4 @@ export const SET_FIRST_LOAD = "set-first-load";
 export const SET_CURRENT_ID = "set-current-id";
 export const SET_SORT = "set-sort";
 export const SET_SNACK = "set-snack";
+export const SET_IS_FETCHED = "set-isfetched";

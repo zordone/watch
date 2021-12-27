@@ -24,6 +24,7 @@ import "./Home.css";
 
 class Home extends Component {
   constructor(props) {
+    console.log("constructor");
     super(props);
     this.currentSearch = "";
     this.onImdbPaste = this.onImdbPaste.bind(this);
@@ -33,7 +34,6 @@ class Home extends Component {
     this.onRowClick = this.onRowClick.bind(this);
     this.onSnackClose = this.onSnackClose.bind(this);
     this.updateSearch = _.throttle(this.updateSearch, 1000);
-    this.isFetched = false;
   }
 
   componentDidMount() {
@@ -120,15 +120,16 @@ class Home extends Component {
   }
 
   fetchData(all = false) {
-    if (this.isFetched) {
+    const { isFetched, setIsFetched, fetchItems, search } = this.props;
+    if (isFetched) {
+      this.onSearchChanged(search);
       return;
     }
-    const { search, fetchItems } = this.props;
     fetchItems(all)
       .then(() => {
         this.onSearchChanged(search);
         if (all) {
-          this.isFetched = true;
+          setIsFetched(true);
         }
       })
       .catch(console.error);
@@ -275,6 +276,7 @@ const mapStateToProps = (state) => ({
   sort: selectors.getSort(state),
   snackOpen: selectors.getSnackOpen(state),
   snackText: selectors.getSnackText(state),
+  isFetched: selectors.getIsFetched(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -284,6 +286,7 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentId: (currentId) => dispatch(actions.setCurrentId(currentId)),
   setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
   setSnack: (open, text) => dispatch(actions.setSnack(open, text)),
+  setIsFetched: (isFetched) => dispatch(actions.setIsFetched(isFetched)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
