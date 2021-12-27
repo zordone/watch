@@ -7,12 +7,8 @@ export const receiveItems = items => ({
     items
 });
 
-export const fetchItems = () => (
-    dispatch => (
-        service.listItems()
-            .then(items => dispatch(receiveItems(items)))
-    )
-);
+export const fetchItems = all => dispatch =>
+    service.listItems(all).then(items => dispatch(receiveItems(items)));
 
 export const addNewItem = item => ({
     type: types.ADD_NEW_ITEM,

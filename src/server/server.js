@@ -24,6 +24,7 @@ app.get('/admin/backup', api.adminBackup);
 
 // client
 app.get('/items', api.listItems);
+app.get('/activeitems', api.listActiveItems);
 app.post('/items', api.newItem);
 app.get('/items/:id', api.getItemById);
 app.put('/items/:id', api.updateItemById);

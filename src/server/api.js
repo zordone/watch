@@ -7,9 +7,9 @@ const { Item } = require('./models');
 const { importCsv } = require('./importCsv');
 const { IMPORT_DIR, BACKUP_DIR } = require('./config');
 const { genres } = require('../common/data.json');
-const { ItemType } = require('../common/enums-node');
+const { ItemType, FinishedType } = require('../common/enums-node');
 
-const between = (value, min, max) => (min <= value && value <= max);
+const between = (value, min, max) => min <= value && value <= max;
 
 const removeAllItems = () =>
     Item.remove({})
@@ -63,19 +63,22 @@ exports.adminImport = (req, res) => {
             let done = 0;
             let errors = 0;
             importCsv(filename)
-                .then(models => (
-                    Promise.all(models.map(model => (
-                        model.save()
-                            .then(() => {
-                                done += 1;
-                            })
-                            .catch(err => {
-                                console.log('[AdminImport] Item to save', model);
-                                console.error('[AdminImport] Item is not saved.', err);
-                                errors += 1;
-                            })
-                    )))
-                ))
+                .then(models =>
+                    Promise.all(
+                        models.map(model =>
+                            model
+                                .save()
+                                .then(() => {
+                                    done += 1;
+                                })
+                                .catch(err => {
+                                    console.log('[AdminImport] Item to save', model);
+                                    console.error('[AdminImport] Item is not saved.', err);
+                                    errors += 1;
+                                })
+                        )
+                    )
+                )
                 .then(() => {
                     console.log('[AdminImport] Import finished. Done:', done, 'Errors:', errors);
                     res.sendStatus(200);
@@ -116,10 +119,11 @@ exports.adminBackup = (req, res) => {
         });
 };
 
-exports.listItems = (req, res) => {
-    Item.find()
+const listItems = (req, res, all) => {
+    const filter = all ? undefined : { finished: FinishedType.NO };
+    Item.find(filter)
         .then(items => {
-            console.log('[ListItems] Found:', items.length);
+            console.log(`[ListItems] Found: ${items.length} (${all ? 'all' : 'active'})`);
             res.send(items);
         })
         .catch(err => {
@@ -127,6 +131,9 @@ exports.listItems = (req, res) => {
             res.sendStatus(500);
         });
 };
+
+exports.listItems = (req, res) => listItems(req, res, true);
+exports.listActiveItems = (req, res) => listItems(req, res, false);
 
 exports.newItem = (req, res) => {
     const body = omit((req && req.body) || {}, Item.dontUpdateFields);
@@ -202,7 +209,8 @@ exports.searchImages = (req, res) => {
             show: false
         }
     };
-    google.list(params)
+    google
+        .list(params)
         .then(images => {
             console.log('[SearchImages] Found:', images.length);
             const filtered = images
@@ -211,11 +219,12 @@ exports.searchImages = (req, res) => {
                     const ratio = width / height;
                     return { width, height, ratio, url };
                 })
-                .filter(image => (
-                    between(image.width, 150, 900) &&
-                    between(image.height, 200, 1200) &&
-                    between(image.ratio, 0.65, 0.85)
-                ));
+                .filter(
+                    image =>
+                        between(image.width, 150, 900) &&
+                        between(image.height, 200, 1200) &&
+                        between(image.ratio, 0.65, 0.85)
+                );
             console.log('[SearchImages] Filtered:', filtered.length);
             res.send(filtered);
         })
@@ -236,9 +245,7 @@ exports.imdbData = (req, res) => {
             const data = JSON.parse(json);
             const result = {
                 parsed: {
-                    type: data['@type'] === 'TVSeries'
-                        ? ItemType.SHOW
-                        : ItemType.MOVIE,
+                    type: data['@type'] === 'TVSeries' ? ItemType.SHOW : ItemType.MOVIE,
                     title: data.name || '',
                     genres: makeArray(data.genre)
                         .map(genre => genre.toLowerCase())
@@ -255,9 +262,7 @@ exports.imdbData = (req, res) => {
                         .map(keyword => keyword.trim().toLowerCase())
                         .filter(Boolean),
                     posterUrl: data.image || '',
-                    released: data.datePublished
-                        ? data.datePublished
-                        : '',
+                    released: data.datePublished ? data.datePublished : '',
                     releaseYear: data.datePublished
                         ? parseInt(data.datePublished.substr(0, 4), 10)
                         : null

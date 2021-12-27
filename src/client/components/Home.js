@@ -33,21 +33,21 @@ class Home extends Component {
         this.onRowClick = this.onRowClick.bind(this);
         this.onSnackClose = this.onSnackClose.bind(this);
         this.updateSearch = _.throttle(this.updateSearch, 1000);
+        this.isFetched = false;
     }
 
     componentDidMount() {
         fixedHeaderWorkaround();
         events.addListener(Events.IMDB_PASTE, this.onImdbPaste);
         const { fetchItems, items, search } = this.props;
-        const isFetched = Boolean(items.length);
-        const itemsPromise = isFetched
-            ? Promise.resolve()
-            : fetchItems();
-        itemsPromise
-            .then(() => {
-                this.onSearchChanged(search);
-            })
-            .catch(console.error);
+
+        // initial short list
+        this.fetchData(false);
+
+        // full list a bit later
+        setTimeout(() => {
+            window.requestIdleCallback(() => this.fetchData(true));
+        }, 5000);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -59,6 +59,21 @@ class Home extends Component {
         const { setFirstLoad } = this.props;
         setFirstLoad(false);
         events.removeListener(Events.IMDB_PASTE, this.onImdbPaste);
+    }
+
+    fetchData(all = false) {
+        if (this.isFetched) {
+            return;
+        }
+        const { search, fetchItems } = this.props;
+        fetchItems(all)
+            .then(() => {
+                this.onSearchChanged(search);
+                if (all) {
+                    this.isFetched = true;
+                }
+            })
+            .catch(console.error);
     }
 
     onImdbPaste(event) {
@@ -77,7 +92,9 @@ class Home extends Component {
             }
             // set sort
             if (isSortCommand) {
-                const newSort = this.currentSearch.replace('sort:', '').toLowerCase() || SortComparators.DEFAULT;
+                const newSort =
+                    this.currentSearch.replace('sort:', '').toLowerCase() ||
+                    SortComparators.DEFAULT;
                 const isValid = Object.values(SortComparators).includes(newSort);
                 if (!isValid) {
                     return;
@@ -135,7 +152,7 @@ class Home extends Component {
             this.scrollToCurrent();
             return;
         }
-        const filteredItems = items.filter(item => (
+        const filteredItems = items.filter(item =>
             searchWords.every(word => {
                 const { text, starts, equals } = item.searchData;
                 const isKeyword = Object.values(SearchKeywords).includes(word);
@@ -145,7 +162,7 @@ class Home extends Component {
                     equals.includes(word)
                 );
             })
-        ));
+        );
         setSearch(search, filteredItems);
     }
 
@@ -192,7 +209,10 @@ class Home extends Component {
                         onRowClick={this.onRowClick}
                     />
                     <div className="Home-footer">
-                        <span>{filteredItems.length} item{filteredItems.length === 1 ? '' : 's'}</span>
+                        <span>
+                            {filteredItems.length} item
+                            {filteredItems.length === 1 ? '' : 's'}
+                        </span>
                         <span>v{packageJson.version}</span>
                     </div>
                 </main>
@@ -201,12 +221,12 @@ class Home extends Component {
                     open={snackOpen}
                     autoHideDuration={3000}
                     onClose={this.onSnackClose}
-                    message={(
+                    message={
                         <span>
                             <CheckCircle />
                             {snackText}
                         </span>
-                    )}
+                    }
                     ContentProps={{
                         classes: {
                             root: 'Home-snack',
@@ -268,7 +288,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchItems: () => dispatch(actions.fetchItems()),
+    fetchItems: all => dispatch(actions.fetchItems(all)),
     setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
     setFirstLoad: firstLoad => dispatch(actions.setFirstLoad(firstLoad)),
     setCurrentId: currentId => dispatch(actions.setCurrentId(currentId)),
@@ -276,7 +296,4 @@ const mapDispatchToProps = dispatch => ({
     setSnack: (open, text) => dispatch(actions.setSnack(open, text))
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
