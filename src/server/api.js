@@ -237,7 +237,11 @@ exports.searchImages = (req, res) => {
 exports.imdbData = (req, res) => {
   const { imdbId } = req.params;
   console.log("[ImdbData] IMDb ID:", imdbId);
-  fetch(`http://www.imdb.com/title/${imdbId}/?ref_=fn_tv_tt_1`)
+  fetch(`http://www.imdb.com/title/${imdbId}/?ref_=fn_tv_tt_1`, {
+    headers: {
+      "Accept-Language": "en-US",
+    },
+  })
     .then((imdbRes) => imdbRes.text())
     .then((html) => {
       const imdbDataRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
