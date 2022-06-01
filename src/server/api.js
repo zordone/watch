@@ -3,6 +3,7 @@ const Scraper = require("images-scraper");
 const moment = require("moment");
 const fs = require("fs");
 const fetch = require("node-fetch");
+const { DOMParser } = require("xmldom");
 const { Item } = require("./models");
 const { importCsv } = require("./importCsv");
 const { IMPORT_DIR, BACKUP_DIR } = require("./config");
@@ -10,6 +11,9 @@ const { genres } = require("../common/data.json");
 const { ItemType, FinishedType } = require("../common/enums-node");
 
 const between = (value, min, max) => min <= value && value <= max;
+
+const decode = (htmlString) =>
+  new DOMParser().parseFromString(`<d>${htmlString}</d>`, "text/html").documentElement.textContent;
 
 const removeAllItems = () =>
   Item.remove({})
@@ -250,7 +254,7 @@ exports.imdbData = (req, res) => {
       const result = {
         parsed: {
           type: data["@type"] === "TVSeries" ? ItemType.SHOW : ItemType.MOVIE,
-          title: data.name || "",
+          title: decode(data.alternateName || data.name || ""),
           genres: makeArray(data.genre)
             .map((genre) => genre.toLowerCase())
             .filter((genre) => {
@@ -260,7 +264,7 @@ exports.imdbData = (req, res) => {
               }
               return isValid;
             }),
-          description: data.description,
+          description: decode(data.description || ""),
           keywords: (data.keywords || "")
             .split(",")
             .map((keyword) => keyword.trim().toLowerCase())
