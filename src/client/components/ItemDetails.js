@@ -169,7 +169,7 @@ class ItemDetails extends Component {
     }
     // Subtitles & Port.hu
     if (isCheckable && item.withVali !== ValiType.NO) {
-      addLink("Subtitles", `https://www.feliratok.info/?search=${title}&nyelv=Magyar`);
+      addLink("Subtitles", `https://www.feliratok.eu/?search=${title}&nyelv=Magyar`);
       addLink("Port.hu", `https://port.hu/kereso?q=${title}&type=movie`); // always "movie"
     }
     // Torrent

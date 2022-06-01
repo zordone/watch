@@ -24,7 +24,6 @@ import "./Home.css";
 
 class Home extends Component {
   constructor(props) {
-    console.log("constructor");
     super(props);
     this.currentSearch = "";
     this.onImdbPaste = this.onImdbPaste.bind(this);
