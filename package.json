@@ -26,7 +26,7 @@
     "jest": "^24.7.1",
     "lodash": "^4.17.21",
     "material-ui-chip-input": "^1.0.0-beta.7",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "mongoose": "^5.13.13",
     "node-fetch": "^2.6.6",
     "object-assign": "4.1.1",
