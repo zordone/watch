@@ -4,6 +4,7 @@ import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Home from "./Home";
 import Item from "./Item";
+import Help from "./Help";
 import events, { Events } from "../service/events";
 import "./App.css";
 
@@ -47,6 +48,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/item/:id/:imdbId?" component={Item} />
+              <Route exact path="/help" component={Help} />
             </Switch>
           </div>
         </BrowserRouter>

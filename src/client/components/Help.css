@@ -1,0 +1,33 @@
+.Help {
+  padding: 1rem;
+}
+
+.Help .columns {
+  display: flex;
+  gap: 2rem;
+}
+
+.Help code {
+  background: #424242;
+  padding: 0.2rem;
+  border-radius: 0.2rem;
+  line-height: 1.8;
+  text-shadow: 0 0 0.2rem #000;
+}
+
+.Help h3 {
+  margin-top: 0;
+  border-bottom: 1px solid;
+}
+
+.Help a {
+  margin-bottom: 1rem;
+  display: inline-block;
+  color: #f10006;
+  text-decoration: none;
+  opacity: 0.8;
+  font-weight: bold;
+}
+.Help a:hover {
+  opacity: 1;
+}
