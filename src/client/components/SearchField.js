@@ -84,7 +84,7 @@ class SearchField extends PureComponent {
       <div className={`SearchField ${emptyClass}`}>
         <div className="SearchField-words">{value.split(" ").map(this.renderWord)}</div>
         <TextField
-          placeholder="Search"
+          placeholder="Filter"
           value={value}
           onChange={this.onFieldChange}
           inputRef={this.onSetInputRef}

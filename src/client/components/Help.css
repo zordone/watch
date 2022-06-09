@@ -2,32 +2,65 @@
   padding: 1rem;
 }
 
-.Help .columns {
-  display: flex;
-  gap: 2rem;
+.Help-paper {
+  padding: 1rem;
+  max-width: 40rem;
+  margin: 0 auto;
 }
 
-.Help code {
-  background: #424242;
-  padding: 0.2rem;
+.Help-sections {
+  display: flex;
+  flex-direction: column;
+}
+
+.Help-sections section {
+  padding-bottom: 1rem;
+}
+
+.Help-keywords {
+  display: flex;
+  gap: 1rem;
+  padding-left: 3rem;
+}
+
+.Help-keywords button {
+  border: none;
+  color: inherit;
+  background: #666;
+  padding: 0 0.5rem;
   border-radius: 0.2rem;
   line-height: 1.8;
-  text-shadow: 0 0 0.2rem #000;
+  text-shadow: 0 0 0.2rem #000a;
+  font-family: monospace;
+  box-shadow: 0 0 0.6rem #0006;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.9;
+  transition-property: transform, opacity;
+  transition-duration: 100ms;
+  transition-timing-function: ease-in-out;
+}
+.Help-keywords button:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+.Help-keywords button.selected {
+  background: #00a9ff;
 }
 
 .Help h3 {
   margin-top: 0;
   border-bottom: 1px solid;
+  opacity: 0.5;
+  transition: opacity 300ms ease-in-out;
+}
+.Help section:hover h3 {
+  opacity: 1;
 }
 
-.Help a {
-  margin-bottom: 1rem;
-  display: inline-block;
-  color: #f10006;
-  text-decoration: none;
-  opacity: 0.8;
-  font-weight: bold;
-}
-.Help a:hover {
-  opacity: 1;
+.Help .Help-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }

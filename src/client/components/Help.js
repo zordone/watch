@@ -1,44 +1,161 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { SearchKeywords, SortComparators } from "../../common/enums";
-import { sortTitles } from "../service/sort";
+import { Button, Paper } from "@material-ui/core";
+import * as actions from "../redux/actions";
+import * as selectors from "../redux/selectors";
+import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
+import { noop } from "../service/utils";
 import "./Help.css";
 
-const Row = ({ name, desc }) => (
-  <li key={name}>{[<code>{name}</code>, desc ? " - " : "", desc]}</li>
-);
+const values = (obj, prefix = "") =>
+  Object.values(obj)
+    .filter(Boolean)
+    .map((key) => `${prefix}${key}`);
 
-Row.propTypes = {
-  name: PropTypes.string.isRequired,
-  desc: PropTypes.string,
+const sections = [
+  { title: "Type", keywords: values(ItemType) },
+  { title: "State", keywords: values(StateType) },
+  { title: "Rating", keywords: values(RatingType, "#") },
+  { title: "Audience", keywords: ["csaba", "vali"] },
+  {
+    title: "Technical",
+    keywords: ["#finished", "#unfinished", "#noposter", "#noimdb", "#unscraped"],
+  },
+  { title: "Sorting", keywords: values(SortComparators, "sort:") },
+];
+
+class Help extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: [],
+    };
+    this.onClose = this.onClose.bind(this);
+    this.onApply = this.onApply.bind(this);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClose() {
+    const { history } = this.props;
+    history.goBack();
+  }
+
+  onApply() {
+    const { items, setSearch, setSort } = this.props;
+    const { selected } = this.state;
+    const search = selected.filter((name) => !name.startsWith("sort:")).join(" ");
+    const sort = selected.filter((name) => name.startsWith("sort:")).pop();
+
+    if (search) {
+      setSearch(search, items);
+    }
+
+    if (sort) {
+      setSort(items, sort.substr(5));
+    }
+    this.onClose();
+  }
+
+  onClick(event) {
+    const { items, setSearch, setSort } = this.props;
+    const name = event.target.innerText;
+    const isSort = name.startsWith("sort:");
+    const isCmd = event.metaKey;
+
+    // multiselect
+    if (isCmd) {
+      const { selected: prevSelected } = this.state;
+      const nextSelected = prevSelected.includes(name)
+        ? prevSelected.filter((x) => x !== name)
+        : [...prevSelected.filter((x) => !(isSort && x.startsWith("sort:"))), name];
+      this.setState({ selected: nextSelected });
+      return;
+    }
+
+    // single select
+    if (isSort) {
+      setSort(items, name.substr(5));
+    } else {
+      setSearch(name, items);
+    }
+    this.onClose();
+  }
+
+  render() {
+    const { selected } = this.state;
+    return (
+      <div className="Help">
+        <Paper className="Help-paper">
+          <div className="Help-sections">
+            {sections.map(({ title, keywords }) => (
+              <section key={title}>
+                <h3>{title}</h3>
+                <div className="Help-keywords">
+                  {keywords
+                    .filter(Boolean)
+                    .sort()
+                    .map((keyword) => (
+                      <button
+                        key={keyword}
+                        type="button"
+                        onClick={this.onClick}
+                        className={selected.includes(keyword) ? "selected" : ""}
+                      >
+                        {keyword}
+                      </button>
+                    ))}
+                </div>
+              </section>
+            ))}
+          </div>
+          <div className="Help-buttons">
+            {selected.length > 0 && (
+              <Button
+                variant="contained"
+                color="primary"
+                className="Item-button"
+                onClick={this.onApply}
+              >
+                Apply
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="default"
+              className="Item-button"
+              onClick={this.onClose}
+            >
+              Close
+            </Button>
+          </div>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+Help.propTypes = {
+  history: PropTypes.shape({
+    goBack: PropTypes.func.isRequired,
+  }).isRequired,
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setSearch: PropTypes.func,
+  setSort: PropTypes.func,
 };
 
-Row.defaultProps = {
-  desc: "",
+Help.defaultProps = {
+  setSearch: noop,
+  setSort: noop,
 };
 
-const Help = () => (
-  <div className="Help">
-    <a href="/">⬅ Home</a>
-    <div className="columns">
-      <section>
-        <h3>Search Keywords</h3>
-        <ul>
-          {Object.values(SearchKeywords).map((name) => (
-            <Row name={name} />
-          ))}
-        </ul>
-      </section>
-      <section>
-        <h3>Sorting Methods</h3>
-        <ul>
-          {Object.values(SortComparators).map((name) => (
-            <Row name={`sort:${name}`} desc={`Sort by ${sortTitles[name]}`} />
-          ))}
-        </ul>
-      </section>
-    </div>
-  </div>
-);
+const mapStateToProps = (state) => ({
+  items: selectors.getItems(state),
+});
 
-export default Help;
+const mapDispatchToProps = (dispatch) => ({
+  setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
+  setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Help);

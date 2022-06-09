@@ -29,6 +29,7 @@ class Home extends Component {
     this.onImdbPaste = this.onImdbPaste.bind(this);
     this.onSearchChanged = this.onSearchChanged.bind(this);
     this.onShortcut = this.onShortcut.bind(this);
+    this.onHelp = this.onHelp.bind(this);
     this.onAddNew = this.onAddNew.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
     this.onSnackClose = this.onSnackClose.bind(this);
@@ -90,6 +91,9 @@ class Home extends Component {
     } else if (code === "KeyN" && !inSearch) {
       // add new item
       this.onAddNew();
+    } else if (code === "KeyH" && !inSearch) {
+      // show help
+      this.onHelp();
     } else if (code === "ArrowUp" && cmdKey) {
       // home
       this.scrollToTop();
@@ -100,6 +104,11 @@ class Home extends Component {
     const { history } = this.props;
     const imdbParam = imdbId ? `/${imdbId}` : "";
     history.push(`/item/new${imdbParam}`);
+  }
+
+  onHelp() {
+    const { history } = this.props;
+    history.push("/help");
   }
 
   onRowClick(id) {
@@ -188,6 +197,11 @@ class Home extends Component {
     const searchField = (
       <SearchField onChange={this.onSearchChanged} onShortcut={this.onShortcut} value={search} />
     );
+    const helpButton = (
+      <IconButton className="HelpButton" aria-label="Help" onClick={this.onHelp}>
+        ?
+      </IconButton>
+    );
     const newButton = (
       <IconButton className="NewButton" aria-label="Add new item" onClick={this.onAddNew}>
         <Add />
@@ -195,7 +209,7 @@ class Home extends Component {
     );
     return (
       <div className="Home">
-        <Header {...{ searchField, newButton }} />
+        <Header {...{ searchField, helpButton, newButton }} />
         <main>
           <ItemTable items={filteredItems} currentId={currentId} onRowClick={this.onRowClick} />
           <div className="Home-footer">
