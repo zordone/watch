@@ -28,7 +28,7 @@ class PosterSearch extends PureComponent {
     if (!visible) {
       return null;
     }
-    const filteredImages = images.filter((image) => !failedUrls.includes(image.url));
+    const filteredImages = images.filter((image) => !failedUrls.includes(image));
     return (
       <Paper className="PosterSearch">
         {searching && (
@@ -45,12 +45,12 @@ class PosterSearch extends PureComponent {
           <div className="PosterSearch-images">
             {filteredImages.map((image) => (
               <button
-                key={image.url}
+                key={image}
                 type="button"
                 className="PosterSearch-poster"
-                onClick={() => onSelect(image.url)}
+                onClick={() => onSelect(image)}
               >
-                <img src={image.url} alt="Poster" onError={this.onFailedImage} />
+                <img src={image} alt="Poster" onError={this.onFailedImage} />
               </button>
             ))}
             <div className="PosterSearch-fade left" />
@@ -65,13 +65,7 @@ class PosterSearch extends PureComponent {
 PosterSearch.propTypes = {
   visible: PropTypes.bool,
   searching: PropTypes.bool,
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      width: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-      url: PropTypes.string.isRequired,
-    }),
-  ),
+  images: PropTypes.arrayOf(PropTypes.string),
   onSelect: PropTypes.func,
 };
 

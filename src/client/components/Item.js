@@ -158,7 +158,7 @@ class Item extends Component {
       posters: { visible: true, searching: true, images: [] },
       posterScraping: true,
     });
-    const query = `${item.title} ${item.type} poster portrait official`;
+    const query = encodeURI(`${item.title} ${item.type} poster`);
     service
       .searchImages(query)
       // service.mockSearchImages(3000)

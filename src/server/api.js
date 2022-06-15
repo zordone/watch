@@ -10,6 +10,9 @@ const { IMPORT_DIR, BACKUP_DIR } = require("./config");
 const { genres } = require("../common/data.json");
 const { ItemType, FinishedType } = require("../common/enums-node");
 
+const reImage = /\.(jpe?g|png)$/i;
+const reImdbData = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
+
 const between = (value, min, max) => min <= value && value <= max;
 
 const decode = (htmlString) =>
@@ -200,35 +203,17 @@ exports.deleteItemById = (req, res) => {
 exports.searchImages = (req, res) => {
   const { query } = req.params;
   console.log("[SearchImages] Search:", query);
-  const google = new Scraper.Google();
-  const params = {
-    keyword: query,
-    num: 20,
-    rlimit: 10,
-    detail: true,
-    advanced: {
-      resolution: "m",
+  const google = new Scraper({
+    // puppeteer: { headless: false },
+    tbs: {
+      isz: "m", // medium
     },
-    nightmare: {
-      show: false,
-    },
-  };
+  });
   google
-    .list(params)
+    .scrape(encodeURI(query), 50)
     .then((images) => {
       console.log("[SearchImages] Found:", images.length);
-      const filtered = images
-        .map((image) => {
-          const { width, height, url } = image;
-          const ratio = width / height;
-          return { width, height, ratio, url };
-        })
-        .filter(
-          (image) =>
-            between(image.width, 150, 900) &&
-            between(image.height, 200, 1200) &&
-            between(image.ratio, 0.65, 0.85),
-        );
+      const filtered = images.map((image) => image.url).filter((url) => reImage.test(url));
       console.log("[SearchImages] Filtered:", filtered.length);
       res.send(filtered);
     })
@@ -248,8 +233,7 @@ exports.imdbData = (req, res) => {
   })
     .then((imdbRes) => imdbRes.text())
     .then((html) => {
-      const imdbDataRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
-      const json = (imdbDataRegex.exec(html) || [])[1];
+      const json = (reImdbData.exec(html) || [])[1];
       const data = JSON.parse(json);
       const result = {
         parsed: {
