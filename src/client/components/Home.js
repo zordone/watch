@@ -197,13 +197,14 @@ class Home extends Component {
     const searchField = (
       <SearchField onChange={this.onSearchChanged} onShortcut={this.onShortcut} value={search} />
     );
+    // TODO: upgare mui icons and use proper question mark icon
     const helpButton = (
-      <IconButton className="HelpButton" aria-label="Help" onClick={this.onHelp}>
+      <IconButton aria-label="Help" onClick={this.onHelp}>
         ?
       </IconButton>
     );
     const newButton = (
-      <IconButton className="NewButton" aria-label="Add new item" onClick={this.onAddNew}>
+      <IconButton aria-label="Add new item" onClick={this.onAddNew}>
         <Add />
       </IconButton>
     );

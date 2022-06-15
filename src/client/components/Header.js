@@ -5,10 +5,12 @@ import "./Header.css";
 const Header = ({ searchField, helpButton, newButton }) => (
   <header className="Header">
     <img className="Header-logo" alt="logo" src="/app-logo.webp" />
-    <div className="Header-title" />
+    <img className="Header-title" alt="watch" src="/app-title.webp" />
     {searchField}
-    {helpButton}
-    {newButton}
+    <div className="Header-buttons">
+      {helpButton}
+      {newButton}
+    </div>
   </header>
 );
 
