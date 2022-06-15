@@ -47,7 +47,7 @@ class SearchField extends PureComponent {
   onFieldChange(event) {
     const { value } = event.target;
     const { onChange } = this.props;
-    const cleaned = value.trimStart().replace(/\s+/g, " ");
+    const cleaned = value.trimStart().replace(/\s+/g, " ").toLowerCase();
     onChange(cleaned);
     this.setState({ value: cleaned });
   }
