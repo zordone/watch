@@ -42,7 +42,7 @@ This is an app I made to store and manage the list of movies and tv shows I'm in
 
 ## Scripts
 
-- Start Mongo DB: `mongod --dbpath=/Users/zord/data/db`
+- Start Mongo DB: `npm run mongo`
 - Start server: `npm run server`
 - Start client: `npm start`
 - Start all in one: `npm run start-all`
