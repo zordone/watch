@@ -28,6 +28,7 @@ const DETAILS = "details";
 class Item extends Component {
   constructor(props) {
     super(props);
+    const { history } = this.props;
     this.state = {
       item: { ...defaultItem },
       page: DETAILS,
@@ -39,6 +40,7 @@ class Item extends Component {
       posterScraping: false,
       error: "",
       deleteSure: false,
+      canGoBack: history.length > 1,
     };
     this.findByTitle = this.findByTitle.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -139,7 +141,12 @@ class Item extends Component {
 
   onClose() {
     const { history } = this.props;
-    history.goBack();
+    const { canGoBack } = this.state;
+    if (canGoBack) {
+      history.goBack();
+    } else {
+      window.close();
+    }
   }
 
   onShowForm() {
@@ -233,7 +240,7 @@ class Item extends Component {
   }
 
   render() {
-    const { item, page, posters, error, deleteSure, posterScraping } = this.state;
+    const { item, page, posters, error, deleteSure, posterScraping, canGoBack } = this.state;
     const isNew = item._id === Const.NEW;
     const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
     return (
@@ -268,7 +275,7 @@ class Item extends Component {
               className="Item-button"
               onClick={this.onClose}
             >
-              Cancel
+              {canGoBack ? "Cancel" : "Close"}
             </Button>
             {!isNew && (
               <Button
