@@ -10,7 +10,7 @@ import "./ItemRow.css";
 const ItemRow = ({ item, onClick, isCurrent }) => {
   const className = `ItemRow ${isCurrent ? "current" : ""}`;
   return (
-    <TableRow className={className} onClick={() => onClick(item._id)}>
+    <TableRow className={className} onClick={(event) => onClick(item._id, event.metaKey)}>
       <TableCell className="ItemTable-skinny-col">
         <ItemIcon item={item} />
       </TableCell>

@@ -111,10 +111,15 @@ class Home extends Component {
     history.push("/help");
   }
 
-  onRowClick(id) {
+  onRowClick(id, isCmd) {
     const { history, setCurrentId } = this.props;
+    const path = `/item/${id}`;
+    if (isCmd) {
+      window.open(path, "_blank");
+      return;
+    }
     setCurrentId(id);
-    history.push(`/item/${id}`);
+    history.push(path);
   }
 
   onSearchChanged(search) {
