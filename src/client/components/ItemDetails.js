@@ -154,6 +154,7 @@ class ItemDetails extends Component {
     const inProgress = Boolean(item.inProgress);
     const title = encodeURIComponent(item.title);
     const isCheckable = this.checkableStates.includes(item.state.type);
+    const isWaiting = item.state.type === StateType.WAITING;
     const nextSeasonNum = getNextSeasonNum(item);
     const season = isMovie ? "" : ` season ${nextSeasonNum}`;
     // IMDb
@@ -180,7 +181,7 @@ class ItemDetails extends Component {
       addLink("Port.hu", `https://port.hu/kereso?q=${title}&type=movie`); // always "movie"
     }
     // Torrent
-    if (isCheckable) {
+    if (isCheckable || isWaiting) {
       const type = isMovie ? "movies" : "tv";
       const year = isMovie && item.releaseYear ? ` ${item.releaseYear}` : "";
       const query = encodeURIComponent(`${item.title}${season}${year}`);
