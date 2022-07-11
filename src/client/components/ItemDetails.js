@@ -167,6 +167,13 @@ class ItemDetails extends Component {
       const params = isMovie ? "&s=tt&ttype=ft" : "&s=tt&ttype=tv&ref_=fn_tv";
       addLink("IMDb search", `http://www.imdb.com/find?q=${title}${params}`);
     }
+    // IMDb next season
+    if (item.imdbId && isCheckable && !isMovie) {
+      addLink(
+        `IMDb ${seasonCode(nextSeasonNum)}`,
+        `http://www.imdb.com/title/${item.imdbId}/episodes/?season=${nextSeasonNum}`,
+      );
+    }
     // Subtitles & Port.hu
     if (isCheckable && item.withVali !== ValiType.NO) {
       addLink("Subtitles", `https://www.feliratok.eu/?search=${title}&nyelv=Magyar`);
