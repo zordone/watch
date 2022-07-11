@@ -1,4 +1,4 @@
-/* globals document */
+/* globals document, window */
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -18,6 +18,7 @@ import itemState from "../service/itemState";
 import { anyChanged, slugify, noop } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import PosterSearch from "./PosterSearch";
+import Spinner from "./Spinner";
 import { Const, SortComparators } from "../../common/enums";
 import events, { Events } from "../service/events";
 import "./Item.css";
@@ -30,7 +31,10 @@ class Item extends Component {
     super(props);
     const { history } = this.props;
     this.state = {
-      item: { ...defaultItem },
+      item: {
+        ...defaultItem,
+        isDefaultItem: true,
+      },
       page: DETAILS,
       posters: {
         visible: false,
@@ -243,6 +247,8 @@ class Item extends Component {
     const { item, page, posters, error, deleteSure, posterScraping, canGoBack } = this.state;
     const isNew = item._id === Const.NEW;
     const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
+    const isFullyFetched = item && !item.isDefaultItem;
+
     return (
       <div className="Item">
         <Paper className="Item-paper">
@@ -310,6 +316,7 @@ class Item extends Component {
           )}
         </Paper>
         <PosterSearch {...posters} onSelect={this.onPosterSelect} />
+        {!isFullyFetched && <Spinner />}
       </div>
     );
   }

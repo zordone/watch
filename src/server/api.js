@@ -13,8 +13,6 @@ const { ItemType, FinishedType } = require("../common/enums-node");
 const reImage = /\.(jpe?g|png)$/i;
 const reImdbData = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
 
-const between = (value, min, max) => min <= value && value <= max;
-
 const decode = (htmlString) =>
   new DOMParser().parseFromString(`<d>${htmlString}</d>`, "text/html").documentElement.textContent;
 
@@ -233,7 +231,11 @@ exports.imdbData = (req, res) => {
   })
     .then((imdbRes) => imdbRes.text())
     .then((html) => {
+      reImdbData.lastIndex = 0;
       const json = (reImdbData.exec(html) || [])[1];
+      if (!json) {
+        throw new Error("JSON regex didn't match");
+      }
       const data = JSON.parse(json);
       const result = {
         parsed: {

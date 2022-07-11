@@ -73,7 +73,7 @@
   "scripts": {
     "start": "npm run nvm node scripts/start-dev.js",
     "start-prod": "node scripts/start-prod.js",
-    "build": "node scripts/build.js",
+    "build": "npm run nvm node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "server": "npm run nvm node ./src/server/server.js",
     "mongo": "mongod --dbpath=/Users/zord/data/db",
