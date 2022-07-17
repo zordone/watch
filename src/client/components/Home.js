@@ -37,11 +37,20 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    // init search from url param
+    const { location } = this.props;
+    const search = new URLSearchParams(location.search).get("q");
+    if (search) {
+      this.onSearchChanged(decodeURIComponent(search));
+    }
+
     fixedHeaderWorkaround();
     events.addListener(Events.IMDB_PASTE, this.onImdbPaste);
 
     // initial short list
-    this.fetchData(false);
+    setTimeout(() => {
+      this.fetchData(false);
+    }, 0);
 
     // full list a bit later
     setTimeout(() => {
@@ -149,7 +158,7 @@ class Home extends Component {
   }
 
   updateSearch(search) {
-    const { items, setSearch } = this.props;
+    const { items, setSearch, history } = this.props;
     if (search.startsWith("sort:")) {
       this.updateSearch.cancel();
       return;
@@ -162,6 +171,7 @@ class Home extends Component {
     if (!searchWords.length) {
       setSearch("", items);
       this.scrollToCurrent();
+      history.replace("/");
       return;
     }
     const filteredItems = items.filter((item) =>
@@ -176,6 +186,7 @@ class Home extends Component {
       }),
     );
     setSearch(search, filteredItems);
+    history.replace(`/?q=${encodeURIComponent(search)}`);
   }
 
   scrollToCurrent() {

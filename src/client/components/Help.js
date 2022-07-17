@@ -36,9 +36,13 @@ class Help extends Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClose() {
+  onClose(_event, search) {
     const { history } = this.props;
     history.goBack();
+
+    if (search) {
+      history.replace(`/?q=${encodeURIComponent(search)}`);
+    }
   }
 
   onApply() {
@@ -54,7 +58,7 @@ class Help extends Component {
     if (sort) {
       setSort(items, sort.substr(5));
     }
-    this.onClose();
+    this.onClose(null, search);
   }
 
   onClick(event) {
@@ -76,10 +80,11 @@ class Help extends Component {
     // single select
     if (isSort) {
       setSort(items, name.substr(5));
+      this.onClose();
     } else {
       setSearch(name, items);
+      this.onClose(null, name);
     }
-    this.onClose();
   }
 
   render() {

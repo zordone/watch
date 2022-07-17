@@ -1,6 +1,6 @@
 {
   "name": "watch",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.0.3",
@@ -79,8 +79,8 @@
     "mongo": "mongod --dbpath=/Users/zord/data/db",
     "lint": "./node_modules/eslint/bin/eslint.js ./src",
     "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
-    "start-all": "node scripts/start-all.js",
-    "start-all-prod": "node scripts/start-all.js --prod",
+    "start-all": "npm run nvm node scripts/start-all.js",
+    "start-all-prod": "npm run nvm node scripts/start-all.js -- --prod",
     "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css",
     "analyze": "source-map-explorer build/static/js/main.*",
     "prettier": "prettier --write .",

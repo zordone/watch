@@ -42,14 +42,10 @@ This is an app I made to store and manage the list of movies and tv shows I'm in
 
 ## Scripts
 
-- Start Mongo DB: `npm run mongo`
-- Start server: `npm run server`
-- Start client: `npm start`
-- Start all in one: `npm run start-all`
-- Make build: `npm run build`
-- Start build: `npm run start-all-prod`
-
-## All-in-one scripts
-
-- Dev: `node scripts/start-all.js`
-- Prod: `node scripts/start-all.js --prod`
+- Start in development mode:
+  1. Start Mongo DB: `npm run mongo`
+  2. Start server: `npm run server`
+  3. Start client: `npm start`
+- Start all in development mode: `npm run start-all`
+- Make production build: `npm run build`
+- Start production build: `npm run start-all-prod`
