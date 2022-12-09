@@ -6,6 +6,7 @@ import * as actions from "../redux/actions";
 import * as selectors from "../redux/selectors";
 import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
 import { noop } from "../service/utils";
+import { updateHash } from "../service/history";
 import "./Help.css";
 
 const values = (obj, prefix = "") =>
@@ -39,9 +40,8 @@ class Help extends Component {
   onClose(_event, search) {
     const { history } = this.props;
     history.goBack();
-
     if (search) {
-      history.replace(`/?q=${encodeURIComponent(search)}`);
+      updateHash(search);
     }
   }
 

@@ -19,8 +19,11 @@ import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
 import events, { Events } from "../service/events";
+import { updateHash } from "../service/history";
 import _ from "../../common/lodashReduced";
 import "./Home.css";
+
+let isFirstMount = true;
 
 class Home extends Component {
   constructor(props) {
@@ -38,10 +41,13 @@ class Home extends Component {
 
   componentDidMount() {
     // init search from url param
-    const { location } = this.props;
-    const search = new URLSearchParams(location.search).get("q");
-    if (search) {
-      this.onSearchChanged(decodeURIComponent(search));
+    if (isFirstMount) {
+      const { location } = this.props;
+      const search = (location.hash || "").slice(1);
+      if (search) {
+        this.onSearchChanged(decodeURIComponent(search));
+      }
+      isFirstMount = false;
     }
 
     fixedHeaderWorkaround();
@@ -158,7 +164,7 @@ class Home extends Component {
   }
 
   updateSearch(search) {
-    const { items, setSearch, history } = this.props;
+    const { items, setSearch } = this.props;
     if (search.startsWith("sort:")) {
       this.updateSearch.cancel();
       return;
@@ -171,7 +177,7 @@ class Home extends Component {
     if (!searchWords.length) {
       setSearch("", items);
       this.scrollToCurrent();
-      history.replace("/");
+      updateHash(search);
       return;
     }
     const filteredItems = items.filter((item) =>
@@ -186,7 +192,7 @@ class Home extends Component {
       }),
     );
     setSearch(search, filteredItems);
-    history.replace(`/?q=${encodeURIComponent(search)}`);
+    updateHash(search);
   }
 
   scrollToCurrent() {

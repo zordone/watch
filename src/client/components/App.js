@@ -6,6 +6,7 @@ import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
 import events, { Events } from "../service/events";
+import { history } from "../service/history";
 import "./App.css";
 
 const theme = createMuiTheme({
@@ -43,7 +44,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
+        <BrowserRouter history={history}>
           <div className="App">
             <Switch>
               <Route exact path="/" component={Home} />
