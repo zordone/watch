@@ -224,9 +224,14 @@ exports.searchImages = (req, res) => {
 exports.imdbData = (req, res) => {
   const { imdbId } = req.params;
   console.log("[ImdbData] IMDb ID:", imdbId);
-  fetch(`http://www.imdb.com/title/${imdbId}/?ref_=fn_tv_tt_1`, {
+  const url = `https://www.imdb.com/title/${imdbId}/`;
+  fetch(url, {
     headers: {
+      "Accept-Encoding": "gzip",
       "Accept-Language": "en-US",
+      Accept: "text/html; charset=utf-8",
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
     },
   })
     .then((imdbRes) => imdbRes.text())
