@@ -157,6 +157,7 @@ class ItemDetails extends Component {
     const isWaiting = item.state.type === StateType.WAITING;
     const nextSeasonNum = getNextSeasonNum(item);
     const season = isMovie ? "" : ` season ${nextSeasonNum}`;
+    const seasonShort = isMovie ? "" : ` s${nextSeasonNum.toString().padStart(2, "0")}`;
     // IMDb
     if (item.imdbId) {
       if (["#", "none"].includes(item.imdbId)) {
@@ -184,7 +185,7 @@ class ItemDetails extends Component {
     if (isCheckable || isWaiting) {
       const type = isMovie ? "movies" : "tv";
       const year = isMovie && item.releaseYear ? ` ${item.releaseYear}` : "";
-      const query = encodeURIComponent(`${item.title}${season}${year}`);
+      const query = encodeURIComponent(`${item.title}${seasonShort}${year}`);
       addLink("Torrents", `https://www.limetorrents.info/search/${type}/${query}/date/1/`);
     }
     // Youtube recap
