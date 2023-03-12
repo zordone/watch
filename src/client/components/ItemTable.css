@@ -4,6 +4,16 @@
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+.ItemTable-paper::-webkit-scrollbar {
+  background: #424242;
+  border-radius: 100px;
+  width: 10px;
+}
+.ItemTable-paper::-webkit-scrollbar-thumb {
+  background: #515151;
+  border-radius: 100px;
+  border: 2px solid #424242;
+}
 
 .ItemTable td,
 .ItemTable th {
