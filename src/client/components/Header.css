@@ -10,10 +10,17 @@
   gap: 1rem;
 }
 
-.Header-logo {
+.Header .Header-logoButton {
   grid-area: logo;
   position: static;
   height: 43px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+.Header-logo {
+  height: 100%;
 }
 
 .Header-title {

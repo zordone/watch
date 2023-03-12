@@ -33,6 +33,7 @@ class Home extends Component {
     this.onSearchChanged = this.onSearchChanged.bind(this);
     this.onShortcut = this.onShortcut.bind(this);
     this.onHelp = this.onHelp.bind(this);
+    this.onLogoClick = this.onLogoClick.bind(this);
     this.onAddNew = this.onAddNew.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
     this.onSnackClose = this.onSnackClose.bind(this);
@@ -124,6 +125,11 @@ class Home extends Component {
   onHelp() {
     const { history } = this.props;
     history.push("/help");
+  }
+
+  onLogoClick() {
+    this.onSearchChanged("");
+    this.scrollToTop();
   }
 
   onRowClick(id, isCmd) {
@@ -232,7 +238,7 @@ class Home extends Component {
     );
     return (
       <div className="Home">
-        <Header {...{ searchField, helpButton, newButton }} />
+        <Header {...{ searchField, helpButton, newButton, onLogoClick: this.onLogoClick }} />
         <main>
           <ItemTable items={filteredItems} currentId={currentId} onRowClick={this.onRowClick} />
           <div className="Home-footer">
