@@ -109,7 +109,7 @@ class Home extends Component {
     } else if (code === "KeyH" && !inSearch) {
       // show help
       this.onHelp();
-    } else if (code === "ArrowUp" && cmdKey) {
+    } else if ((cmdKey && code === "ArrowUp") || code === "Home") {
       // home
       this.scrollToTop();
     }
