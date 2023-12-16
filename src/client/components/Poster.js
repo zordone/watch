@@ -14,7 +14,7 @@ const Poster = ({ item, onPosterSearch, posterScraping }) => {
   return (
     <div className="Poster">
       <ItemIcon className="Poster-fallback" item={item} />
-      <div className="Poster-image" style={style} />
+      <img src={item.posterUrl} alt="Poster" className="Poster-image" />
       <ScrapeButton
         className="Poster-search"
         ariaLabel="Poster search"
