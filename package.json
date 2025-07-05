@@ -1,6 +1,6 @@
 {
   "name": "watch",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.0.3",
@@ -36,10 +36,10 @@
     "promise": "8.0.1",
     "prop-types": "^15.6.2",
     "raf": "3.4.0",
-    "react": "^16.5.1",
+    "react": "^16.14.0",
     "react-autosuggest": "^9.4.1",
     "react-dev-utils": "^8.0.0",
-    "react-dom": "^16.5.1",
+    "react-dom": "^16.14.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
@@ -58,16 +58,17 @@
     "xmldom": "^0.6.0"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
+    "@babel/core": "^7.24.0",
+    "@babel/eslint-parser": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-loader": "1.9.0",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.10.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^2.5.1",
     "source-map-explorer": "^1.6.0"
   },
@@ -78,8 +79,8 @@
     "test": "node scripts/test.js --env=jsdom",
     "server": "npm run nvm node ./src/server/server.js",
     "mongo": "mongod --dbpath=/Users/zord/data/db",
-    "lint": "./node_modules/eslint/bin/eslint.js ./src",
-    "lint-fix": "./node_modules/eslint/bin/eslint.js ./src --fix",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
     "start-all": "npm run nvm node scripts/start-all.js",
     "start-all-prod": "npm run nvm node scripts/start-all.js -- --prod",
     "loc": "echo \"JavaScript:\" && wc -l src/**/*.js && echo \"\nCSS:\" && wc -l src/**/*.css",
@@ -125,11 +126,9 @@
   },
   "babel": {
     "presets": [
-      "react-app"
+      "@babel/preset-env",
+      "@babel/preset-react"
     ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "prettier": {
     "printWidth": 100,

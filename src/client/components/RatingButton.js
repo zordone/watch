@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { IconButton } from "@material-ui/core";
 import ThumbUp from "@material-ui/icons/ThumbUp";
@@ -14,41 +14,40 @@ const Icons = {
   [RatingType.FAVORITE]: Favorite,
 };
 
-class RatingButton extends React.PureComponent {
-  handleClick = (event) => {
-    const { onChange } = this.props;
-    const {
-      currentTarget: {
-        attributes: {
-          rating: { value },
+const RatingButton = ({ value, onChange }) => {
+  const handleClick = useCallback(
+    (event) => {
+      const {
+        currentTarget: {
+          attributes: {
+            rating: { value: ratingValue },
+          },
         },
-      },
-    } = event;
-    onChange(value);
-  };
+      } = event;
+      onChange(ratingValue);
+    },
+    [onChange],
+  );
 
-  render() {
-    const { value } = this.props;
-    const buttons = Object.values(RatingType)
-      .filter(Boolean)
-      .map((rating) => {
-        const activeClass = value === rating ? "active" : "";
-        const Icon = Icons[rating];
-        return (
-          <IconButton
-            key={rating}
-            rating={rating}
-            className={`${rating} ${activeClass}`}
-            aria-label="Show form"
-            onClick={this.handleClick}
-          >
-            <Icon />
-          </IconButton>
-        );
-      });
-    return <div className="RatingButton">{buttons}</div>;
-  }
-}
+  const buttons = Object.values(RatingType)
+    .filter(Boolean)
+    .map((rating) => {
+      const activeClass = value === rating ? "active" : "";
+      const Icon = Icons[rating];
+      return (
+        <IconButton
+          key={rating}
+          rating={rating}
+          className={`${rating} ${activeClass}`}
+          aria-label="Show form"
+          onClick={handleClick}
+        >
+          <Icon />
+        </IconButton>
+      );
+    });
+  return <div className="RatingButton">{buttons}</div>;
+};
 
 RatingButton.propTypes = {
   value: PropTypes.oneOf(Object.values(RatingType)),

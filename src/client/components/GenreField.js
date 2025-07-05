@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import ChipInputAutoComplete from "./ChipInputAutoComplete";
 import _ from "../../common/lodashReduced";
@@ -6,51 +6,49 @@ import data from "../../common/data.json";
 import { noop } from "../service/utils";
 import "./GenreField.css";
 
-class GenreField extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.onAddGenre = this.onAddGenre.bind(this);
-    this.onDeleteGenre = this.onDeleteGenre.bind(this);
-  }
+const GenreField = ({ value, onChange, id, className, maxGenres, ...rest }) => {
+  const fireOnChanged = useCallback(
+    (newValue) => {
+      if (_.isEqual(value, newValue)) {
+        return;
+      }
+      const event = {
+        target: { id, value: newValue },
+      };
+      onChange(event);
+    },
+    [value, onChange, id],
+  );
 
-  onAddGenre(genre) {
-    const { value } = this.props;
-    this.fireOnChanged(value.concat(genre));
-  }
+  const onAddGenre = useCallback(
+    (genre) => {
+      fireOnChanged(value.concat(genre));
+    },
+    [value, fireOnChanged],
+  );
 
-  onDeleteGenre(genre, index) {
-    const { value } = this.props;
-    const newValue = [...value];
-    newValue.splice(index, 1);
-    this.fireOnChanged(newValue);
-  }
+  const onDeleteGenre = useCallback(
+    (genre, index) => {
+      const newValue = [...value];
+      newValue.splice(index, 1);
+      fireOnChanged(newValue);
+    },
+    [value, fireOnChanged],
+  );
 
-  fireOnChanged(value) {
-    const { onChange, id, value: oldValue } = this.props;
-    if (_.isEqual(oldValue, value)) {
-      return;
-    }
-    const event = {
-      target: { id, value },
-    };
-    onChange(event);
-  }
-
-  render() {
-    const { onChange, className, style, maxGenres, ...rest } = this.props;
-    return (
-      <ChipInputAutoComplete
-        onAdd={this.onAddGenre}
-        onDelete={this.onDeleteGenre}
-        dataSource={data.genres}
-        rootClassName={className}
-        className="GenreField"
-        maxChips={maxGenres}
-        {...rest}
-      />
-    );
-  }
-}
+  return (
+    <ChipInputAutoComplete
+      value={value}
+      onAdd={onAddGenre}
+      onDelete={onDeleteGenre}
+      dataSource={data.genres}
+      rootClassName={className}
+      className="GenreField"
+      maxChips={maxGenres}
+      {...rest}
+    />
+  );
+};
 
 GenreField.propTypes = {
   id: PropTypes.string,

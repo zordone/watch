@@ -1,5 +1,3 @@
-/* globals window */
-
 import { Const, SortComparators } from "../../common/enums";
 import sortComparators from "./sort";
 import mockImagesResponse from "./mockImagesResponse";

@@ -1,5 +1,3 @@
-/* globals document,CustomEvent */
-
 export const Events = Object.freeze({
   PASTE: "paste",
   KEYUP: "keyup",

@@ -1,57 +1,54 @@
-import React, { PureComponent } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import ChipInput from "material-ui-chip-input";
 import _ from "../../common/lodashReduced";
 import "./ChipArrayInput.css";
 import { noop } from "../service/utils";
 
-class ChipArrayInput extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.onAdd = this.onAdd.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-  }
+const ChipArrayInput = ({ value, onChange, id, className, ...rest }) => {
+  const fireOnChanged = useCallback(
+    (newValue) => {
+      if (_.isEqual(value, newValue)) {
+        return;
+      }
+      const event = {
+        target: { id, value: newValue },
+      };
+      onChange(event);
+    },
+    [value, onChange, id],
+  );
 
-  onAdd(item) {
-    const { value } = this.props;
-    this.fireOnChanged(value.concat(item));
-  }
+  const onAdd = useCallback(
+    (item) => {
+      fireOnChanged(value.concat(item));
+    },
+    [value, fireOnChanged],
+  );
 
-  onDelete(item, index) {
-    const { value } = this.props;
-    const newValue = [...value];
-    newValue.splice(index, 1);
-    this.fireOnChanged(newValue);
-  }
+  const onDelete = useCallback(
+    (item, index) => {
+      const newValue = [...value];
+      newValue.splice(index, 1);
+      fireOnChanged(newValue);
+    },
+    [value, fireOnChanged],
+  );
 
-  fireOnChanged(value) {
-    const { onChange, id, value: oldValue } = this.props;
-    if (_.isEqual(oldValue, value)) {
-      return;
-    }
-    const event = {
-      target: { id, value },
-    };
-    onChange(event);
-  }
-
-  render() {
-    const { onChange, className, classes, ...rest } = this.props;
-    return (
-      <ChipInput
-        onAdd={this.onAdd}
-        onDelete={this.onDelete}
-        className={`ChipArrayInput ${className}`}
-        classes={{
-          chipContainer: "chipContainer",
-          chip: "chip",
-          label: "label",
-        }}
-        {...rest}
-      />
-    );
-  }
-}
+  return (
+    <ChipInput
+      onAdd={onAdd}
+      onDelete={onDelete}
+      className={`ChipArrayInput ${className}`}
+      classes={{
+        chipContainer: "chipContainer",
+        chip: "chip",
+        label: "label",
+      }}
+      {...rest}
+    />
+  );
+};
 
 ChipArrayInput.propTypes = {
   id: PropTypes.string,

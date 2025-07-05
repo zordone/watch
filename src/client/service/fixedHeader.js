@@ -1,5 +1,3 @@
-/* globals window,document,ResizeObserver */
-
 /**
  * This is just a hacky workaround to achieve a fixed table header.
  *

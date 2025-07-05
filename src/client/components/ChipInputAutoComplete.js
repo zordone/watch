@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import MenuItem from "@material-ui/core/MenuItem";
 import ChipInput from "material-ui-chip-input";
@@ -46,64 +46,65 @@ const suggestionMenuItemStyleHighlighted = {
   background: "#FFF2",
 };
 
-class ChipInputAutoComplete extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      suggestions: [],
-      inputValue: "",
-    };
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
-    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onTryToAdd = this.onTryToAdd.bind(this);
-    this.renderInputComponent = this.renderInputComponent.bind(this);
-    this.renderSuggestion = this.renderSuggestion.bind(this);
-  }
+const ChipInputAutoComplete = ({
+  value,
+  dataSource,
+  maxChips,
+  onAdd,
+  onDelete,
+  label,
+  rootClassName,
+  className,
+}) => {
+  const [suggestions, setSuggestions] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
-  onSuggestionsFetchRequested(options) {
-    const { dataSource, value, maxChips } = this.props;
-    const prefix = options.value.toLowerCase();
-    this.setState({
-      suggestions: dataSource.filter(
-        (item) =>
-          item.toLowerCase().startsWith(prefix) && !value.includes(item) && value.length < maxChips,
-      ),
-    });
-  }
+  const onSuggestionsFetchRequested = useCallback(
+    (options) => {
+      const prefix = options.value.toLowerCase();
+      setSuggestions(
+        dataSource.filter(
+          (item) =>
+            item.toLowerCase().startsWith(prefix) &&
+            !value.includes(item) &&
+            value.length < maxChips,
+        ),
+      );
+    },
+    [dataSource, value, maxChips],
+  );
 
-  onSuggestionsClearRequested() {
-    this.setState({
-      suggestions: [],
-      inputValue: "",
-    });
-  }
+  const onSuggestionsClearRequested = useCallback(() => {
+    setSuggestions([]);
+    setInputValue("");
+  }, []);
 
-  onSuggestionSelected(e, { suggestionValue }) {
-    const { onAdd } = this.props;
-    onAdd(suggestionValue);
-    e.preventDefault();
-  }
+  const onSuggestionSelected = useCallback(
+    (e, { suggestionValue }) => {
+      onAdd(suggestionValue);
+      e.preventDefault();
+    },
+    [onAdd],
+  );
 
-  onInputChange(event, { newValue }) {
-    this.setState({
-      inputValue: newValue,
-    });
-  }
+  const onInputChange = useCallback((event, { newValue }) => {
+    setInputValue(newValue);
+  }, []);
 
-  onTryToAdd(value) {
-    const { dataSource, onAdd } = this.props;
-    if (dataSource.includes(value)) {
-      onAdd(value);
-    } else {
-      this.setState({
-        inputValue: "",
-      });
-    }
-  }
+  const onTryToAdd = useCallback(
+    (inputValue) => {
+      if (dataSource.includes(inputValue)) {
+        onAdd(inputValue);
+      } else {
+        setInputValue("");
+      }
+    },
+    [dataSource, onAdd],
+  );
 
-  renderInputComponent(inputProps) {
+  const renderInputComponent = useCallback((inputProps) => {
+    // we only destructure some of these to omit them from `rest`
+    // eslint-disable-next-line no-unused-vars
     const { chips, value, onChange, className, classes, dataSource, ...rest } = inputProps;
     return (
       <ChipInput
@@ -113,17 +114,15 @@ class ChipInputAutoComplete extends PureComponent {
           chip: "chip",
           label: "label",
         }}
-        onAdd={this.onAddGenre}
-        onDelete={this.onDeleteGenre}
         onUpdateInput={onChange}
         className="GenreField"
         clearInputValueOnChange
         {...rest}
       />
     );
-  }
+  }, []);
 
-  renderSuggestion(suggestion, { isHighlighted }) {
+  const renderSuggestion = useCallback((suggestion, { isHighlighted }) => {
     return (
       <MenuItem
         component="div"
@@ -136,41 +135,38 @@ class ChipInputAutoComplete extends PureComponent {
         <div>{suggestion}</div>
       </MenuItem>
     );
-  }
+  }, []);
 
-  render() {
-    const { value, onDelete, label, rootClassName, className } = this.props;
-    const { suggestions, inputValue } = this.state;
-    return (
-      <Autosuggest
-        theme={{
-          ...autoSuggestTheme,
-          container: `ChipInputAutoComplete-rootContainer ${rootClassName}`,
-        }}
-        inputProps={{
-          value: inputValue,
-          chips: value,
-          onChange: this.onInputChange,
-          onAdd: this.onTryToAdd,
-          onDelete,
-          label,
-        }}
-        className={className}
-        suggestions={suggestions}
-        getSuggestionValue={(suggestion) => suggestion}
-        renderInputComponent={this.renderInputComponent}
-        renderSuggestion={this.renderSuggestion}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        onSuggestionSelected={this.onSuggestionSelected}
-        focusInputOnSuggestionClick
-        highlightFirstSuggestion
-      />
-    );
-  }
-}
+  return (
+    <Autosuggest
+      theme={{
+        ...autoSuggestTheme,
+        container: `ChipInputAutoComplete-rootContainer ${rootClassName}`,
+      }}
+      inputProps={{
+        value: inputValue,
+        chips: value,
+        onChange: onInputChange,
+        onAdd: onTryToAdd,
+        onDelete,
+        label,
+      }}
+      className={className}
+      suggestions={suggestions}
+      getSuggestionValue={(suggestion) => suggestion}
+      renderInputComponent={renderInputComponent}
+      renderSuggestion={renderSuggestion}
+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      onSuggestionsClearRequested={onSuggestionsClearRequested}
+      onSuggestionSelected={onSuggestionSelected}
+      focusInputOnSuggestionClick
+      highlightFirstSuggestion
+    />
+  );
+};
 
 ChipInputAutoComplete.propTypes = {
+  label: PropTypes.string,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
   dataSource: PropTypes.arrayOf(PropTypes.string),
   maxChips: PropTypes.number,

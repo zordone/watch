@@ -1,6 +1,4 @@
-/* globals document, window */
-
-import React, { Component } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,79 +11,134 @@ import * as actions from "../redux/actions";
 import * as selectors from "../redux/selectors";
 import SearchField from "./SearchField";
 import Loader from "./Loader";
-import { anyChanged, noop } from "../service/utils";
+import { noop } from "../service/utils";
 import fixedHeaderWorkaround from "../service/fixedHeader";
 import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
 import events, { Events } from "../service/events";
 import { updateHash } from "../service/history";
-import _ from "../../common/lodashReduced";
+import useThrottledCallback from "../hooks/useThrottledCallback";
+import useOnMount from "../hooks/useOnMount";
 import "./Home.css";
 
 let isFirstMount = true;
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.currentSearch = "";
-    this.onImdbPaste = this.onImdbPaste.bind(this);
-    this.onSearchChanged = this.onSearchChanged.bind(this);
-    this.onShortcut = this.onShortcut.bind(this);
-    this.onHelp = this.onHelp.bind(this);
-    this.onLogoClick = this.onLogoClick.bind(this);
-    this.onAddNew = this.onAddNew.bind(this);
-    this.onRowClick = this.onRowClick.bind(this);
-    this.onSnackClose = this.onSnackClose.bind(this);
-    this.updateSearch = _.throttle(this.updateSearch, 1000);
-  }
+const Home = ({
+  history,
+  location,
+  items,
+  search,
+  filteredItems,
+  firstLoad,
+  currentId,
+  sort,
+  snackOpen,
+  snackText,
+  isFetched,
+  fetchItems,
+  setSearch,
+  setFirstLoad,
+  setCurrentId,
+  setSort,
+  setSnack,
+  setIsFetched,
+}) => {
+  const currentSearchRef = useRef("");
 
-  componentDidMount() {
-    // init search from url param
-    if (isFirstMount) {
-      const { location } = this.props;
-      const search = (location.hash || "").slice(1);
-      if (search) {
-        this.onSearchChanged(decodeURIComponent(search));
-      }
-      isFirstMount = false;
+  const scrollToCurrent = useCallback(() => {
+    if (!currentId) return;
+    const currentRow = document.querySelector(".ItemRow.current");
+    if (currentRow) {
+      currentRow.scrollIntoViewIfNeeded();
     }
+    setCurrentId("");
+  }, [currentId, setCurrentId]);
 
-    fixedHeaderWorkaround();
-    events.addListener(Events.IMDB_PASTE, this.onImdbPaste);
+  const scrollToTop = () => {
+    const firstRow = document.querySelector(".ItemRow");
+    if (firstRow) {
+      firstRow.scrollIntoViewIfNeeded();
+    }
+  };
 
-    // initial short list
-    setTimeout(() => {
-      this.fetchData(false);
-    }, 0);
+  const updateSearchThrottled = useThrottledCallback(
+    useCallback(
+      (searchValue) => {
+        if (searchValue.startsWith("sort:")) {
+          // i'm not exactly sure how to do this now, or why it was even needed.
+          // updateSearchThrottled.cancel();
+          return;
+        }
+        const searchWords = searchValue
+          .toLowerCase()
+          .split(" ")
+          .map((word) => word.trim())
+          .filter(Boolean);
+        if (!searchWords.length) {
+          setSearch("", items);
+          scrollToCurrent();
+          updateHash(searchValue);
+          return;
+        }
+        const filteredItemsResult = items.filter((item) =>
+          searchWords.every((word) => {
+            const { text, starts, equals } = item.searchData;
+            const isKeyword = Object.values(SearchKeywords).includes(word);
+            return (
+              (!isKeyword && text.includes(word)) ||
+              (!isKeyword && starts.find((startItem) => startItem.startsWith(word))) ||
+              equals.includes(word)
+            );
+          }),
+        );
+        setSearch(searchValue, filteredItemsResult);
+        updateHash(searchValue);
+      },
+      [items, scrollToCurrent, setSearch],
+    ),
+    1000,
+  );
 
-    // full list a bit later
-    setTimeout(() => {
-      window.requestIdleCallback(() => this.fetchData(true));
-    }, 5000);
-  }
+  const onSearchChanged = (searchValue) => {
+    currentSearchRef.current = searchValue;
+    updateSearchThrottled(searchValue);
+  };
 
-  shouldComponentUpdate(nextProps) {
-    this.scrollToCurrent();
-    return anyChanged(["search", "filteredItems", "snackOpen"], this.props, nextProps);
-  }
+  const onAddNew = (event, imdbId) => {
+    const imdbParam = imdbId ? `/${imdbId}` : "";
+    history.push(`/item/new${imdbParam}`);
+  };
 
-  componentWillUnmount() {
-    const { setFirstLoad } = this.props;
-    setFirstLoad(false);
-    events.removeListener(Events.IMDB_PASTE, this.onImdbPaste);
-  }
+  const onHelp = () => {
+    history.push("/help");
+  };
 
-  onImdbPaste(event) {
-    this.onAddNew(event, event.detail.imdbId);
-  }
+  const onLogoClick = () => {
+    onSearchChanged("");
+    scrollToTop();
+  };
 
-  onShortcut(code, inSearch, cmdKey) {
-    const { filteredItems, history, items, sort, setSort, setSnack } = this.props;
+  const fetchData = (all = false) => {
+    if (isFetched) {
+      onSearchChanged(search);
+      return;
+    }
+    fetchItems(all)
+      .then(() => {
+        onSearchChanged(search);
+        if (all) {
+          setIsFetched(true);
+        }
+      })
+      .catch(console.error);
+  };
+
+  const onShortcut = (code, inSearch, cmdKey) => {
     if (code === "Enter") {
       // open first item
       const item = filteredItems[0];
-      const isSortCommand = this.currentSearch.startsWith("sort:");
+      const isSortCommand = currentSearchRef.current.startsWith("sort:");
       if (item && !isSortCommand) {
         history.push(`/item/${item._id}`);
         return;
@@ -93,7 +146,7 @@ class Home extends Component {
       // set sort
       if (isSortCommand) {
         const newSort =
-          this.currentSearch.replace("sort:", "").toLowerCase() || SortComparators.DEFAULT;
+          currentSearchRef.current.replace("sort:", "").toLowerCase() || SortComparators.DEFAULT;
         const isValid = Object.values(SortComparators).includes(newSort);
         if (!isValid) {
           return;
@@ -102,38 +155,21 @@ class Home extends Component {
           setSort(items, newSort);
           setSnack(true, `Sorted by ${sortTitles[newSort]}.`);
         }
-        this.updateSearch("");
+        updateSearchThrottled("");
       }
     } else if (code === "KeyN" && !inSearch) {
       // add new item
-      this.onAddNew();
+      onAddNew();
     } else if (code === "KeyH" && !inSearch) {
       // show help
-      this.onHelp();
+      onHelp();
     } else if ((cmdKey && code === "ArrowUp") || code === "Home") {
       // home
-      this.scrollToTop();
+      scrollToTop();
     }
-  }
+  };
 
-  onAddNew(event, imdbId) {
-    const { history } = this.props;
-    const imdbParam = imdbId ? `/${imdbId}` : "";
-    history.push(`/item/new${imdbParam}`);
-  }
-
-  onHelp() {
-    const { history } = this.props;
-    history.push("/help");
-  }
-
-  onLogoClick() {
-    this.onSearchChanged("");
-    this.scrollToTop();
-  }
-
-  onRowClick(id, isCmd) {
-    const { history, setCurrentId } = this.props;
+  const onRowClick = (id, isCmd) => {
     const path = `/item/${id}`;
     if (isCmd) {
       window.open(path, "_blank");
@@ -141,145 +177,114 @@ class Home extends Component {
     }
     setCurrentId(id);
     history.push(path);
-  }
+  };
 
-  onSearchChanged(search) {
-    this.currentSearch = search;
-    this.updateSearch(search);
-  }
-
-  onSnackClose() {
-    const { setSnack } = this.props;
+  const onSnackClose = () => {
     setSnack(false);
-  }
+  };
 
-  fetchData(all = false) {
-    const { isFetched, setIsFetched, fetchItems, search } = this.props;
-    if (isFetched) {
-      this.onSearchChanged(search);
-      return;
-    }
-    fetchItems(all)
-      .then(() => {
-        this.onSearchChanged(search);
-        if (all) {
-          setIsFetched(true);
-        }
-      })
-      .catch(console.error);
-  }
-
-  updateSearch(search) {
-    const { items, setSearch } = this.props;
-    if (search.startsWith("sort:")) {
-      this.updateSearch.cancel();
-      return;
-    }
-    const searchWords = search
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.trim())
-      .filter(Boolean);
-    if (!searchWords.length) {
-      setSearch("", items);
-      this.scrollToCurrent();
-      updateHash(search);
-      return;
-    }
-    const filteredItems = items.filter((item) =>
-      searchWords.every((word) => {
-        const { text, starts, equals } = item.searchData;
-        const isKeyword = Object.values(SearchKeywords).includes(word);
-        return (
-          (!isKeyword && text.includes(word)) ||
-          (!isKeyword && starts.find((startItem) => startItem.startsWith(word))) ||
-          equals.includes(word)
-        );
-      }),
-    );
-    setSearch(search, filteredItems);
-    updateHash(search);
-  }
-
-  scrollToCurrent() {
-    const { currentId, setCurrentId } = this.props;
-    if (currentId) {
-      const currentRow = document.querySelector(".ItemRow.current");
-      if (currentRow) {
-        currentRow.scrollIntoViewIfNeeded();
+  useOnMount(() => {
+    // init search from url param
+    if (isFirstMount) {
+      const searchFromHash = (location.hash || "").slice(1);
+      if (searchFromHash) {
+        onSearchChanged(decodeURIComponent(searchFromHash));
       }
+      isFirstMount = false;
     }
-    setCurrentId("");
-  }
 
-  scrollToTop() {
-    const firstRow = document.querySelector(".ItemRow");
-    if (firstRow) {
-      firstRow.scrollIntoViewIfNeeded();
-    }
-  }
+    fixedHeaderWorkaround();
 
-  render() {
-    const { filteredItems, firstLoad, search, currentId, snackOpen, snackText } = this.props;
-    // TODO: don't always rerender these buttons
-    const searchField = (
-      <SearchField onChange={this.onSearchChanged} onShortcut={this.onShortcut} value={search} />
-    );
-    // TODO: upgare mui icons and use proper question mark icon
-    const helpButton = (
-      <IconButton aria-label="Help" onClick={this.onHelp}>
-        ?
-      </IconButton>
-    );
-    const newButton = (
-      <IconButton aria-label="Add new item" onClick={this.onAddNew}>
-        <Add />
-      </IconButton>
-    );
-    return (
-      <div className="Home">
-        <Header {...{ searchField, helpButton, newButton, onLogoClick: this.onLogoClick }} />
-        <main>
-          <ItemTable items={filteredItems} currentId={currentId} onRowClick={this.onRowClick} />
-          <div className="Home-footer">
-            <span>
-              {filteredItems.length} item
-              {filteredItems.length === 1 ? "" : "s"}
-            </span>
-            <span>v{packageJson.version}</span>
-          </div>
-        </main>
-        {firstLoad && <Loader progress={0} />}
-        <Snackbar
-          open={snackOpen}
-          autoHideDuration={3000}
-          onClose={this.onSnackClose}
-          message={
-            <span>
-              <CheckCircle />
-              {snackText}
-            </span>
-          }
-          ContentProps={{
-            classes: {
-              root: "Home-snack",
-              message: "Home-snackMessage",
-            },
-          }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transitionDuration={500}
-        />
-      </div>
-    );
-  }
-}
+    const onImdbPaste = (event) => {
+      onAddNew(event, event.detail.imdbId);
+    };
+
+    events.addListener(Events.IMDB_PASTE, onImdbPaste);
+
+    // initial short list
+    setTimeout(() => {
+      fetchData(false);
+    }, 0);
+
+    // full list a bit later
+    setTimeout(() => {
+      window.requestIdleCallback(() => fetchData(true));
+    }, 5000);
+
+    // on unmount
+    return () => {
+      setFirstLoad(false);
+      events.removeListener(Events.IMDB_PASTE, onImdbPaste);
+    };
+  });
+
+  useEffect(() => {
+    scrollToCurrent();
+  }, [search, filteredItems, snackOpen, scrollToCurrent]);
+
+  // TODO: don't always rerender these buttons
+  const searchField = (
+    <SearchField onChange={onSearchChanged} onShortcut={onShortcut} value={search} />
+  );
+  // TODO: upgare mui icons and use proper question mark icon
+  const helpButton = (
+    <IconButton aria-label="Help" onClick={onHelp}>
+      ?
+    </IconButton>
+  );
+  const newButton = (
+    <IconButton aria-label="Add new item" onClick={onAddNew}>
+      <Add />
+    </IconButton>
+  );
+
+  return (
+    <div className="Home">
+      <Header {...{ searchField, helpButton, newButton, onLogoClick }} />
+      <main>
+        <ItemTable items={filteredItems} currentId={currentId} onRowClick={onRowClick} />
+        <div className="Home-footer">
+          <span>
+            {filteredItems.length} item
+            {filteredItems.length === 1 ? "" : "s"}
+          </span>
+          <span>v{packageJson.version}</span>
+        </div>
+      </main>
+      {firstLoad && <Loader progress={0} />}
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={onSnackClose}
+        message={
+          <span>
+            <CheckCircle />
+            {snackText}
+          </span>
+        }
+        ContentProps={{
+          classes: {
+            root: "Home-snack",
+            message: "Home-snackMessage",
+          },
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transitionDuration={500}
+      />
+    </div>
+  );
+};
 
 Home.propTypes = {
   history: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    hash: PropTypes.string.isRequired,
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   search: PropTypes.string.isRequired,
@@ -289,11 +294,14 @@ Home.propTypes = {
   sort: PropTypes.oneOf(Object.values(SortComparators)),
   snackOpen: PropTypes.bool,
   snackText: PropTypes.string,
+  isFetched: PropTypes.bool,
   fetchItems: PropTypes.func,
   setSearch: PropTypes.func,
   setFirstLoad: PropTypes.func,
   setCurrentId: PropTypes.func,
   setSort: PropTypes.func,
+  setSnack: PropTypes.func,
+  setIsFetched: PropTypes.func,
 };
 
 Home.defaultProps = {
@@ -302,6 +310,7 @@ Home.defaultProps = {
   sort: SortComparators.DEFAULT,
   snackOpen: false,
   snackText: "",
+  isFetched: false,
   fetchItems: noop,
   setSearch: noop,
   setFirstLoad: noop,

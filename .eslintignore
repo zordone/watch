@@ -1,2 +1,6 @@
-/scripts/
-/config/
+_work
+.idea
+.vscode
+build
+node_modules
+public

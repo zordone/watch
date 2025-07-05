@@ -1,4 +1,4 @@
-import { ItemType, NextType, ValiType, FinishedType } from "../../common/enums";
+import { ItemType, NextType, ValiType, FinishedType, StateType } from "../../common/enums";
 import { parseDate } from "./utils";
 import itemState from "./itemState";
 import itemSearchData from "./search";
@@ -21,6 +21,10 @@ export const defaultItem = {
   posterUrl: "",
   releaseYear: "",
   rating: "",
+  state: {
+    type: StateType.READY,
+    message: "",
+  },
 };
 
 export const jsonHeaders = {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Button, Paper } from "@material-ui/core";
@@ -26,28 +26,17 @@ const sections = [
   { title: "Sorting", keywords: values(SortComparators, "sort:") },
 ];
 
-class Help extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: [],
-    };
-    this.onClose = this.onClose.bind(this);
-    this.onApply = this.onApply.bind(this);
-    this.onClick = this.onClick.bind(this);
-  }
+const Help = ({ history, items, setSearch, setSort }) => {
+  const [selected, setSelected] = useState([]);
 
-  onClose(_event, search) {
-    const { history } = this.props;
+  const onClose = (_event, search) => {
     history.goBack();
     if (search) {
       updateHash(search);
     }
-  }
+  };
 
-  onApply() {
-    const { items, setSearch, setSort } = this.props;
-    const { selected } = this.state;
+  const onApply = () => {
     const search = selected.filter((name) => !name.startsWith("sort:")).join(" ");
     const sort = selected.filter((name) => name.startsWith("sort:")).pop();
 
@@ -58,87 +47,71 @@ class Help extends Component {
     if (sort) {
       setSort(items, sort.substr(5));
     }
-    this.onClose(null, search);
-  }
+    onClose(null, search);
+  };
 
-  onClick(event) {
-    const { items, setSearch, setSort } = this.props;
+  const onClick = (event) => {
     const name = event.target.innerText;
     const isSort = name.startsWith("sort:");
     const isCmd = event.metaKey;
 
     // multiselect
     if (isCmd) {
-      const { selected: prevSelected } = this.state;
-      const nextSelected = prevSelected.includes(name)
-        ? prevSelected.filter((x) => x !== name)
-        : [...prevSelected.filter((x) => !(isSort && x.startsWith("sort:"))), name];
-      this.setState({ selected: nextSelected });
+      const nextSelected = selected.includes(name)
+        ? selected.filter((x) => x !== name)
+        : [...selected.filter((x) => !(isSort && x.startsWith("sort:"))), name];
+      setSelected(nextSelected);
       return;
     }
 
     // single select
     if (isSort) {
       setSort(items, name.substr(5));
-      this.onClose();
+      onClose();
     } else {
       setSearch(name, items);
-      this.onClose(null, name);
+      onClose(null, name);
     }
-  }
-
-  render() {
-    const { selected } = this.state;
-    return (
-      <div className="Help">
-        <Paper className="Help-paper">
-          <div className="Help-sections">
-            {sections.map(({ title, keywords }) => (
-              <section key={title}>
-                <h3>{title}</h3>
-                <div className="Help-keywords">
-                  {keywords
-                    .filter(Boolean)
-                    .sort()
-                    .map((keyword) => (
-                      <button
-                        key={keyword}
-                        type="button"
-                        onClick={this.onClick}
-                        className={selected.includes(keyword) ? "selected" : ""}
-                      >
-                        {keyword}
-                      </button>
-                    ))}
-                </div>
-              </section>
-            ))}
-          </div>
-          <div className="Help-buttons">
-            {selected.length > 0 && (
-              <Button
-                variant="contained"
-                color="primary"
-                className="Item-button"
-                onClick={this.onApply}
-              >
-                Apply
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              color="default"
-              className="Item-button"
-              onClick={this.onClose}
-            >
-              Close
+  };
+  return (
+    <div className="Help">
+      <Paper className="Help-paper">
+        <div className="Help-sections">
+          {sections.map(({ title, keywords }) => (
+            <section key={title}>
+              <h3>{title}</h3>
+              <div className="Help-keywords">
+                {keywords
+                  .filter(Boolean)
+                  .sort()
+                  .map((keyword) => (
+                    <button
+                      key={keyword}
+                      type="button"
+                      onClick={onClick}
+                      className={selected.includes(keyword) ? "selected" : ""}
+                    >
+                      {keyword}
+                    </button>
+                  ))}
+              </div>
+            </section>
+          ))}
+        </div>
+        <div className="Help-buttons">
+          {selected.length > 0 && (
+            <Button variant="contained" color="primary" className="Item-button" onClick={onApply}>
+              Apply
             </Button>
-          </div>
-        </Paper>
-      </div>
-    );
-  }
-}
+          )}
+          <Button variant="contained" color="default" className="Item-button" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      </Paper>
+    </div>
+  );
+};
 
 Help.propTypes = {
   history: PropTypes.shape({

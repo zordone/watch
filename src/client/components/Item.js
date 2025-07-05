@@ -1,6 +1,4 @@
-/* globals document, window */
-
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
@@ -15,7 +13,7 @@ import * as selectors from "../redux/selectors";
 import ItemForm from "./ItemForm";
 import ItemDetails from "./ItemDetails";
 import itemState from "../service/itemState";
-import { anyChanged, slugify, noop } from "../service/utils";
+import { slugify, noop } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import PosterSearch from "./PosterSearch";
 import Spinner from "./Spinner";
@@ -26,57 +24,171 @@ import "./Item.css";
 const FORM = "form";
 const DETAILS = "details";
 
-class Item extends Component {
-  constructor(props) {
-    super(props);
-    const { history } = this.props;
-    this.state = {
-      item: {
-        ...defaultItem,
-        isDefaultItem: true,
-      },
-      page: DETAILS,
-      posters: {
-        visible: false,
-        searching: false,
-        images: [],
-      },
-      posterScraping: false,
-      error: "",
-      deleteSure: false,
-      canGoBack: history.length > 1,
-    };
-    this.findByTitle = this.findByTitle.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.onSave = this.onSave.bind(this);
-    this.onClose = this.onClose.bind(this);
-    this.onKeyUp = this.onKeyUp.bind(this);
-    this.onShowForm = this.onShowForm.bind(this);
-    this.onShowDetails = this.onShowDetails.bind(this);
-    this.onPosterSearch = this.onPosterSearch.bind(this);
-    this.onPosterSelect = this.onPosterSelect.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-    this.updateItemState = this.updateItemState;
-  }
+const Item = ({
+  match,
+  history,
+  items,
+  sort,
+  resort,
+  addNewItem,
+  updateItem,
+  deleteItem,
+  fetchItems,
+  setFirstLoad,
+  setCurrentId,
+  setSort,
+  setSnack,
+}) => {
+  const [item, setItem] = useState({
+    ...defaultItem,
+    isDefaultItem: true,
+  });
+  const [page, setPage] = useState(DETAILS);
+  const [posters, setPosters] = useState({
+    visible: false,
+    searching: false,
+    images: [],
+  });
+  const [posterScraping, setPosterScraping] = useState(false);
+  const [error, setError] = useState("");
+  const [deleteSure, setDeleteSure] = useState(false);
+  const [canGoBack] = useState(history.length > 1);
 
-  componentDidMount() {
-    const { match, items, fetchItems, setFirstLoad, setCurrentId } = this.props;
+  const deleteTimerRef = useRef();
+
+  const updateItemState = (changedItem, updateState = false) => {
+    setItem({
+      ...changedItem,
+      state: updateState ? itemState(changedItem) : changedItem.state,
+    });
+  };
+
+  const onClose = useCallback(() => {
+    if (canGoBack) {
+      history.goBack();
+    } else {
+      window.close();
+    }
+  }, [canGoBack, history]);
+
+  const onChange = (changedItem) => {
+    const updateState = page === DETAILS;
+    updateItemState(changedItem, updateState);
+  };
+
+  const onSave = () => {
+    const isNew = item._id === Const.NEW;
+    const promise = isNew ? service.saveNewItem(item) : service.updateItemById(item._id, item);
+    promise
+      .then((saved) => {
+        setItem(saved);
+        if (isNew) {
+          addNewItem(saved);
+        }
+        updateItem(items, saved);
+        onClose();
+        setSnack(true, "Item updated.");
+        setCurrentId(saved._id);
+      })
+      .catch((err) => {
+        console.error("Updating item failed.", err);
+        setError(err.message);
+      });
+  };
+
+  const onShowForm = () => {
+    setPage(FORM);
+  };
+
+  const onShowDetails = () => {
+    setPage(DETAILS);
+    updateItemState(item, true);
+  };
+
+  const onPosterSearch = () => {
+    setPosters({ visible: true, searching: true, images: [] });
+    setPosterScraping(true);
+    const query = encodeURI(`${item.title} ${item.type} poster`);
+    service
+      .searchImages(query)
+      .then((images) => {
+        setPosters({ visible: true, searching: false, images });
+        setPosterScraping(false);
+      })
+      .catch((err) => {
+        setPosterScraping(false);
+        throw err;
+      });
+  };
+
+  const onPosterSelect = (url) => {
+    if (url) {
+      onChange({ ...item, posterUrl: url });
+    }
+    setPosters({ visible: false, searching: false, images: [] });
+  };
+
+  const onDelete = () => {
+    if (deleteSure) {
+      clearTimeout(deleteTimerRef.current);
+      service
+        .deleteItemById(item._id)
+        .then(() => {
+          deleteItem(items, item._id);
+          setError("");
+          setDeleteSure(false);
+          onClose();
+          setSnack(true, "Item deleted.");
+        })
+        .catch((err) => {
+          console.error("Updating item failed.", err);
+          setError(err.message);
+          setDeleteSure(false);
+        });
+    } else {
+      setDeleteSure(true);
+      deleteTimerRef.current = setTimeout(() => {
+        setDeleteSure(false);
+      }, 3000);
+    }
+  };
+
+  const findByTitle = (id, title) => {
+    const titleSlug = slugify(title);
+    return items.find(
+      (currentItem) => currentItem._id !== id && slugify(currentItem.title) === titleSlug,
+    );
+  };
+
+  useEffect(() => {
     const { id, imdbId } = match.params;
     if (id === Const.NEW) {
-      const item = service.createNewItem();
+      const newItem = service.createNewItem();
       if (id === Const.NEW && imdbId) {
-        item.imdbId = imdbId;
+        newItem.imdbId = imdbId;
       }
-      this.setState({
-        item,
-        page: FORM,
-      });
+      setItem(newItem);
+      setPage(FORM);
     } else {
-      service.getItemById(id).then((item) => {
-        this.setState({ item });
+      service.getItemById(id).then((fetchedItem) => {
+        setItem(fetchedItem);
       });
     }
-    events.addListener(Events.KEYUP, this.onKeyUp);
+
+    const onKeyUp = (event) => {
+      const inInput = "INPUT,SELECT,TEXTAREA".includes(document.activeElement.tagName);
+      if (event.code === "Escape") {
+        onClose();
+      } else if (!inInput && event.code === "KeyE") {
+        setPage((currentPage) => (currentPage === DETAILS ? FORM : DETAILS));
+      } else if (!inInput && event.code === "KeyI") {
+        setPage(FORM);
+        events.dispatch(Events.IMDB_SCRAPE);
+      }
+    };
+
+    events.addListener(Events.KEYUP, onKeyUp);
+
     // pre-fetch items in case we reloaded the app on this page
     const isFetched = Boolean(items.length);
     if (!isFetched) {
@@ -85,251 +197,88 @@ class Item extends Component {
         setCurrentId(id);
       });
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const { items, setSort, sort, resort } = nextProps;
+    return () => {
+      events.removeListener(Events.KEYUP, onKeyUp);
+      if (deleteTimerRef.current) {
+        clearTimeout(deleteTimerRef.current);
+      }
+    };
+  }, [match.params, history.length, items.length, fetchItems, setFirstLoad, setCurrentId, onClose]);
+
+  useEffect(() => {
     if (resort) {
       setSort(items, sort);
     }
-  }
+  }, [resort, items, sort, setSort]);
+  const isNew = item._id === Const.NEW;
+  const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
+  const isFullyFetched = item && !item.isDefaultItem;
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return anyChanged(["page", "item", "posters", "error", "deleteSure"], this.state, nextState);
-  }
-
-  componentWillUnmount() {
-    events.removeListener(Events.KEYUP, this.onKeyUp);
-  }
-
-  onKeyUp(event) {
-    const inInput = "INPUT,SELECT,TEXTAREA".includes(document.activeElement.tagName);
-    if (event.code === "Escape") {
-      this.onClose();
-    } else if (!inInput && event.code === "KeyE") {
-      const { page } = this.state;
-      this.setState({ page: page === DETAILS ? FORM : DETAILS });
-    } else if (!inInput && event.code === "KeyI") {
-      this.setState({ page: FORM });
-      events.dispatch(Events.IMDB_SCRAPE);
-    }
-  }
-
-  onChange(changedItem) {
-    const { page } = this.state;
-    const updateState = page === DETAILS;
-    this.updateItemState(changedItem, updateState);
-  }
-
-  onSave() {
-    const { updateItem, addNewItem, setCurrentId, items, setSnack } = this.props;
-    const { item } = this.state;
-    const isNew = item._id === Const.NEW;
-    const promise = isNew ? service.saveNewItem(item) : service.updateItemById(item._id, item);
-    promise
-      .then((saved) => {
-        this.setState({ item: saved });
-        if (isNew) {
-          addNewItem(saved);
-        }
-        updateItem(items, saved);
-        this.onClose();
-        setSnack(true, "Item updated.");
-        setCurrentId(saved._id);
-      })
-      .catch((err) => {
-        console.error("Updating item failed.", err);
-        this.setState({ error: err.message });
-      });
-  }
-
-  onClose() {
-    const { history } = this.props;
-    const { canGoBack } = this.state;
-    if (canGoBack) {
-      history.goBack();
-    } else {
-      window.close();
-    }
-  }
-
-  onShowForm() {
-    this.setState({ page: FORM });
-  }
-
-  onShowDetails() {
-    const { item } = this.state;
-    this.setState({ page: DETAILS });
-    this.updateItemState(item, true);
-  }
-
-  onPosterSearch() {
-    const { item } = this.state;
-    this.setState({
-      posters: { visible: true, searching: true, images: [] },
-      posterScraping: true,
-    });
-    const query = encodeURI(`${item.title} ${item.type} poster`);
-    service
-      .searchImages(query)
-      // service.mockSearchImages(3000)
-      .then((images) => {
-        this.setState({
-          posters: { visible: true, searching: false, images },
-          posterScraping: false,
-        });
-      })
-      .catch((err) => {
-        this.setState({
-          posterScraping: false,
-        });
-        throw err;
-      });
-  }
-
-  onPosterSelect(url) {
-    const { item } = this.state;
-    if (url) {
-      this.onChange({ ...item, posterUrl: url });
-    }
-    this.setState({
-      posters: { visible: false, searching: false, images: [] },
-    });
-  }
-
-  onDelete() {
-    const { items, deleteItem, setSnack } = this.props;
-    const { deleteSure, item } = this.state;
-    if (deleteSure) {
-      clearTimeout(this.deleteTimer);
-      service
-        .deleteItemById(item._id)
-        .then(() => {
-          deleteItem(items, item._id);
-          this.setState({
-            error: "",
-            deleteSure: false,
-          });
-          this.onClose();
-          setSnack(true, "Item deleted.");
-        })
-        .catch((err) => {
-          console.error("Updating item failed.", err);
-          this.setState({
-            error: err.message,
-            deleteSure: false,
-          });
-        });
-    } else {
-      this.setState({ deleteSure: true });
-      this.deleteTimer = setTimeout(() => {
-        this.setState({ deleteSure: false });
-      }, 3000);
-    }
-  }
-
-  updateItemState(changedItem, updateState = false) {
-    this.setState({
-      item: {
-        ...changedItem,
-        state: updateState ? itemState(changedItem) : changedItem.state,
-      },
-    });
-  }
-
-  findByTitle(id, title) {
-    const { items } = this.props;
-    const titleSlug = slugify(title);
-    return items.find((item) => item._id !== id && slugify(item.title) === titleSlug);
-  }
-
-  render() {
-    const { item, page, posters, error, deleteSure, posterScraping, canGoBack } = this.state;
-    const isNew = item._id === Const.NEW;
-    const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
-    const isFullyFetched = item && !item.isDefaultItem;
-
-    return (
-      <div className="Item">
-        <Paper className="Item-paper">
-          <ItemDetails
-            item={item}
-            onChange={this.onChange}
-            visible={page === DETAILS}
-            onPosterSearch={this.onPosterSearch}
-            posterScraping={posterScraping}
-          />
-          <ItemForm
-            item={item}
-            onChange={this.onChange}
-            visible={page === FORM}
-            findByTitle={this.findByTitle}
-          />
-          {error && <p className="Item-error">{error}</p>}
-          <div className="Item-buttons">
-            <Button
-              variant="contained"
-              color="primary"
-              className="Item-button"
-              onClick={this.onSave}
-            >
-              Save
-            </Button>
+  return (
+    <div className="Item">
+      <Paper className="Item-paper">
+        <ItemDetails
+          item={item}
+          onChange={onChange}
+          visible={page === DETAILS}
+          onPosterSearch={onPosterSearch}
+          posterScraping={posterScraping}
+        />
+        <ItemForm
+          item={item}
+          onChange={onChange}
+          visible={page === FORM}
+          findByTitle={findByTitle}
+        />
+        {error && <p className="Item-error">{error}</p>}
+        <div className="Item-buttons">
+          <Button variant="contained" color="primary" className="Item-button" onClick={onSave}>
+            Save
+          </Button>
+          <Button variant="contained" color="default" className="Item-button" onClick={onClose}>
+            {canGoBack ? "Cancel" : "Close"}
+          </Button>
+          {!isNew && (
             <Button
               variant="contained"
               color="default"
-              className="Item-button"
-              onClick={this.onClose}
+              className={deleteClassName}
+              onClick={onDelete}
             >
-              {canGoBack ? "Cancel" : "Close"}
+              <DeleteForever />
+              <span className="title">&nbsp;Sure to delete?</span>
+              <div className="timeout" />
             </Button>
-            {!isNew && (
-              <Button
-                variant="contained"
-                color="default"
-                className={deleteClassName}
-                onClick={this.onDelete}
-              >
-                <DeleteForever />
-                <span className="title">&nbsp;Sure to delete?</span>
-                <div className="timeout" />
-              </Button>
-            )}
-          </div>
-          {page === DETAILS && (
-            <IconButton
-              className="Item-pageButton"
-              aria-label="Show form"
-              onClick={this.onShowForm}
-            >
-              <Create />
-            </IconButton>
           )}
-          {page === FORM && (
-            <IconButton
-              className="Item-pageButton"
-              aria-label="Show details"
-              onClick={this.onShowDetails}
-            >
-              <Check />
-            </IconButton>
-          )}
-        </Paper>
-        <PosterSearch {...posters} onSelect={this.onPosterSelect} />
-        {!isFullyFetched && <Spinner />}
-      </div>
-    );
-  }
-}
+        </div>
+        {page === DETAILS && (
+          <IconButton className="Item-pageButton" aria-label="Show form" onClick={onShowForm}>
+            <Create />
+          </IconButton>
+        )}
+        {page === FORM && (
+          <IconButton className="Item-pageButton" aria-label="Show details" onClick={onShowDetails}>
+            <Check />
+          </IconButton>
+        )}
+      </Paper>
+      <PosterSearch {...posters} onSelect={onPosterSelect} />
+      {!isFullyFetched && <Spinner />}
+    </div>
+  );
+};
 
 Item.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
+      imdbId: PropTypes.string,
     }).isRequired,
   }).isRequired,
   history: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+    length: PropTypes.number.isRequired,
   }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   sort: PropTypes.oneOf(Object.values(SortComparators)),
@@ -340,6 +289,8 @@ Item.propTypes = {
   setFirstLoad: PropTypes.func,
   setCurrentId: PropTypes.func,
   setSort: PropTypes.func,
+  fetchItems: PropTypes.func,
+  setSnack: PropTypes.func,
 };
 
 Item.defaultProps = {
@@ -351,6 +302,8 @@ Item.defaultProps = {
   setFirstLoad: noop,
   setCurrentId: noop,
   setSort: noop,
+  fetchItems: noop,
+  setSnack: noop,
 };
 
 const mapStateToProps = (state) => ({

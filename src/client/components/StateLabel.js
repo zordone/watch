@@ -15,10 +15,13 @@ const StateLabel = ({ state, className }) => {
 };
 
 StateLabel.propTypes = {
-  state: PropTypes.shape({
-    type: PropTypes.oneOf(Object.values(StateType)).isRequired,
-    message: PropTypes.string.isRequired,
-  }),
+  state: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.shape({
+      type: PropTypes.oneOf(Object.values(StateType)).isRequired,
+      message: PropTypes.string.isRequired,
+    }),
+  ]),
   className: PropTypes.string,
 };
 

@@ -5,6 +5,7 @@ import TableCell from "@material-ui/core/TableCell";
 import ItemIcon from "./ItemIcon";
 import StateLabel from "./StateLabel";
 import { maxLength, noop } from "../service/utils";
+import { StateType, ValiType } from "../../common/enums";
 import "./ItemRow.css";
 
 const ItemRow = ({ item, onClick, isCurrent }) => {
@@ -30,7 +31,16 @@ const ItemRow = ({ item, onClick, isCurrent }) => {
 };
 
 ItemRow.propTypes = {
-  item: PropTypes.shape({}).isRequired,
+  item: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+    state: PropTypes.shape({
+      type: PropTypes.oneOf(Object.values(StateType)),
+    }),
+    notes: PropTypes.string,
+    withVali: PropTypes.oneOf(Object.values(ValiType)),
+  }).isRequired,
   isCurrent: PropTypes.bool,
   onClick: PropTypes.func,
 };

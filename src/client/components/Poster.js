@@ -28,6 +28,7 @@ const Poster = ({ item, onPosterSearch, posterScraping }) => {
 Poster.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.oneOf(Object.values(ItemType)),
+    posterUrl: PropTypes.string,
   }).isRequired,
   posterScraping: PropTypes.bool,
   onPosterSearch: PropTypes.func,
