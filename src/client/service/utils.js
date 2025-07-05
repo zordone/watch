@@ -9,7 +9,7 @@ export const parseDate = (date) => {
   return {
     date: mom && mom.toDate(),
     input: mom ? mom.format("YYYY-MM-DD") : "",
-    display: mom ? mom.format("YYYY. MM. DD") : "",
+    display: mom ? mom.format("YYYY.MM.DD") : "",
   };
 };
 

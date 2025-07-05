@@ -25,3 +25,7 @@
 .StateLabel .bold {
   font-weight: 600;
 }
+
+.StateLabel strong {
+  white-space: nowrap;
+}
