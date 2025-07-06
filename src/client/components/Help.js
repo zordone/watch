@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Button, Paper } from "@material-ui/core";
 import * as actions from "../redux/actions";
@@ -26,7 +27,8 @@ const sections = [
   { title: "Sorting", keywords: values(SortComparators, "sort:") },
 ];
 
-const Help = ({ history, items, setSearch, setSort }) => {
+const Help = ({ items, setSearch, setSort }) => {
+  const history = useHistory();
   const [selected, setSelected] = useState([]);
 
   const onClose = (_event, search) => {
@@ -114,9 +116,6 @@ const Help = ({ history, items, setSearch, setSort }) => {
 };
 
 Help.propTypes = {
-  history: PropTypes.shape({
-    goBack: PropTypes.func.isRequired,
-  }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSearch: PropTypes.func,
   setSort: PropTypes.func,

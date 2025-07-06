@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -20,13 +21,12 @@ import Spinner from "./Spinner";
 import { Const, SortComparators } from "../../common/enums";
 import events, { Events } from "../service/events";
 import "./Item.css";
+import { useGoBackOrHome } from "../hooks/useGoBackOrHome";
 
 const FORM = "form";
 const DETAILS = "details";
 
 const Item = ({
-  match,
-  history,
   items,
   sort,
   resort,
@@ -39,6 +39,8 @@ const Item = ({
   setSort,
   setSnack,
 }) => {
+  const onClose = useGoBackOrHome();
+  const match = { params: useParams() };
   const [item, setItem] = useState({
     ...defaultItem,
     isDefaultItem: true,
@@ -52,7 +54,6 @@ const Item = ({
   const [posterScraping, setPosterScraping] = useState(false);
   const [error, setError] = useState("");
   const [deleteSure, setDeleteSure] = useState(false);
-  const [canGoBack] = useState(history.length > 1);
 
   const deleteTimerRef = useRef();
 
@@ -62,14 +63,6 @@ const Item = ({
       state: updateState ? itemState(changedItem) : changedItem.state,
     });
   };
-
-  const onClose = useCallback(() => {
-    if (canGoBack) {
-      history.goBack();
-    } else {
-      window.close();
-    }
-  }, [canGoBack, history]);
 
   const onChange = (changedItem) => {
     const updateState = page === DETAILS;
@@ -204,7 +197,7 @@ const Item = ({
         clearTimeout(deleteTimerRef.current);
       }
     };
-  }, [match.params, history.length, items.length, fetchItems, setFirstLoad, setCurrentId, onClose]);
+  }, [match.params, items.length, fetchItems, setFirstLoad, setCurrentId, onClose]);
 
   useEffect(() => {
     if (resort) {
@@ -237,7 +230,7 @@ const Item = ({
             Save
           </Button>
           <Button variant="contained" color="default" className="Item-button" onClick={onClose}>
-            {canGoBack ? "Cancel" : "Close"}
+            Cancel
           </Button>
           {!isNew && (
             <Button
@@ -270,16 +263,6 @@ const Item = ({
 };
 
 Item.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      imdbId: PropTypes.string,
-    }).isRequired,
-  }).isRequired,
-  history: PropTypes.shape({
-    goBack: PropTypes.func.isRequired,
-    length: PropTypes.number.isRequired,
-  }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   sort: PropTypes.oneOf(Object.values(SortComparators)),
   resort: PropTypes.bool,

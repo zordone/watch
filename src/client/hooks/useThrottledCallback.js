@@ -1,7 +1,7 @@
 import { useRef, useMemo } from "react";
 import _ from "../../common/lodashReduced";
 
-const useThrottledCallback = (callback, delay) => {
+export const useThrottledCallback = (callback, delay) => {
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
@@ -12,5 +12,3 @@ const useThrottledCallback = (callback, delay) => {
 
   return throttledFn;
 };
-
-export default useThrottledCallback;

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { connect } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -18,15 +19,13 @@ import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
 import events, { Events } from "../service/events";
 import { updateHash } from "../service/history";
-import useThrottledCallback from "../hooks/useThrottledCallback";
-import useOnMount from "../hooks/useOnMount";
+import { useThrottledCallback } from "../hooks/useThrottledCallback";
+import { useOnMount } from "../hooks/useOnMount";
 import "./Home.css";
 
 let isFirstMount = true;
 
 const Home = ({
-  history,
-  location,
   items,
   search,
   filteredItems,
@@ -44,6 +43,8 @@ const Home = ({
   setSnack,
   setIsFetched,
 }) => {
+  const history = useHistory();
+  const location = useLocation();
   const currentSearchRef = useRef("");
 
   const scrollToCurrent = useCallback(() => {
@@ -279,13 +280,6 @@ const Home = ({
 };
 
 Home.propTypes = {
-  history: PropTypes.shape({
-    goBack: PropTypes.func.isRequired,
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  location: PropTypes.shape({
-    hash: PropTypes.string.isRequired,
-  }).isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   search: PropTypes.string.isRequired,
   filteredItems: PropTypes.arrayOf(PropTypes.object).isRequired,

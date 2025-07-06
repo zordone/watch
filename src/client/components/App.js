@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
 import events, { Events } from "../service/events";
-import { history } from "../service/history";
+import { setRouterHistory } from "../service/history";
 import "./App.css";
 
 const theme = createMuiTheme({
@@ -23,6 +23,24 @@ const theme = createMuiTheme({
     fontFamily: "Roboto,Arial,sans-serif",
   },
 });
+
+const AppRoutes = () => {
+  const history = useHistory();
+
+  useEffect(() => {
+    setRouterHistory(history);
+  }, [history]);
+
+  return (
+    <div className="App">
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/item/:id/:imdbId?" component={Item} />
+        <Route exact path="/help" component={Help} />
+      </Switch>
+    </div>
+  );
+};
 
 const App = () => {
   useEffect(() => {
@@ -43,14 +61,8 @@ const App = () => {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <BrowserRouter history={history}>
-        <div className="App">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/item/:id/:imdbId?" component={Item} />
-            <Route exact path="/help" component={Help} />
-          </Switch>
-        </div>
+      <BrowserRouter>
+        <AppRoutes />
       </BrowserRouter>
     </MuiThemeProvider>
   );

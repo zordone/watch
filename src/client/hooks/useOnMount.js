@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-const useOnMount = (onMount) => {
+export const useOnMount = (onMount) => {
   const onMountRef = useRef(onMount);
 
   useEffect(() => {
@@ -8,5 +8,3 @@ const useOnMount = (onMount) => {
     return onUnmount;
   }, []);
 };
-
-export default useOnMount;

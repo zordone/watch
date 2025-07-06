@@ -10,7 +10,7 @@ import { parseDate, mergeArrays } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import events, { Events } from "../service/events";
 import ScrapeButton from "./ScrapeButton";
-import useThrottledCallback from "../hooks/useThrottledCallback";
+import { useThrottledCallback } from "../hooks/useThrottledCallback";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
