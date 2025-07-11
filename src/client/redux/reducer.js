@@ -10,7 +10,6 @@ const initialState = {
   resort: false,
   snackOpen: false,
   snackText: "",
-  isFetched: false,
 };
 
 export default (state = initialState, action) => {
@@ -48,6 +47,10 @@ export default (state = initialState, action) => {
         ...state,
         // new search term
         search: action.search,
+      };
+    case types.SET_FILTERED_ITEMS:
+      return {
+        ...state,
         // items filtered by the new search term
         filteredItems: action.filteredItems,
       };
@@ -81,11 +84,6 @@ export default (state = initialState, action) => {
         // we only update the text if the snackbar is open
         // (leave it there during hide transition)
         snackText: action.snackOpen ? action.snackText : state.snackText,
-      };
-    case types.SET_IS_FETCHED:
-      return {
-        ...state,
-        isFetched: action.isFetched,
       };
 
     default:

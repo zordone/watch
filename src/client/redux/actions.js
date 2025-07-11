@@ -31,9 +31,13 @@ export const deleteItem = (items, id) => ({
   items: items.filter((item) => item._id !== id),
 });
 
-export const setSearch = (search, filteredItems) => ({
+export const setSearch = (search) => ({
   type: types.SET_SEARCH,
   search,
+});
+
+export const setFilteredItems = (filteredItems) => ({
+  type: types.SET_FILTERED_ITEMS,
   filteredItems,
 });
 
@@ -57,9 +61,4 @@ export const setSnack = (snackOpen, snackText) => ({
   type: types.SET_SNACK,
   snackOpen,
   snackText,
-});
-
-export const setIsFetched = (isFetched) => ({
-  type: types.SET_IS_FETCHED,
-  isFetched,
 });

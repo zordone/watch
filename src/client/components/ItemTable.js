@@ -56,4 +56,4 @@ ItemTable.defaultProps = {
   onRowClick: noop,
 };
 
-export default ItemTable;
+export default React.memo(ItemTable);

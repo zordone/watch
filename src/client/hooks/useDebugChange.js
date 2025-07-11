@@ -1,6 +1,7 @@
 import { useRef } from "react";
 
-export const useDebugChange = (values) => {
+// hook to help debugging prop or state changes
+export const useDebugChange = (values, title = "useDebugChange") => {
   const prevValuesRef = useRef({});
 
   const keys = Object.keys({ ...values, ...prevValuesRef.current });
@@ -10,12 +11,16 @@ export const useDebugChange = (values) => {
       const prevValue = prevValuesRef.current[key];
       const currentValue = values[key];
       if (prevValue !== currentValue) {
-        return `  ${key}`;
+        return [key, prevValue, "->", currentValue];
       }
     })
     .filter(Boolean);
+
   if (changes.length) {
-    console.log("useDebugChange:", changes.join(", "));
+    console.group(title);
+    changes.forEach((change) => console.log(...change));
+    console.groupEnd();
   }
+
   prevValuesRef.current = values;
 };

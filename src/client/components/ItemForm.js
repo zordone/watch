@@ -10,7 +10,7 @@ import { parseDate, mergeArrays } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import events, { Events } from "../service/events";
 import ScrapeButton from "./ScrapeButton";
-import { useThrottledCallback } from "../hooks/useThrottledCallback";
+import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
@@ -28,7 +28,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
     setItem({ ...propItem });
   }, [propItem]);
 
-  const onTitleChange = useThrottledCallback(
+  const onTitleChangeDebounced = useDebouncedCallback(
     useCallback(() => {
       const other = findByTitle(item._id, item.title);
       if (other !== sameTitle) {
@@ -43,7 +43,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
         setSameTitle(other);
       }
     }, [findByTitle, item._id, item.title, sameTitle]),
-    1000,
+    500,
   );
 
   const onFieldChange = (event) => {
@@ -55,7 +55,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
     setItem(newItem);
     onChange(newItem);
     if (item.title !== newItem.title) {
-      onTitleChange();
+      onTitleChangeDebounced();
     }
   };
 
@@ -96,13 +96,13 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
         setItem(newItem);
         setImdbScraping(false);
         onChange(newItem);
-        onTitleChange();
+        onTitleChangeDebounced();
       })
       .catch((err) => {
         setImdbScraping(false);
         throw err;
       });
-  }, [item, onTitleChange, onChange]);
+  }, [item, onTitleChangeDebounced, onChange]);
 
   useEffect(() => {
     events.addListener(Events.IMDB_SCRAPE, onImdbScrape);
