@@ -1,5 +1,5 @@
 .ItemRow.current {
-  animation: show-current 1.5s ease-out 1;
+  animation: show-current 1000ms ease-out 1;
 }
 
 @keyframes show-current {

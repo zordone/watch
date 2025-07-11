@@ -51,8 +51,9 @@ const Home = ({
     const currentRow = document.querySelector(".ItemRow.current");
     if (currentRow) {
       currentRow.scrollIntoViewIfNeeded();
+      // give time to the ItemRow current animation to finish
+      setTimeout(() => setCurrentId(""), 1000);
     }
-    setCurrentId("");
   }, [currentId, setCurrentId]);
 
   const scrollToTop = useCallback(() => {
@@ -96,7 +97,6 @@ const Home = ({
         if (searchValue.startsWith("sort:")) {
           return;
         }
-        console.warn("setSearch", searchValue);
         setSearch(searchValue);
         updateHash(searchValue);
       },

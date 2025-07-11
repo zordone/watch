@@ -4,10 +4,12 @@ import "./Header.css";
 
 const Header = ({ searchField, helpButton, newButton, onLogoClick }) => (
   <header className="Header">
-    <button type="button" className="Header-logoButton" onClick={onLogoClick}>
-      <img className="Header-logo" alt="logo" src="/app-logo.webp" />
-    </button>
-    <img className="Header-title" alt="watch" src="/app-title.webp" />
+    <div className="Header-logoAndTitle">
+      <button type="button" className="Header-logoButton" onClick={onLogoClick}>
+        <img className="Header-logo" alt="logo" src="/app-logo.webp" />
+      </button>
+      <img className="Header-title" alt="watch" src="/app-title.webp" />
+    </div>
     {searchField}
     <div className="Header-buttons">
       {helpButton}

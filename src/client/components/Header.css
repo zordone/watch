@@ -4,16 +4,23 @@
   padding: 1rem;
   color: white;
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  grid-template-areas: "logo title search buttons";
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "logo-title search buttons";
   align-items: center;
   gap: 1rem;
+}
+
+.Header .Header-logoAndTitle {
+  display: flex;
+  align-items: center;
+  grid-area: logo-title;
+  gap: 0.3rem;
 }
 
 .Header .Header-logoButton {
   grid-area: logo;
   position: static;
-  height: 43px;
+  height: 34px;
   border: none;
   background: none;
   padding: 0;
@@ -25,7 +32,7 @@
 
 .Header-title {
   grid-area: title;
-  height: 43px;
+  height: 30px;
 }
 
 .Header-buttons {

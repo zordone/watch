@@ -12,7 +12,7 @@
   grid-template-rows: 1fr;
   align-items: center;
   justify-items: center;
-  animation: hide 500ms ease-in 1 forwards 2.7s;
+  animation: hide 500ms ease-in 1 forwards 1600ms;
   pointer-events: none;
   overflow: hidden;
 }
@@ -23,7 +23,7 @@
   grid-row: 1;
   width: 50%;
   height: 200px;
-  animation: hide 500ms ease-in 1 forwards 2.7s, zoom 500ms ease-in 1 forwards 2.7s;
+  animation: hide 1000ms ease-in 1 forwards 1000ms, zoom 800ms ease-in 1 forwards 1200ms;
 }
 
 .Loader-image {
@@ -45,7 +45,7 @@
   mask: url("/wave-mask.webp");
   mask-size: 8% 200%;
   mask-position: 0 0%;
-  animation: waves 7s linear infinite, loading 1.5s linear 1 forwards 1s;
+  animation: waves 5s linear infinite, loading 1300ms ease-in 1 forwards 200ms;
 }
 
 @keyframes waves {
@@ -91,8 +91,8 @@
   0% {
     transform: scale(1);
   }
-  40% {
-    transform: scale(1.2);
+  50% {
+    transform: scale(4);
   }
   100% {
     transform: scale(20);
@@ -101,7 +101,7 @@
 
 @media only screen and (max-width: 640px) {
   .Loader-fg {
-    mask-size: 33% 200%;
-    animation: waves 1.2s linear infinite, loading 1.5s linear 1 forwards 1s;
+    mask-size: 15% 200%;
+    animation: waves 3s linear infinite, loading 1200ms ease-in 1 forwards 300ms;
   }
 }
