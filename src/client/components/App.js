@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
@@ -9,7 +8,7 @@ import events, { Events } from "../service/events";
 import { setRouterHistory } from "../service/history";
 import "./App.css";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     type: "dark",
     primary: {
@@ -60,11 +59,11 @@ const App = () => {
   }, []);
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };
 

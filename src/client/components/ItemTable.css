@@ -24,6 +24,9 @@
 .ItemTable-head tr {
   height: 0;
 }
+.ItemTable-head tr * {
+  padding: 0;
+}
 
 .ItemTable-head th,
 .ItemTable-fixedHeaderCell {
