@@ -7,7 +7,7 @@ const BASE_URL = window.location.origin.replace(/:3000$/, ":3001");
 console.debug("Backend URL", BASE_URL);
 
 export const sortItems = (items, sort = SortComparators.DEFAULT) => [
-  ...items.sort(sortComparators[sort]),
+  ...items.toSorted(sortComparators[sort]),
 ];
 
 export const listItems = (all) =>

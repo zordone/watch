@@ -1,3 +1,7 @@
+button.ScrapeButton {
+  padding: 0;
+}
+
 .ScrapeButton.hidden {
   display: none;
 }

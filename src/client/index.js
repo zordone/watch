@@ -1,9 +1,7 @@
 import "core-js";
 import React from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
+import { createRoot } from "react-dom/client";
 import whyDidYouUpdate from "why-did-you-update";
-import configureStore from "./redux/configureStore";
 import App from "./components/App";
 import "./index.css";
 
@@ -19,11 +17,6 @@ if (WHY_UPDATE_ON && process.env.NODE_ENV !== "production") {
   });
 }
 
-const store = configureStore();
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root"),
-);
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<App />);

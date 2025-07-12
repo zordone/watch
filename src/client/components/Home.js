@@ -1,18 +1,14 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import Add from "@material-ui/icons/Add";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import ItemTable from "./ItemTable";
 import Header from "./Header";
-import * as actions from "../redux/actions";
-import * as selectors from "../redux/selectors";
+import { useStore, actions } from "../store/store";
 import SearchField from "./SearchField";
 import Loader from "./Loader";
-import { noop } from "../service/utils";
 import fixedHeaderWorkaround from "../service/fixedHeader";
 import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
@@ -25,23 +21,10 @@ import "./Home.css";
 
 let isFirstMount = true;
 
-const Home = ({
-  items,
-  search,
-  filteredItems,
-  firstLoad,
-  currentId,
-  sort,
-  snackOpen,
-  snackText,
-  fetchItems,
-  setSearch,
-  setFilteredItems,
-  setFirstLoad,
-  setCurrentId,
-  setSort,
-  setSnack,
-}) => {
+const Home = () => {
+  const store = useStore();
+  const { items, search, filteredItems, firstLoad, currentId, sort, snackOpen, snackText } = store;
+
   const history = useHistory();
   const location = useLocation();
   const currentSearchRef = useRef();
@@ -52,9 +35,9 @@ const Home = ({
     if (currentRow) {
       currentRow.scrollIntoViewIfNeeded();
       // give time to the ItemRow current animation to finish
-      setTimeout(() => setCurrentId(""), 1000);
+      setTimeout(() => actions.setCurrentId(""), 1000);
     }
-  }, [currentId, setCurrentId]);
+  }, [currentId]);
 
   const scrollToTop = useCallback(() => {
     const firstRow = document.querySelector(".ItemRow");
@@ -71,7 +54,7 @@ const Home = ({
       .map((word) => word.trim())
       .filter(Boolean);
     if (!searchWords.length) {
-      setFilteredItems(items);
+      actions.setFilteredItems(items);
       return;
     }
     const newFilteredItems = items.filter((item) =>
@@ -85,23 +68,20 @@ const Home = ({
         );
       }),
     );
-    setFilteredItems(newFilteredItems);
-  }, [search, items, setFilteredItems]);
+    actions.setFilteredItems(newFilteredItems);
+  }, [search, items]);
 
   // debounced update of the search term and the URL hash
   const updateSearchDebounced = useDebouncedCallback(
-    useCallback(
-      (searchValue) => {
-        // these are special commands, not typed by the user, but passed by the help dialog.
-        // these shouldn't become the visible search term, so we can just ignore them here.
-        if (searchValue.startsWith("sort:")) {
-          return;
-        }
-        setSearch(searchValue);
-        updateHash(searchValue);
-      },
-      [setSearch],
-    ),
+    useCallback((searchValue) => {
+      // these are special commands, not typed by the user, but passed by the help dialog.
+      // these shouldn't become the visible search term, so we can just ignore them here.
+      if (searchValue.startsWith("sort:")) {
+        return;
+      }
+      actions.setSearch(searchValue);
+      updateHash(searchValue);
+    }, []),
     500,
   );
 
@@ -154,8 +134,8 @@ const Home = ({
           return;
         }
         if (sort !== newSort) {
-          setSort(items, newSort);
-          setSnack(true, `Sorted by ${sortTitles[newSort]}.`);
+          actions.setSort(items, newSort);
+          actions.setSnack(true, `Sorted by ${sortTitles[newSort]}.`);
         }
         updateSearchDebounced("");
       }
@@ -178,14 +158,14 @@ const Home = ({
         window.open(path, "_blank");
         return;
       }
-      setCurrentId(id);
+      actions.setCurrentId(id);
       history.push(path);
     },
-    [history, setCurrentId],
+    [history],
   );
 
   const onSnackClose = () => {
-    setSnack(false);
+    actions.setSnack(false);
   };
 
   useOnMount(() => {
@@ -198,7 +178,7 @@ const Home = ({
         onSearchChanged(decodeURIComponent(searchFromHash));
       }
       // fetch all data (as opposed to initial short list first, then full list )
-      fetchItems(true).catch(console.error);
+      actions.fetchItems(true).catch(console.error);
     }
 
     fixedHeaderWorkaround();
@@ -211,7 +191,7 @@ const Home = ({
 
     // on unmount
     return () => {
-      setFirstLoad(false);
+      actions.setFirstLoad(false);
       events.removeListener(Events.IMDB_PASTE, onImdbPaste);
     };
   });
@@ -275,57 +255,4 @@ const Home = ({
   );
 };
 
-Home.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  search: PropTypes.string.isRequired,
-  filteredItems: PropTypes.arrayOf(PropTypes.object).isRequired,
-  firstLoad: PropTypes.bool,
-  currentId: PropTypes.string,
-  sort: PropTypes.oneOf(Object.values(SortComparators)),
-  snackOpen: PropTypes.bool,
-  snackText: PropTypes.string,
-  fetchItems: PropTypes.func,
-  setSearch: PropTypes.func,
-  setFilteredItems: PropTypes.func,
-  setFirstLoad: PropTypes.func,
-  setCurrentId: PropTypes.func,
-  setSort: PropTypes.func,
-  setSnack: PropTypes.func,
-};
-
-Home.defaultProps = {
-  firstLoad: false,
-  currentId: "",
-  sort: SortComparators.DEFAULT,
-  snackOpen: false,
-  snackText: "",
-  fetchItems: noop,
-  setSearch: noop,
-  setFilteredItems: noop,
-  setFirstLoad: noop,
-  setCurrentId: noop,
-  setSort: noop,
-};
-
-const mapStateToProps = (state) => ({
-  items: selectors.getItems(state),
-  search: selectors.getSearch(state),
-  filteredItems: selectors.getFilteredItems(state),
-  firstLoad: selectors.getFirstLoad(state),
-  currentId: selectors.getCurrentId(state),
-  sort: selectors.getSort(state),
-  snackOpen: selectors.getSnackOpen(state),
-  snackText: selectors.getSnackText(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchItems: (all) => dispatch(actions.fetchItems(all)),
-  setSearch: (search) => dispatch(actions.setSearch(search)),
-  setFilteredItems: (filteredItems) => dispatch(actions.setFilteredItems(filteredItems)),
-  setFirstLoad: (firstLoad) => dispatch(actions.setFirstLoad(firstLoad)),
-  setCurrentId: (currentId) => dispatch(actions.setCurrentId(currentId)),
-  setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
-  setSnack: (open, text) => dispatch(actions.setSnack(open, text)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

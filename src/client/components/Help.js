@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
 import { Button, Paper } from "@material-ui/core";
-import * as actions from "../redux/actions";
-import * as selectors from "../redux/selectors";
+import { useStore, actions } from "../store/store";
 import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
-import { noop } from "../service/utils";
 import { updateHash } from "../service/history";
 import "./Help.css";
 
@@ -27,7 +23,10 @@ const sections = [
   { title: "Sorting", keywords: values(SortComparators, "sort:") },
 ];
 
-const Help = ({ items, setSearch, setSort }) => {
+const Help = () => {
+  const store = useStore();
+  const { items } = store;
+
   const history = useHistory();
   const [selected, setSelected] = useState([]);
 
@@ -43,11 +42,11 @@ const Help = ({ items, setSearch, setSort }) => {
     const sort = selected.filter((name) => name.startsWith("sort:")).pop();
 
     if (search) {
-      setSearch(search);
+      actions.setSearch(search);
     }
 
     if (sort) {
-      setSort(items, sort.substr(5));
+      actions.setSort(items, sort.substr(5));
     }
     onClose(null, search);
   };
@@ -68,10 +67,10 @@ const Help = ({ items, setSearch, setSort }) => {
 
     // single select
     if (isSort) {
-      setSort(items, name.substr(5));
+      actions.setSort(items, name.substr(5));
       onClose();
     } else {
-      setSearch(name);
+      actions.setSearch(name);
       onClose(null, name);
     }
   };
@@ -115,24 +114,4 @@ const Help = ({ items, setSearch, setSort }) => {
   );
 };
 
-Help.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setSearch: PropTypes.func,
-  setSort: PropTypes.func,
-};
-
-Help.defaultProps = {
-  setSearch: noop,
-  setSort: noop,
-};
-
-const mapStateToProps = (state) => ({
-  items: selectors.getItems(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setSearch: (search) => dispatch(actions.setSearch(search)),
-  setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Help);
+export default Help;

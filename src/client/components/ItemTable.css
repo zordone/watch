@@ -21,10 +21,7 @@
   font-weight: 100;
 }
 
-.ItemTable-head tr {
-  height: 0;
-}
-.ItemTable-head tr * {
+.ItemTable-head tr th {
   padding: 0;
 }
 
@@ -39,12 +36,10 @@
   background: #fff1;
 }
 
-.ItemTable th,
 .ItemTable td,
 .ItemTable td:last-child,
 .ItemTable-fixedHeaderCell {
-  padding-left: 4px;
-  padding-right: 4px;
+  padding: 6px 4px;
 }
 
 .ItemTable .ItemTable-skinny-col {

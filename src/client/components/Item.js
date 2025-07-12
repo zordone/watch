@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -9,16 +7,15 @@ import Create from "@material-ui/icons/Create";
 import Check from "@material-ui/icons/Check";
 import DeleteForever from "@material-ui/icons/DeleteForever";
 import * as service from "../service/service";
-import * as actions from "../redux/actions";
-import * as selectors from "../redux/selectors";
+import { useStore, actions } from "../store/store";
 import ItemForm from "./ItemForm";
 import ItemDetails from "./ItemDetails";
 import itemState from "../service/itemState";
-import { slugify, noop } from "../service/utils";
+import { slugify } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import PosterSearch from "./PosterSearch";
 import Spinner from "./Spinner";
-import { Const, SortComparators } from "../../common/enums";
+import { Const } from "../../common/enums";
 import events, { Events } from "../service/events";
 import "./Item.css";
 import { useGoBackOrHome } from "../hooks/useGoBackOrHome";
@@ -26,19 +23,10 @@ import { useGoBackOrHome } from "../hooks/useGoBackOrHome";
 const FORM = "form";
 const DETAILS = "details";
 
-const Item = ({
-  items,
-  sort,
-  resort,
-  addNewItem,
-  updateItem,
-  deleteItem,
-  fetchItems,
-  setFirstLoad,
-  setCurrentId,
-  setSort,
-  setSnack,
-}) => {
+const Item = () => {
+  const store = useStore();
+  const { items, sort, resort } = store;
+
   const onClose = useGoBackOrHome();
   const match = { params: useParams() };
   const [item, setItem] = useState({
@@ -76,12 +64,12 @@ const Item = ({
       .then((saved) => {
         setItem(saved);
         if (isNew) {
-          addNewItem(saved);
+          actions.addNewItem(saved);
         }
-        updateItem(items, saved);
+        actions.updateItem(items, saved);
         onClose();
-        setSnack(true, "Item updated.");
-        setCurrentId(saved._id);
+        actions.setSnack(true, "Item updated.");
+        actions.setCurrentId(saved._id);
       })
       .catch((err) => {
         console.error("Updating item failed.", err);
@@ -127,11 +115,11 @@ const Item = ({
       service
         .deleteItemById(item._id)
         .then(() => {
-          deleteItem(items, item._id);
+          actions.deleteItem(items, item._id);
           setError("");
           setDeleteSure(false);
           onClose();
-          setSnack(true, "Item deleted.");
+          actions.setSnack(true, "Item deleted.");
         })
         .catch((err) => {
           console.error("Updating item failed.", err);
@@ -185,9 +173,9 @@ const Item = ({
     // pre-fetch items in case we reloaded the app on this page
     const isFetched = Boolean(items.length);
     if (!isFetched) {
-      fetchItems().then(() => {
-        setFirstLoad(false);
-        setCurrentId(id);
+      actions.fetchItems().then(() => {
+        actions.setFirstLoad(false);
+        actions.setCurrentId(id);
       });
     }
 
@@ -197,13 +185,13 @@ const Item = ({
         clearTimeout(deleteTimerRef.current);
       }
     };
-  }, [match.params, items.length, fetchItems, setFirstLoad, setCurrentId, onClose]);
+  }, [match.params, items.length, onClose]);
 
   useEffect(() => {
     if (resort) {
-      setSort(items, sort);
+      actions.setSort(items, sort);
     }
-  }, [resort, items, sort, setSort]);
+  }, [resort, items, sort]);
   const isNew = item._id === Const.NEW;
   const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
   const isFullyFetched = item && !item.isDefaultItem;
@@ -262,48 +250,4 @@ const Item = ({
   );
 };
 
-Item.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
-  sort: PropTypes.oneOf(Object.values(SortComparators)),
-  resort: PropTypes.bool,
-  addNewItem: PropTypes.func,
-  updateItem: PropTypes.func,
-  deleteItem: PropTypes.func,
-  setFirstLoad: PropTypes.func,
-  setCurrentId: PropTypes.func,
-  setSort: PropTypes.func,
-  fetchItems: PropTypes.func,
-  setSnack: PropTypes.func,
-};
-
-Item.defaultProps = {
-  sort: PropTypes.oneOf(Object.values(SortComparators)),
-  resort: false,
-  addNewItem: noop,
-  updateItem: noop,
-  deleteItem: noop,
-  setFirstLoad: noop,
-  setCurrentId: noop,
-  setSort: noop,
-  fetchItems: noop,
-  setSnack: noop,
-};
-
-const mapStateToProps = (state) => ({
-  items: selectors.getItems(state),
-  sort: selectors.getSort(state),
-  resort: selectors.getResort(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchItems: () => dispatch(actions.fetchItems()),
-  addNewItem: (item) => dispatch(actions.addNewItem(item)),
-  updateItem: (items, item) => dispatch(actions.updateItem(items, item)),
-  deleteItem: (items, id) => dispatch(actions.deleteItem(items, id)),
-  setFirstLoad: (firstLoad) => dispatch(actions.setFirstLoad(firstLoad)),
-  setCurrentId: (currentId) => dispatch(actions.setCurrentId(currentId)),
-  setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
-  setSnack: (open, text) => dispatch(actions.setSnack(open, text)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Item);
+export default Item;
