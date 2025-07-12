@@ -8,7 +8,7 @@ import { noop } from "../service/utils";
 import events, { Events } from "../service/events";
 import "./SearchField.css";
 
-const SearchField = ({ onChange, onShortcut, value: propValue }) => {
+const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = "" }) => {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
@@ -107,12 +107,6 @@ SearchField.propTypes = {
   onChange: PropTypes.func,
   onShortcut: PropTypes.func,
   value: PropTypes.string,
-};
-
-SearchField.defaultProps = {
-  onChange: noop,
-  onShortcut: noop,
-  value: "",
 };
 
 export default SearchField;

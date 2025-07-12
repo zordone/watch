@@ -1,8 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { noop } from "../service/utils";
 import "./Header.css";
 
-const Header = ({ searchField, helpButton, newButton, onLogoClick }) => (
+const Header = ({
+  searchField = null,
+  helpButton = null,
+  newButton = null,
+  onLogoClick = noop,
+}) => (
   <header className="Header">
     <div className="Header-logoAndTitle">
       <button type="button" className="Header-logoButton" onClick={onLogoClick}>
@@ -23,13 +29,6 @@ Header.propTypes = {
   helpButton: PropTypes.element,
   newButton: PropTypes.element,
   onLogoClick: PropTypes.func,
-};
-
-Header.defaultProps = {
-  searchField: null,
-  helpButton: null,
-  newButton: null,
-  onLogoClick: () => {},
 };
 
 export default Header;

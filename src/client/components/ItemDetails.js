@@ -32,7 +32,13 @@ DetailsRow.propTypes = {
   optional: PropTypes.bool,
 };
 
-const ItemDetails = ({ item: propItem, onChange, onPosterSearch, posterScraping, visible }) => {
+const ItemDetails = ({
+  item: propItem,
+  onChange,
+  onPosterSearch = noop,
+  posterScraping = false,
+  visible = true,
+}) => {
   const [item, setItem] = useState({ ...defaultItem });
   const [buttons, setButtons] = useState([]);
   const [links, setLinks] = useState([]);
@@ -260,12 +266,6 @@ ItemDetails.propTypes = {
   onPosterSearch: PropTypes.func,
   posterScraping: PropTypes.bool,
   visible: PropTypes.bool,
-};
-
-ItemDetails.defaultProps = {
-  visible: true,
-  posterScraping: false,
-  onPosterSearch: noop,
 };
 
 export default ItemDetails;

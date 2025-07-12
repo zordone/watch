@@ -8,7 +8,7 @@ import { maxLength, noop } from "../service/utils";
 import { StateType, ValiType } from "../../common/enums";
 import "./ItemRow.css";
 
-const ItemRow = ({ item, onClick, isCurrent }) => {
+const ItemRow = ({ item, onClick = noop, isCurrent = false }) => {
   const className = `ItemRow ${isCurrent ? "current" : ""}`;
   return (
     <TableRow className={className} onClick={(event) => onClick(item._id, event.metaKey)}>
@@ -43,11 +43,6 @@ ItemRow.propTypes = {
   }).isRequired,
   isCurrent: PropTypes.bool,
   onClick: PropTypes.func,
-};
-
-ItemRow.defaultProps = {
-  isCurrent: false,
-  onClick: noop,
 };
 
 export default ItemRow;

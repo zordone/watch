@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { StateType } from "../../common/enums";
 import "./StateLabel.css";
 
-const StateLabel = ({ state, className }) => {
+const StateLabel = ({ state = null, className = "" }) => {
   if (!state) {
     return null;
   }
@@ -23,11 +23,6 @@ StateLabel.propTypes = {
     }),
   ]),
   className: PropTypes.string,
-};
-
-StateLabel.defaultProps = {
-  state: null,
-  className: "",
 };
 
 export default StateLabel;

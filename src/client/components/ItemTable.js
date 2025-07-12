@@ -10,8 +10,7 @@ import ItemRow from "./ItemRow";
 import { noop } from "../service/utils";
 import "./ItemTable.css";
 
-const ItemTable = (props) => {
-  const { items, onRowClick, currentId } = props;
+const ItemTable = ({ items = [], onRowClick = noop, currentId = null }) => {
   const isEmpty = items.length === 0;
   return (
     <Paper className="ItemTable-paper">
@@ -48,12 +47,6 @@ ItemTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   currentId: PropTypes.string,
   onRowClick: PropTypes.func,
-};
-
-ItemTable.defaultProps = {
-  items: [],
-  currentId: null,
-  onRowClick: noop,
 };
 
 export default React.memo(ItemTable);
