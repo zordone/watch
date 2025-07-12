@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import ChipInput from "material-ui-chip-input";
+import { MuiChipsInput } from "mui-chips-input";
 import _ from "../../common/lodashReduced";
-import "./ChipArrayInput.css";
 import { noop } from "../service/utils";
 
-const ChipArrayInput = ({ value, onChange, id, className, ...rest }) => {
+const ChipArrayInput = ({ value, onChange = noop, id, className = "", ...rest }) => {
   const fireOnChanged = useCallback(
     (newValue) => {
       if (_.isEqual(value, newValue)) {
@@ -36,15 +35,11 @@ const ChipArrayInput = ({ value, onChange, id, className, ...rest }) => {
   );
 
   return (
-    <ChipInput
-      onAdd={onAdd}
-      onDelete={onDelete}
+    <MuiChipsInput
+      value={value}
+      onAddChip={onAdd}
+      onDeleteChip={onDelete}
       className={`ChipArrayInput ${className}`}
-      classes={{
-        chipContainer: "chipContainer",
-        chip: "chip",
-        label: "label",
-      }}
       {...rest}
     />
   );
@@ -57,14 +52,6 @@ ChipArrayInput.propTypes = {
   label: PropTypes.string,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func,
-};
-
-ChipArrayInput.defaultProps = {
-  id: undefined,
-  className: "",
-  style: {},
-  label: undefined,
-  onChange: noop,
 };
 
 export default ChipArrayInput;

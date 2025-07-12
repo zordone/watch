@@ -7,7 +7,7 @@ const store = proxy({
   items: [],
   filteredItems: [],
   search: "",
-  firstLoad: true,
+  isLoaderFinished: false,
   currentId: "",
   sort: "default",
   resort: false,
@@ -58,8 +58,8 @@ export const actions = {
     store.filteredItems = filteredItems;
   },
 
-  setFirstLoad(firstLoad) {
-    store.firstLoad = firstLoad;
+  setIsLoaderFinished(isLoaderFinished) {
+    store.isLoaderFinished = isLoaderFinished;
   },
 
   setCurrentId(currentId) {

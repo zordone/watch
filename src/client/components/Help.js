@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Paper } from "@material-ui/core";
+import { Button, Paper } from "@mui/material";
 import { useStore, actions } from "../store/store";
 import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
 import { updateHash } from "../service/history";

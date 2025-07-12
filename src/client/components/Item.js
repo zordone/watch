@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Create from "@material-ui/icons/Create";
-import Check from "@material-ui/icons/Check";
-import DeleteForever from "@material-ui/icons/DeleteForever";
+import { Button, IconButton, Paper } from "@mui/material";
+import { Create, Check, DeleteForever } from "@mui/icons-material";
 import * as service from "../service/service";
 import { useStore, actions } from "../store/store";
 import ItemForm from "./ItemForm";
@@ -174,7 +170,6 @@ const Item = () => {
     const isFetched = Boolean(items.length);
     if (!isFetched) {
       actions.fetchItems().then(() => {
-        actions.setFirstLoad(false);
         actions.setCurrentId(id);
       });
     }
@@ -192,6 +187,7 @@ const Item = () => {
       actions.setSort(items, sort);
     }
   }, [resort, items, sort]);
+
   const isNew = item._id === Const.NEW;
   const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
   const isFullyFetched = item && !item.isDefaultItem;

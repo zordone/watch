@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import GenreField from "./GenreField";
 import ChipArrayInput from "./ChipArrayInput";
 import * as service from "../service/service";
@@ -11,18 +11,19 @@ import { defaultItem } from "../service/serviceUtils";
 import events, { Events } from "../service/events";
 import ScrapeButton from "./ScrapeButton";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
+import { noop } from "lodash";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
 
-const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
+const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
   const [item, setItem] = useState({ ...defaultItem });
   const [sameTitle, setSameTitle] = useState(undefined);
   const [imdbScraping, setImdbScraping] = useState(false);
 
   const sameTitleLinkRef = useRef();
-  const seasonInputProps = { min: "1", max: "99" };
-  const releaseYearInputProps = { min: "1900", max: "2100" };
+  const seasonSlotProps = { htmlInput: { min: "1", max: "99" } };
+  const releaseYearSlotProps = { htmlInput: { min: "1900", max: "2100" } };
 
   useEffect(() => {
     setItem({ ...propItem });
@@ -170,7 +171,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
           className="last"
           label="Last watched"
           type="number"
-          inputProps={seasonInputProps}
+          slotProps={seasonSlotProps}
           onChange={onFieldChange}
           value={item.lastWatched}
         />
@@ -179,7 +180,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
           className="progress"
           label="In progress"
           type="number"
-          inputProps={seasonInputProps}
+          slotProps={seasonSlotProps}
           onChange={onFieldChange}
           value={item.inProgress}
         />
@@ -252,7 +253,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle, visible }) => {
           className="relyr"
           label="Release year"
           type="number"
-          inputProps={releaseYearInputProps}
+          slotProps={releaseYearSlotProps}
           onChange={onFieldChange}
           value={item.releaseYear}
         />
@@ -274,11 +275,6 @@ ItemForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   findByTitle: PropTypes.func,
   visible: PropTypes.bool,
-};
-
-ItemForm.defaultProps = {
-  findByTitle: () => undefined,
-  visible: true,
 };
 
 export default ItemForm;

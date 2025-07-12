@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import { Button } from "@mui/material";
 import Poster from "./Poster";
 import StateLabel from "./StateLabel";
 import { ItemType, FinishedType, StateType, NextType, ValiType } from "../../common/enums";

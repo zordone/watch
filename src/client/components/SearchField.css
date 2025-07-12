@@ -1,11 +1,13 @@
 .SearchField {
   position: relative;
-  background: #fff1;
+  background: #313131;
   border-radius: 4px;
 }
 
-.SearchField .SearchField-input {
+.SearchField .SearchField-input input {
   font-size: 1.5rem;
+  padding: 4px 0;
+  font-weight: 100;
 }
 
 .SearchField-input input::selection {
@@ -36,8 +38,8 @@
   position: absolute;
   height: 20px;
   font-size: 1.5rem;
-  top: 7px;
-  left: 51px;
+  top: 8px;
+  left: 52px;
   right: 0;
   color: transparent;
   pointer-events: none;

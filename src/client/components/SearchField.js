@@ -1,12 +1,33 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Search from "@material-ui/icons/Search";
+import { TextField, InputAdornment } from "@mui/material";
+import { Search } from "@mui/icons-material";
 import { SearchKeywords } from "../../common/enums";
 import { noop } from "../service/utils";
 import events, { Events } from "../service/events";
 import "./SearchField.css";
+
+const textFieldSlotProps = {
+  input: {
+    startAdornment: (
+      <InputAdornment position="start">
+        <Search />
+      </InputAdornment>
+    ),
+    disableUnderline: true,
+    classes: {
+      root: "SearchField-input",
+      focused: "focused",
+    },
+  },
+  htmlInput: {
+    autoComplete: "off",
+    autoCorrect: "off",
+    autoCapitalize: "off",
+    spellCheck: "false",
+    "aria-label": "search",
+  },
+};
 
 const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = "" }) => {
   const [value, setValue] = useState("");
@@ -78,25 +99,8 @@ const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = ""
         value={value}
         onChange={onFieldChange}
         inputRef={inputRef}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
-          disableUnderline: true,
-          classes: {
-            root: "SearchField-input",
-            focused: "focused",
-          },
-        }}
-        inputProps={{
-          autoComplete: "off",
-          autoCorrect: "off",
-          autoCapitalize: "off",
-          spellCheck: "false",
-          "aria-label": "search",
-        }}
+        variant="standard"
+        slotProps={textFieldSlotProps}
         fullWidth
       />
     </div>

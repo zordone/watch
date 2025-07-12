@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Movie, Tv } from "@mui/icons-material";
 import { ItemType } from "../../common/enums";
 
 const ItemIcon = ({ item, className = "" }) => (
-  <i className={`ItemIcon material-icons ${item.type} ${className}`}>
-    {item.type === ItemType.MOVIE ? "movie_creation" : "live_tv"}
-  </i>
+  <span className={`ItemIcon ${item.type} ${className}`}>
+    {item.type === ItemType.MOVIE ? <Movie /> : <Tv />}
+  </span>
 );
 
 ItemIcon.propTypes = {

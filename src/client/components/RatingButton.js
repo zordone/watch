@@ -1,9 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { IconButton } from "@material-ui/core";
-import ThumbUp from "@material-ui/icons/ThumbUp";
-import ThumbDown from "@material-ui/icons/ThumbDown";
-import Favorite from "@material-ui/icons/Favorite";
+import { IconButton } from "@mui/material";
+import { ThumbUp, ThumbDown, Favorite } from "@mui/icons-material";
 import { RatingType } from "../../common/enums";
 import { noop } from "../service/utils";
 import "./RatingButton.css";
@@ -14,7 +12,7 @@ const Icons = {
   [RatingType.FAVORITE]: Favorite,
 };
 
-const RatingButton = ({ value, onChange }) => {
+const RatingButton = ({ value = "", onChange = noop }) => {
   const handleClick = useCallback(
     (event) => {
       const {
@@ -52,11 +50,6 @@ const RatingButton = ({ value, onChange }) => {
 RatingButton.propTypes = {
   value: PropTypes.oneOf(Object.values(RatingType)),
   onChange: PropTypes.func,
-};
-
-RatingButton.defaultProps = {
-  value: "",
-  onChange: noop,
 };
 
 export default RatingButton;

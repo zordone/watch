@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
@@ -10,16 +10,29 @@ import "./App.css";
 
 const theme = createTheme({
   palette: {
-    type: "dark",
+    mode: "dark",
+    default: {
+      main: "#aaaaaa",
+      dark: "#8a8a8a",
+      contrastText: "#000",
+    },
     primary: {
       main: "#00a9ff",
+      dark: "#008fd7",
+      contrastText: "#000",
     },
     secondary: {
       main: "#ff9500",
+      dark: "#cb7700",
+      contrastText: "#000",
     },
   },
-  typography: {
-    fontFamily: "Roboto,Arial,sans-serif",
+  components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 24,
+      },
+    },
   },
 });
 

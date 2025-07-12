@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import { noop } from "../service/utils";
+import { TextField } from "@mui/material";
 
-const SelectField = ({ options, ...props }) => (
-  <TextField select {...props} SelectProps={{ native: true }}>
+const textFieldSlotProps = { select: { native: true } };
+
+const SelectField = ({ options = [], ...props }) => (
+  <TextField select {...props} slotProps={textFieldSlotProps}>
     {options.map((option) => (
       <option key={option} value={option}>
         {option}
@@ -21,15 +22,6 @@ SelectField.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.string),
-};
-
-SelectField.defaultProps = {
-  id: undefined,
-  style: {},
-  label: undefined,
-  className: "",
-  onChange: noop,
-  options: "",
 };
 
 export default SelectField;

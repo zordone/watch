@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, forwardRef } from "react";
 import PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
-import ChipInput from "material-ui-chip-input";
+import { MenuItem } from "@mui/material";
+import { MuiChipsInput } from "mui-chips-input";
 import Autosuggest from "react-autosuggest";
 import { noop } from "../service/utils";
 import "./ChipInputAutoComplete.css";
@@ -13,17 +13,18 @@ const autoSuggestTheme = {
   },
   suggestionsContainer: {
     position: "absolute",
-    zIndex: 1,
+    zIndex: 2,
     top: "100%",
     width: "100%",
-    backgroundColor: "#515151",
-    boxShadow:
-      "0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)",
+    backgroundColor: "#444444",
+    boxShadow: "0px 4px 16px 0px #0006",
     boxSizing: "border-box",
     borderRadius: "0 0 4px 4px",
   },
   suggestionsContainerOpen: {
-    padding: "4px",
+    padding: "8px",
+    border: "2px solid #00a9ff",
+    borderTop: "1px solid #00a9ff80",
   },
   suggestionsList: {
     display: "block",
@@ -33,10 +34,11 @@ const autoSuggestTheme = {
   suggestion: {
     display: "block",
   },
+  suggestionHighlighted: {},
 };
 
 const suggestionMenuItemStyle = {
-  padding: "0.2rem",
+  padding: "0.4rem",
   borderRadius: "4px",
   color: "#FFF4",
 };
@@ -46,15 +48,46 @@ const suggestionMenuItemStyleHighlighted = {
   background: "#FFF2",
 };
 
+const InputComponentWithRef = forwardRef(function InputComponent(inputProps, ref) {
+  // we only destructure some of these to omit them from `rest`
+  // eslint-disable-next-line no-unused-vars
+  const { chips, value, onChange, classes, dataSource, ...rest } = inputProps;
+
+  const onInputChangeConvert = useCallback(
+    (newValue) => {
+      // we don't get an event here, just the new value, but we need to pass an event-like object to keep Autosuggest happy
+      const event = { target: { value: newValue } };
+      onChange(event);
+    },
+    [onChange],
+  );
+
+  return (
+    <MuiChipsInput
+      inputRef={ref}
+      value={chips}
+      placeholder="Type..."
+      onInputChange={onInputChangeConvert}
+      clearInputOnBlur
+      {...rest}
+    />
+  );
+});
+
+// we have to get the Autosuggest's ref and get if forwarded to the MuiChipsInput
+const renderInputComponent = ({ ref, key, ...rest }) => {
+  return <InputComponentWithRef {...rest} ref={ref} key={key} />;
+};
+
 const ChipInputAutoComplete = ({
   value,
-  dataSource,
-  maxChips,
-  onAdd,
-  onDelete,
   label,
-  rootClassName,
   className,
+  dataSource = [],
+  maxChips = 5,
+  onAdd = noop,
+  onDelete = noop,
+  rootClassName = "",
 }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -87,7 +120,8 @@ const ChipInputAutoComplete = ({
     [onAdd],
   );
 
-  const onInputChange = useCallback((event, { newValue }) => {
+  const onInputChange = useCallback((event) => {
+    const newValue = event.target.value;
     setInputValue(newValue);
   }, []);
 
@@ -101,26 +135,6 @@ const ChipInputAutoComplete = ({
     },
     [dataSource, onAdd],
   );
-
-  const renderInputComponent = useCallback((inputProps) => {
-    // we only destructure some of these to omit them from `rest`
-    // eslint-disable-next-line no-unused-vars
-    const { chips, value, onChange, className, classes, dataSource, ...rest } = inputProps;
-    return (
-      <ChipInput
-        value={chips}
-        classes={{
-          chipContainer: "chipContainer",
-          chip: "chip",
-          label: "label",
-        }}
-        onUpdateInput={onChange}
-        className="GenreField"
-        clearInputValueOnChange
-        {...rest}
-      />
-    );
-  }, []);
 
   const renderSuggestion = useCallback((suggestion, { isHighlighted }) => {
     return (
@@ -141,17 +155,18 @@ const ChipInputAutoComplete = ({
     <Autosuggest
       theme={{
         ...autoSuggestTheme,
-        container: `ChipInputAutoComplete-rootContainer ${rootClassName}`,
+        container: `ChipInputAutoComplete ${rootClassName}`,
       }}
       inputProps={{
         value: inputValue,
         chips: value,
+        onInput: onInputChange,
+        onAddChip: onTryToAdd,
+        onDeleteChip: onDelete,
         onChange: onInputChange,
-        onAdd: onTryToAdd,
-        onDelete,
         label,
+        className,
       }}
-      className={className}
       suggestions={suggestions}
       getSuggestionValue={(suggestion) => suggestion}
       renderInputComponent={renderInputComponent}
@@ -174,15 +189,6 @@ ChipInputAutoComplete.propTypes = {
   rootClassName: PropTypes.string,
   onAdd: PropTypes.func,
   onDelete: PropTypes.func,
-};
-
-ChipInputAutoComplete.defaultProps = {
-  dataSource: [],
-  maxChips: 5,
-  className: "",
-  rootClassName: "",
-  onAdd: noop,
-  onDelete: noop,
 };
 
 export default ChipInputAutoComplete;

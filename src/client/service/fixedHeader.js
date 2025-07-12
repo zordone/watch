@@ -18,6 +18,7 @@ const fixedHeaderWorkaround = () => {
   }
   const cells = document.querySelectorAll(".ItemTable-head th");
   const fragment = document.createDocumentFragment();
+  fragment.id = "ItemTable-fixedHeader";
   const copies = [];
   cells.forEach((cell) => {
     const copy = document.createElement("div");
@@ -27,6 +28,7 @@ const fixedHeaderWorkaround = () => {
     copies.push(copy);
   });
   const header = document.querySelector(".ItemTable-fixedHeader");
+  header.innerHTML = "";
   header.appendChild(fragment);
   const observer = new ResizeObserver(() => {
     cells.forEach((cell, index) => {

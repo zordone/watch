@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import CloudDownload from "@material-ui/icons/CloudDownload";
+import { Paper } from "@mui/material";
+import { CloudDownload } from "@mui/icons-material";
 import { noop } from "../service/utils";
 import "./PosterSearch.css";
 
-const PosterSearch = ({ visible, searching, images, onSelect }) => {
+const PosterSearch = ({ visible = true, searching = false, images = [], onSelect = noop }) => {
   const [failedUrls, setFailedUrls] = useState([]);
 
   const onFailedImage = useCallback((event) => {
@@ -56,13 +56,6 @@ PosterSearch.propTypes = {
   searching: PropTypes.bool,
   images: PropTypes.arrayOf(PropTypes.string),
   onSelect: PropTypes.func,
-};
-
-PosterSearch.defaultProps = {
-  visible: true,
-  searching: false,
-  images: [],
-  onSelect: noop,
 };
 
 export default PosterSearch;

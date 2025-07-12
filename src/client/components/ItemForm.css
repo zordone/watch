@@ -9,7 +9,7 @@
     "descr descr descr descr descr"
     "keyw  keyw  keyw  keyw  keyw"
     "notes notes notes notes notes"
-    "imdb  postr relyr ratin .";
+    "imdb  postr postr relyr ratin";
 }
 
 .ItemForm label {
@@ -25,13 +25,14 @@
   font-weight: 600;
 }
 .ItemForm-grid .title-field {
-  z-index: 2;
-  background: #424242;
+  z-index: 3;
+  background: #393939;
+  border-radius: 4px;
 }
 
 .ItemForm-grid .same-title {
   position: absolute;
-  height: 1.4rem;
+  height: 1.6rem;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -42,7 +43,7 @@
   color: #800f;
   font-size: 0.8rem;
   text-align: center;
-  z-index: 1;
+  z-index: 2;
   bottom: 0.5rem;
   transition: bottom 1s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -71,10 +72,9 @@
 
 .ItemForm-grid .imdb-scrape {
   position: absolute;
-  right: 0;
+  right: 2px;
   width: 32px;
-  height: 32px;
-  bottom: 2px;
+  top: 15px;
 }
 
 /* hide number/date spin buttons */

@@ -3,3 +3,7 @@
   height: 0;
   width: 0;
 }
+
+.GenreField.MuiChipsInput-TextField .MuiInputBase-root {
+  flex-wrap: nowrap;
+}

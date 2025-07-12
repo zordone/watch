@@ -14,14 +14,18 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 100px;
   opacity: 0.05;
+  zoom: 2;
+  font-size: 0;
 }
 
 .Poster .Poster-image {
   display: block;
   position: relative;
   width: 150px;
+}
+.Poster .Poster-image.failed {
+  opacity: 0;
 }
 
 .Poster .Poster-search {

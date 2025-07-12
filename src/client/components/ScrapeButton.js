@@ -1,11 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
-import CloudDownload from "@material-ui/icons/CloudDownload";
+import { IconButton } from "@mui/material";
+import { CloudDownload } from "@mui/icons-material";
 import { noop } from "../service/utils";
 import "./ScrapeButton.css";
 
-const ScrapeButton = ({ visible, className, ariaLabel, inProgress, onClick }) => {
+const ScrapeButton = ({
+  visible = true,
+  className = "",
+  ariaLabel,
+  inProgress = false,
+  onClick = noop,
+}) => {
   const visibleClassName = visible ? "" : "hidden";
   const progressClassName = inProgress ? "progress" : "";
   return (
@@ -25,13 +31,6 @@ ScrapeButton.propTypes = {
   ariaLabel: PropTypes.string.isRequired,
   inProgress: PropTypes.bool,
   onClick: PropTypes.func,
-};
-
-ScrapeButton.defaultProps = {
-  className: "",
-  visible: true,
-  inProgress: false,
-  onClick: noop,
 };
 
 export default ScrapeButton;

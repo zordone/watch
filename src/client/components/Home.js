@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
-import Snackbar from "@material-ui/core/Snackbar";
-import Add from "@material-ui/icons/Add";
-import CheckCircle from "@material-ui/icons/CheckCircle";
+import { IconButton, Snackbar } from "@mui/material";
+import { Add, CheckCircle } from "@mui/icons-material";
 import ItemTable from "./ItemTable";
 import Header from "./Header";
 import { useStore, actions } from "../store/store";
@@ -21,9 +19,19 @@ import "./Home.css";
 
 let isFirstMount = true;
 
+const snackBarSlotProps = {
+  content: {
+    classes: {
+      root: "Home-snack",
+      message: "Home-snackMessage",
+    },
+  },
+};
+
 const Home = () => {
   const store = useStore();
-  const { items, search, filteredItems, firstLoad, currentId, sort, snackOpen, snackText } = store;
+  const { items, search, filteredItems, isLoaderFinished, currentId, sort, snackOpen, snackText } =
+    store;
 
   const history = useHistory();
   const location = useLocation();
@@ -191,7 +199,6 @@ const Home = () => {
 
     // on unmount
     return () => {
-      actions.setFirstLoad(false);
       events.removeListener(Events.IMDB_PASTE, onImdbPaste);
     };
   });
@@ -228,7 +235,7 @@ const Home = () => {
           <span>v{packageJson.version}</span>
         </div>
       </main>
-      {firstLoad && <Loader />}
+      {!isLoaderFinished && <Loader />}
       <Snackbar
         open={snackOpen}
         autoHideDuration={3000}
@@ -239,12 +246,7 @@ const Home = () => {
             {snackText}
           </span>
         }
-        ContentProps={{
-          classes: {
-            root: "Home-snack",
-            message: "Home-snackMessage",
-          },
-        }}
+        slotProps={snackBarSlotProps}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",

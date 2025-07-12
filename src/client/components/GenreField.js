@@ -6,8 +6,8 @@ import data from "../../common/data.json";
 import { noop } from "../service/utils";
 import "./GenreField.css";
 
-const GenreField = ({ value, onChange, id, className, maxGenres, ...rest }) => {
-  const fireOnChanged = useCallback(
+const GenreField = ({ value, onChange = noop, id, className = "", maxGenres = 5, ...rest }) => {
+  const fireOnChange = useCallback(
     (newValue) => {
       if (_.isEqual(value, newValue)) {
         return;
@@ -22,18 +22,18 @@ const GenreField = ({ value, onChange, id, className, maxGenres, ...rest }) => {
 
   const onAddGenre = useCallback(
     (genre) => {
-      fireOnChanged(value.concat(genre));
+      fireOnChange(value.concat(genre));
     },
-    [value, fireOnChanged],
+    [value, fireOnChange],
   );
 
   const onDeleteGenre = useCallback(
     (genre, index) => {
       const newValue = [...value];
       newValue.splice(index, 1);
-      fireOnChanged(newValue);
+      fireOnChange(newValue);
     },
-    [value, fireOnChanged],
+    [value, fireOnChange],
   );
 
   return (
@@ -58,15 +58,6 @@ GenreField.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
   maxGenres: PropTypes.number,
   onChange: PropTypes.func,
-};
-
-GenreField.defaultProps = {
-  id: undefined,
-  className: "",
-  style: {},
-  label: undefined,
-  maxGenres: 5,
-  onChange: noop,
 };
 
 export default GenreField;
