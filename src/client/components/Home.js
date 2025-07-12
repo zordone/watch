@@ -105,6 +105,11 @@ const Home = ({
     500,
   );
 
+  // search term was changed on another page, then coming back here
+  useEffect(() => {
+    updateHash(search);
+  }, [search]);
+
   const onSearchChanged = useCallback(
     (searchValue) => {
       if (searchValue === currentSearchRef.current) return;

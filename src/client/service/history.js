@@ -15,9 +15,13 @@ export const getHistory = () => routerHistory || fallbackHistory;
 export const updateHash = (search) => {
   const history = getHistory();
   const { location } = history;
+
+  const newHash = search ? `#${encodeURIComponent(search)}` : "";
+  if (location.hash === newHash) return;
+
   history.replace({
     pathname: location.pathname,
     search: location.search,
-    hash: search ? `#${encodeURIComponent(search)}` : "",
+    hash: newHash,
   });
 };

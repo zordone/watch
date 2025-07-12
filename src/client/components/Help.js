@@ -43,7 +43,7 @@ const Help = ({ items, setSearch, setSort }) => {
     const sort = selected.filter((name) => name.startsWith("sort:")).pop();
 
     if (search) {
-      setSearch(search, items);
+      setSearch(search);
     }
 
     if (sort) {
@@ -71,7 +71,7 @@ const Help = ({ items, setSearch, setSort }) => {
       setSort(items, name.substr(5));
       onClose();
     } else {
-      setSearch(name, items);
+      setSearch(name);
       onClose(null, name);
     }
   };
@@ -131,7 +131,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setSearch: (search, filteredItems) => dispatch(actions.setSearch(search, filteredItems)),
+  setSearch: (search) => dispatch(actions.setSearch(search)),
   setSort: (items, sort) => dispatch(actions.setSort(items, sort)),
 });
 
