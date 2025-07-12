@@ -58,9 +58,9 @@
 
 @media only screen and (max-width: 640px) {
   .Header {
-    grid-template-columns: 40px 1fr 43px;
+    grid-template-columns: 40px 1fr 64px;
     grid-template-areas:
-      "logo title new"
+      "logo-title logo-title buttons"
       "search search search";
     grid-row-gap: 0.5rem;
   }
