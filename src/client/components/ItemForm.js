@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
-import GenreField from "./GenreField";
-import ChipArrayInput from "./ChipArrayInput";
+import { noop } from "lodash";
 import * as service from "../service/service";
 import { ItemType, ValiType, NextType, FinishedType, Const, RatingType } from "../../common/enums";
 import SelectField from "./SelectField";
+import ChipField from "./ChipField";
 import { parseDate, mergeArrays } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import events, { Events } from "../service/events";
 import ScrapeButton from "./ScrapeButton";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
-import { noop } from "lodash";
+import data from "../../common/data.json";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
+const MAX_KEYWORDS = 10;
 
 const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
   const [item, setItem] = useState({ ...defaultItem });
@@ -150,13 +151,14 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
           value={item.type}
           options={Object.values(ItemType)}
         />
-        <GenreField
+        <ChipField
           id="genres"
           className="genres"
           label="Genres"
           onChange={onFieldChange}
+          options={data.genres}
           value={item.genres}
-          maxGenres={MAX_GENRES}
+          maxChips={MAX_GENRES}
         />
         <SelectField
           id="withVali"
@@ -217,12 +219,13 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
           value={item.description}
           multiline
         />
-        <ChipArrayInput
+        <ChipField
           id="keywords"
           className="keyw"
           label="Keywords"
           onChange={onFieldChange}
           value={item.keywords}
+          maxChips={MAX_KEYWORDS}
         />
         <TextField
           id="notes"
