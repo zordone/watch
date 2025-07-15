@@ -30,6 +30,7 @@
     "@babel/eslint-parser": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.24.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
     "ajv": "^8.17.1",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^20.0.3",
@@ -54,6 +55,7 @@
     "prettier": "^2.5.1",
     "prop-types": "^15.8.1",
     "react-dev-utils": "^12.0.1",
+    "react-refresh": "^0.17.0",
     "resolve": "^1.6.0",
     "source-map-explorer": "^1.6.0",
     "style-loader": "^4.0.0",
@@ -113,30 +115,6 @@
       "jsx",
       "node",
       "mjs"
-    ]
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "chrome": "110",
-            "firefox": "110",
-            "safari": "16.4",
-            "edge": "110"
-          },
-          "modules": false,
-          "useBuiltIns": "entry",
-          "corejs": 3
-        }
-      ],
-      [
-        "@babel/preset-react",
-        {
-          "runtime": "automatic"
-        }
-      ]
     ]
   },
   "prettier": {

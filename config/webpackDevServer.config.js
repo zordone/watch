@@ -5,7 +5,6 @@ const host = process.env.HOST || "0.0.0.0";
 
 module.exports = function (proxy, allowedHost) {
   return {
-    // WebpackDevServer 5.x basic configuration
     port: process.env.PORT || 3000,
     host: host,
     allowedHosts: allowedHost ? [allowedHost] : "auto",
@@ -20,5 +19,8 @@ module.exports = function (proxy, allowedHost) {
     },
     server: protocol === "https" ? "https" : "http",
     proxy,
+    client: {
+      logging: "warn", // none | warn | error
+    },
   };
 };

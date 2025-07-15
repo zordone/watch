@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
 
@@ -88,7 +89,13 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ModuleScopePlugin(paths.appSrc, [
+        paths.appPackageJson,
+        // These are needed for React Fast Refresh (state-preserving HMR)
+        require.resolve("react-refresh/runtime"),
+        require.resolve("@pmmmwh/react-refresh-webpack-plugin/overlay"),
+        require.resolve("@pmmmwh/react-refresh-webpack-plugin/lib"),
+      ]),
     ],
   },
   module: {
@@ -117,6 +124,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve("babel-loader"),
             options: {
+              configFile: path.resolve(__dirname, "babel.config.js"),
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
@@ -206,6 +214,8 @@ module.exports = {
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/,
     }),
+    // React Fast Refresh (state-preserving HMR)
+    new ReactRefreshWebpackPlugin(),
   ],
   // Turn off performance hints during development because we don't do any
   // splitting or minification in interest of speed. These warnings become

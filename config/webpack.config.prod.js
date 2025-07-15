@@ -122,6 +122,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve("babel-loader"),
             options: {
+              configFile: path.resolve(__dirname, "babel.config.js"),
               compact: true,
             },
           },
