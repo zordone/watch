@@ -19,6 +19,7 @@
 
 .Help-keywords {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   padding-left: 3rem;
 }
@@ -63,4 +64,10 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+}
+
+@media only screen and (max-width: 640px) {
+  .Help {
+    padding: 0;
+  }
 }

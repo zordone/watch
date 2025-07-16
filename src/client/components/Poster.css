@@ -41,3 +41,10 @@
 .Poster .Poster-search.progress {
   display: block;
 }
+
+@media only screen and (max-width: 640px) {
+  .Poster {
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
