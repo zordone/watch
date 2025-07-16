@@ -18,7 +18,7 @@ src
 
 ## Rules
 
-- Never change the dependencies in `package.json` manually. Always use `npm` commands with the `--save` or `--save-dev` argument. Always run `nvm use 20` before running any `npm` commands.
+- Never change the dependencies in `package.json` manually. Always use `npm` commands with the `--save` or `--save-dev` argument. Always run `nvm use 22` before running any `npm` commands.
 - When updating dependencies, never use `--legacy-peer-deps`. Always resolve dependency issues before proceeding.
 - Never delete the `package-lock.json` file for a clean install.
 - Don't put trivial comments in the code. Only write comments if they are actually useful.

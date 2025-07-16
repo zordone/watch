@@ -151,7 +151,6 @@ module.exports = {
                 options: {
                   postcssOptions: {
                     plugins: [
-                      require("postcss-flexbugs-fixes"),
                       autoprefixer({
                         overrideBrowserslist: [
                           "last 2 Chrome versions",

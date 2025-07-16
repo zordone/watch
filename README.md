@@ -36,7 +36,7 @@ This is an app I made to store and manage the list of movies and tv shows I'm in
 
 - Clone the repo
 - Install [MongoDB](https://www.mongodb.com/) if you don't already have
-- `nvm use 20`
+- `nvm use 22`
 - Run `npm install`
 - Then `npm run start-all` for development mode.
 
