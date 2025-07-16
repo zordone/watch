@@ -6,7 +6,9 @@ mongoose.set("strictQuery", false);
 
 exports.connect = () =>
   new Promise((resolve, reject) => {
-    mongoose.connect(DATABASE_URL);
+    mongoose.connect(DATABASE_URL, {
+      family: 4,
+    });
     mongoose.connection
       .on("error", (err) => {
         console.error("Database connection error:", err);

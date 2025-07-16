@@ -2,7 +2,6 @@ const omit = require("lodash/omit");
 const Scraper = require("images-scraper");
 const moment = require("moment");
 const fs = require("fs");
-const fetch = require("node-fetch");
 const { DOMParser } = require("xmldom");
 const { Item } = require("./models");
 const { importCsv } = require("./importCsv");

@@ -12,7 +12,7 @@ process.on("unhandledRejection", (err) => {
 const openBrowser = require("react-dev-utils/openBrowser");
 const express = require("express");
 const path = require("path");
-const shrinkRay = require("shrink-ray-current");
+const compression = require("compression");
 
 // Ensure environment variables are read.
 require("../config/env");
@@ -33,7 +33,7 @@ const protocol = process.env.HTTPS === "true" ? "https" : "http";
 const buildPath = path.resolve(__dirname, "../build");
 
 const prodApp = express();
-prodApp.use(shrinkRay());
+prodApp.use(compression());
 prodApp.use(express.static(buildPath));
 
 prodApp.get("*", (request, response) => {
