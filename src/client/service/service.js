@@ -52,8 +52,7 @@ export const deleteItemById = (id) => {
   return fetch(`${BASE_URL}/items/${id}`, opts).then(jsonOrError);
 };
 
-export const searchImages = (query) =>
-  fetch(`${BASE_URL}/searchimages/${query}`).then((res) => res.json());
+export const searchImages = (query) => fetch(`${BASE_URL}/searchimages/${query}`).then(jsonOrError);
 
 export const mockSearchImages = (timeout) =>
   new Promise((resolve) => {

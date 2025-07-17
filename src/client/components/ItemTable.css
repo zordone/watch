@@ -39,15 +39,20 @@
 .ItemTable td,
 .ItemTable td:last-child,
 .ItemTable-fixedHeaderCell {
-  padding: 6px 4px;
+  padding: 8px 6px;
 }
 
 .ItemTable .ItemTable-skinny-col {
   width: 1px;
 }
 
-.ItemTable .ItemIcon {
+.ItemTable td:has(.ItemIcon) {
+  font-size: 0;
+}
+
+.ItemTable .ItemIcon svg {
   font-size: 1.6rem;
+  color: #ccc;
 }
 
 .ItemTable-fixedHeader {

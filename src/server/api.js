@@ -1,5 +1,5 @@
 const omit = require("lodash/omit");
-const Scraper = require("images-scraper");
+const google = require("googlethis");
 const moment = require("moment");
 const fs = require("fs");
 const { DOMParser } = require("@xmldom/xmldom");
@@ -9,7 +9,7 @@ const { IMPORT_DIR, BACKUP_DIR } = require("./config");
 const { genres } = require("../common/data.json");
 const { ItemType, FinishedType } = require("../common/enums-node");
 
-const reImage = /\.(jpe?g|png)$/i;
+const reImage = /\.(jpe?g|png|webp)\b/i;
 const reImdbData = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
 
 const decode = (htmlString) =>
@@ -197,26 +197,53 @@ exports.deleteItemById = (req, res) => {
     });
 };
 
+const search = (query, { site, limit = 100 } = {}) => {
+  query += site ? ` site:${site}` : "";
+  return google
+    .image(query, {
+      safe: false,
+      additional_params: {
+        tbs: "isz:m", // image size: medium
+        imgar: "t", // aspect ratio: tall
+        imgsz: "vga", // image size min: vga (640x480), svga (800x600), xga (1024x768), 2mp, 4mp, ...
+      },
+    })
+    .then((images) => images.slice(0, limit))
+    .catch((err) => {
+      console.error("[SearchImages] Error:", err);
+      return [];
+    });
+};
+
 exports.searchImages = (req, res) => {
   const { query } = req.params;
   console.log("[SearchImages] Search:", query);
-  const google = new Scraper({
-    // puppeteer: { headless: false },
-    tbs: {
-      isz: "m", // medium
-    },
-  });
-  google
-    .scrape(encodeURI(query), 50)
-    .then((images) => {
+  Promise.all([
+    search(`${JSON.stringify(query)}`, { site: "imdb.com", limit: 10 }),
+    search(`${JSON.stringify(query)}`, { site: "themoviedb.org", limit: 10 }),
+    search(`${JSON.stringify(query)} poster`),
+  ])
+    .then((...imageArrays) => {
+      const images = imageArrays.flat(2);
       console.log("[SearchImages] Found:", images.length);
-      const filtered = images.map((image) => image.url).filter((url) => reImage.test(url));
+      const filtered = images
+        // width & height are reversed here
+        .filter(({ url, width: height, height: width }) => {
+          const isImage = reImage.test(url);
+          const isValidSize = width >= 640 && width <= 1920;
+          const ratio = width / height;
+          const isValidRatio = ratio >= 0.5 && ratio < 1;
+          return isImage && isValidSize && isValidRatio;
+        })
+        .map((image) => image.url);
       console.log("[SearchImages] Filtered:", filtered.length);
-      res.send(filtered);
+      const unique = [...new Set(filtered)];
+      console.log("[SearchImages] Unique:", unique.length);
+      res.send(unique);
     })
     .catch((err) => {
       console.log("[SearchImages]", err);
-      res.status(500).send(err.message || "Unknown scraper error");
+      res.status(500).send(err.message || "Unknown error");
     });
 };
 

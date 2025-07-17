@@ -85,7 +85,7 @@ const Item = () => {
   const onPosterSearch = () => {
     setPosters({ visible: true, searching: true, images: [] });
     setPosterScraping(true);
-    const query = encodeURI(`${item.title} ${item.type} poster`);
+    const query = encodeURI(item.title);
     service
       .searchImages(query)
       .then((images) => {
@@ -93,8 +93,8 @@ const Item = () => {
         setPosterScraping(false);
       })
       .catch((err) => {
+        console.error(err);
         setPosterScraping(false);
-        throw err;
       });
   };
 

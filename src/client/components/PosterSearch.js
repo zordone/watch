@@ -39,6 +39,7 @@ const PosterSearch = ({ visible = true, searching = false, images = [], onSelect
               type="button"
               className="PosterSearch-poster"
               onClick={() => onSelect(image)}
+              title={image}
             >
               <img src={image} alt="Poster" onError={onFailedImage} />
             </button>
