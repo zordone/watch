@@ -12,7 +12,7 @@
     "compression": "^1.7.4",
     "core-js": "^3.44.0",
     "csvtojson": "^2.0.8",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "fs-extra": "^11.3.0",
     "googlethis": "^1.8.0",
     "history": "^4.10.1",

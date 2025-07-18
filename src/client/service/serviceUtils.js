@@ -1,8 +1,8 @@
+import mapValues from "lodash/mapValues";
 import { ItemType, NextType, ValiType, FinishedType, StateType } from "../../common/enums";
 import { parseDate } from "./utils";
 import itemState from "./itemState";
 import itemSearchData from "./search";
-import _ from "../../common/lodashReduced";
 
 export const defaultItem = {
   title: "",
@@ -43,7 +43,7 @@ export const parseItem = (item) => {
   return {
     ...fullItem,
     // default nulls to empty string
-    ..._.mapValues(item, (value) => value || ""),
+    ...mapValues(item, (value) => value || ""),
     // format dates
     nextDate: parseDate(item.nextDate).input,
     // calculated fields

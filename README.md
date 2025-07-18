@@ -23,7 +23,7 @@ This is an app I made to store and manage the list of movies and tv shows I'm in
 
 - Database: MongoDB
 - Server: Node.js Express API
-- Client: React SPA with Material UI
+- Client: React SPA with Material UI and Valtio store
 
 ## Notes and Disclaimers
 

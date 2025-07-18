@@ -1,6 +1,6 @@
 import moment from "moment";
+import uniq from "lodash/uniq";
 import { ItemType } from "../../common/enums";
-import _ from "../../common/lodashReduced";
 
 export const noop = () => {};
 
@@ -44,7 +44,7 @@ export const cachePureFunction = (func, debugName = "") => {
   };
 };
 
-export const mergeArrays = (a, b) => _.uniq(a.concat(b).filter(Boolean));
+export const mergeArrays = (a, b) => uniq(a.concat(b).filter(Boolean));
 
 export const anyChanged = (names, prev, next, debugName = "") => {
   const allNames = Object.keys({ ...prev, ...next });

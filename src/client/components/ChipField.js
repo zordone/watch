@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
+import isEqual from "lodash/isEqual";
 import { Autocomplete, TextField } from "@mui/material";
 import { noop } from "../service/utils";
-import _ from "../../common/lodashReduced";
 
 const ChipField = ({
   id,
@@ -18,7 +18,7 @@ const ChipField = ({
 
   const handleChange = useCallback(
     (_event, newValue) => {
-      if (_.isEqual(value, newValue)) {
+      if (isEqual(value, newValue)) {
         return;
       }
       const event = {

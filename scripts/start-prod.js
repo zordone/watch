@@ -33,16 +33,32 @@ const protocol = process.env.HTTPS === "true" ? "https" : "http";
 const buildPath = path.resolve(__dirname, "../build");
 
 const prodApp = express();
-prodApp.use(compression());
-prodApp.use(express.static(buildPath));
 
-prodApp.get("*", (request, response) => {
-  const url = request.url;
-  const isFile = url.includes(".");
-  const filePath = isFile
-    ? path.resolve(buildPath, url.replace(/^\//, ""))
-    : path.resolve(buildPath, "index.html");
-  response.sendFile(filePath);
+prodApp.use(compression());
+
+// 1. well-known
+prodApp.use(
+  "/.well-known",
+  express.static(path.join(buildPath, ".well-known"), {
+    dotfiles: "allow",
+    immutable: true,
+    maxAge: "1d",
+  }),
+);
+
+// 2. general static assets (hashed, long-term caching)
+prodApp.use(
+  express.static(buildPath, {
+    index: false,
+    dotfiles: "ignore",
+    maxAge: "1y",
+  }),
+);
+
+// 3. SPA index.html for all other routes
+prodApp.use((req, res) => {
+  const indexHtml = path.join(buildPath, "index.html");
+  res.sendFile(indexHtml);
 });
 
 const prodServer = prodApp.listen(port, (err) => {
