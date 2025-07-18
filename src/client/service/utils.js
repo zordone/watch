@@ -1,21 +1,25 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import uniq from "lodash/uniq";
 import { ItemType } from "../../common/enums";
 
 export const noop = () => {};
 
-export const parseDate = (date) => {
-  const mom = date && (typeof date === "string" ? moment(date, moment.ISO_8601) : moment(date));
+export const parseDate = (dateOrString) => {
+  if (!dateOrString) {
+    return { date: null, input: "", display: "" };
+  }
+  const date = dayjs(dateOrString);
   return {
-    date: mom && mom.toDate(),
-    input: mom ? mom.format("YYYY-MM-DD") : "",
-    display: mom ? mom.format("YYYY.MM.DD") : "",
+    date: date.toDate(),
+    input: date.format("YYYY-MM-DD"),
+    display: date.format("YYYY.MM.DD"),
   };
 };
 
-export const inputDateAddMonth = (dateStr, months) => {
-  const mom = dateStr ? moment(dateStr, "YYYY-MM-DD") : moment();
-  return mom.add(months, "month").format("YYYY-MM-DD");
+export const inputDateAddMonth = (dateOrString, months) => {
+  return dayjs(dateOrString ?? undefined)
+    .add(months, "month")
+    .format("YYYY-MM-DD");
 };
 
 export const seasonCode = (num) => (num ? `s${num.toString().padStart(2, "0")}` : "");

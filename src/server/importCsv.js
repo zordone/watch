@@ -1,9 +1,9 @@
 const csv = require("csvtojson");
-const moment = require("moment");
+const dayjs = require("dayjs");
 const { Item } = require("./models");
 const { ItemType, ValiType, NextType, FinishedType } = require("../common/enums-node");
 
-const csvDate = (dateStr) => (dateStr ? moment(dateStr, "YYYY-MM-DD").toDate() : null);
+const csvDate = (dateStr) => (dateStr ? dayjs(dateStr).toDate() : null);
 
 const csvSeason = (seasonStr) => (seasonStr ? parseInt(seasonStr.substr(1), 10) || 1 : null);
 

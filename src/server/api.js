@@ -1,6 +1,6 @@
 const omit = require("lodash/omit");
 const google = require("googlethis");
-const moment = require("moment");
+const dayjs = require("dayjs");
 const fs = require("fs");
 const { DOMParser } = require("@xmldom/xmldom");
 const { Item } = require("./models");
@@ -96,7 +96,7 @@ exports.adminImport = (req, res) => {
 
 exports.adminBackup = (req, res) => {
   const { isAutoBackup } = req;
-  const today = moment().format("YYYY-MM-DD");
+  const today = dayjs().format("YYYY-MM-DD");
   const filename = `${BACKUP_DIR}/${today}.json`;
   if (isAutoBackup && fs.existsSync(filename)) {
     console.log("[AdminBackup] Already backed up today.");
