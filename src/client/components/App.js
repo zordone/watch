@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import events, { Events } from "../service/events";
 import Home from "./Home";
@@ -35,16 +35,12 @@ const theme = createTheme({
   },
 });
 
-const AppRoutes = () => (
-  <div className="App">
-    <Routes>
-      <Route exact path="/" element={<Home />} />
-      <Route exact path="/item/:id" element={<Item />} />
-      <Route exact path="/item/:id/:imdbId" element={<Item />} />
-      <Route exact path="/help" element={<Help />} />
-    </Routes>
-  </div>
-);
+const router = createBrowserRouter([
+  { path: "/", Component: Home },
+  { path: "/item/:id", Component: Item },
+  { path: "/item/:id/:imdbId", Component: Item },
+  { path: "/help", Component: Help },
+]);
 
 const App = () => {
   // handle global imdb id pasting
@@ -65,9 +61,9 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
     </ThemeProvider>
   );
 };

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 // returns a function that navigates back to the previous page, or home if no history is available
 export const useGoBack = () => {
@@ -8,9 +8,9 @@ export const useGoBack = () => {
   const goBack = useCallback(() => {
     // do we have a previous history entry to go back to?
     if (window.history.state?.idx > 0) {
-      navigate(-1);
+      navigate(-1, { viewTransition: true });
     } else {
-      navigate("/", { replace: true });
+      navigate("/", { replace: true, viewTransition: true });
     }
   }, [navigate]);
 

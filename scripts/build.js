@@ -75,7 +75,7 @@ measureFileSizesBeforeBuild(paths.appBuild)
       printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn);
     },
     (err) => {
-      console.log("Failed to compile.\n");
+      console.log("Failed to compile.\n", err, "\n");
       printBuildError(err);
       process.exit(1);
     },

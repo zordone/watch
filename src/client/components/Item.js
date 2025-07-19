@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { Button, IconButton, Paper } from "@mui/material";
 import { Create, Check, DeleteForever } from "@mui/icons-material";
 import * as service from "../service/service";

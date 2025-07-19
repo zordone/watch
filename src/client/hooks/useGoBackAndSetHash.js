@@ -1,12 +1,10 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGoBack } from "./useGoBack";
 import { useSetHash } from "./useSetHash";
 
 // returns a function to navigate back (or home) and then sets the hash.
 // undefined hash is ignored, empty string clears the hash.
 export const useGoBackAndSetHash = () => {
-  const navigate = useNavigate();
   const goBack = useGoBack();
   const setHash = useSetHash();
 
@@ -23,7 +21,7 @@ export const useGoBackAndSetHash = () => {
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, [navigate, setHash]);
+  }, [setHash]);
 
   return (hash) => {
     if (typeof hash === "string") {

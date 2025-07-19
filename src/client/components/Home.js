@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import { IconButton, Snackbar } from "@mui/material";
 import { Add, CheckCircle } from "@mui/icons-material";
 import ItemTable from "./ItemTable";
@@ -115,13 +115,13 @@ const Home = () => {
   const onAddNew = useCallback(
     (event, imdbId) => {
       const imdbParam = imdbId ? `/${imdbId}` : "";
-      navigate(`/item/new${imdbParam}`);
+      navigate(`/item/new${imdbParam}`, { viewTransition: true });
     },
     [navigate],
   );
 
   const onHelp = useCallback(() => {
-    navigate("/help");
+    navigate("/help", { viewTransition: true });
   }, [navigate]);
 
   const onLogoClick = useCallback(() => {
@@ -133,9 +133,9 @@ const Home = () => {
     if (code === "Enter") {
       // open first item
       const item = filteredItems[0];
-      const isSortCommand = currentSearchRef.current.startsWith("sort:");
+      const isSortCommand = currentSearchRef.current?.startsWith("sort:");
       if (item && !isSortCommand) {
-        navigate(`/item/${item._id}`);
+        navigate(`/item/${item._id}`, { viewTransition: true });
         return;
       }
       // set sort
@@ -172,7 +172,7 @@ const Home = () => {
         return;
       }
       actions.setCurrentId(id);
-      navigate(path);
+      navigate(path, { viewTransition: true });
     },
     [navigate],
   );
