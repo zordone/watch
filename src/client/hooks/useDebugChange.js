@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-// hook to help debugging prop or state changes
+// logs debug info about prop or state changes
 export const useDebugChange = (values, title = "useDebugChange") => {
   const prevValuesRef = useRef({});
 

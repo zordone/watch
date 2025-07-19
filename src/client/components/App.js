@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import events, { Events } from "../service/events";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
-import events, { Events } from "../service/events";
-import { setRouterHistory } from "../service/history";
 import "./App.css";
 
 const theme = createTheme({
@@ -36,27 +35,20 @@ const theme = createTheme({
   },
 });
 
-const AppRoutes = () => {
-  const history = useHistory();
-
-  useEffect(() => {
-    setRouterHistory(history);
-  }, [history]);
-
-  return (
-    <div className="App">
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/item/:id/:imdbId?" component={Item} />
-        <Route exact path="/help" component={Help} />
-      </Switch>
-    </div>
-  );
-};
+const AppRoutes = () => (
+  <div className="App">
+    <Routes>
+      <Route exact path="/" element={<Home />} />
+      <Route exact path="/item/:id" element={<Item />} />
+      <Route exact path="/item/:id/:imdbId" element={<Item />} />
+      <Route exact path="/help" element={<Help />} />
+    </Routes>
+  </div>
+);
 
 const App = () => {
+  // handle global imdb id pasting
   useEffect(() => {
-    // handle global imdb id pasting
     const onPaste = (event) => {
       const text = event.clipboardData.getData("Text") || "";
       if (text.match(/^tt\d{6,10}$/)) {

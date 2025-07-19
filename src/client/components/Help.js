@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useCallback, useState } from "react";
 import { Button, Paper } from "@mui/material";
 import { useStore, actions } from "../store/store";
 import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
-import { updateHash } from "../service/history";
+import { useGoBackAndSetHash } from "../hooks/useGoBackAndSetHash";
 import "./Help.css";
 
 const values = (obj, prefix = "") =>
@@ -24,20 +23,15 @@ const sections = [
 ];
 
 const Help = () => {
+  const goBackAndSetHash = useGoBackAndSetHash();
   const store = useStore();
   const { items } = store;
 
-  const history = useHistory();
   const [selected, setSelected] = useState([]);
 
-  const onClose = (_event, search) => {
-    history.goBack();
-    if (search) {
-      updateHash(search);
-    }
-  };
+  const onClose = useCallback((_event, search) => goBackAndSetHash(search), [goBackAndSetHash]);
 
-  const onApply = () => {
+  const onApply = useCallback(() => {
     const search = selected.filter((name) => !name.startsWith("sort:")).join(" ");
     const sort = selected.filter((name) => name.startsWith("sort:")).pop();
 
@@ -49,31 +43,35 @@ const Help = () => {
       actions.setSort(items, sort.substr(5));
     }
     onClose(null, search);
-  };
+  }, [items, onClose, selected]);
 
-  const onClick = (event) => {
-    const name = event.target.innerText;
-    const isSort = name.startsWith("sort:");
-    const isCmd = event.metaKey;
+  const onClick = useCallback(
+    (event) => {
+      const name = event.target.innerText;
+      const isSort = name.startsWith("sort:");
+      const isCmd = event.metaKey;
 
-    // multiselect
-    if (isCmd) {
-      const nextSelected = selected.includes(name)
-        ? selected.filter((x) => x !== name)
-        : [...selected.filter((x) => !(isSort && x.startsWith("sort:"))), name];
-      setSelected(nextSelected);
-      return;
-    }
+      // multiselect
+      if (isCmd) {
+        const nextSelected = selected.includes(name)
+          ? selected.filter((x) => x !== name)
+          : [...selected.filter((x) => !(isSort && x.startsWith("sort:"))), name];
+        setSelected(nextSelected);
+        return;
+      }
 
-    // single select
-    if (isSort) {
-      actions.setSort(items, name.substr(5));
-      onClose();
-    } else {
-      actions.setSearch(name);
-      onClose(null, name);
-    }
-  };
+      // single select
+      if (isSort) {
+        actions.setSort(items, name.substr(5));
+        onClose();
+      } else {
+        actions.setSearch(name);
+        onClose(null, name);
+      }
+    },
+    [items, onClose, selected],
+  );
+
   return (
     <div className="Help">
       <Paper className="Help-paper">

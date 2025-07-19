@@ -13,18 +13,17 @@ import PosterSearch from "./PosterSearch";
 import Spinner from "./Spinner";
 import { Const } from "../../common/enums";
 import events, { Events } from "../service/events";
+import { useGoBack } from "../hooks/useGoBack";
 import "./Item.css";
-import { useGoBackOrHome } from "../hooks/useGoBackOrHome";
 
 const FORM = "form";
 const DETAILS = "details";
 
 const Item = () => {
+  const { id, imdbId } = useParams();
   const store = useStore();
   const { items, sort, resort } = store;
 
-  const onClose = useGoBackOrHome();
-  const match = { params: useParams() };
   const [item, setItem] = useState({
     ...defaultItem,
     isDefaultItem: true,
@@ -40,6 +39,8 @@ const Item = () => {
   const [deleteSure, setDeleteSure] = useState(false);
 
   const deleteTimerRef = useRef();
+
+  const onClose = useGoBack();
 
   const updateItemState = (changedItem, updateState = false) => {
     setItem({
@@ -138,7 +139,6 @@ const Item = () => {
   };
 
   useEffect(() => {
-    const { id, imdbId } = match.params;
     if (id === Const.NEW) {
       const newItem = service.createNewItem();
       if (id === Const.NEW && imdbId) {
@@ -180,7 +180,7 @@ const Item = () => {
         clearTimeout(deleteTimerRef.current);
       }
     };
-  }, [match.params, items.length, onClose]);
+  }, [id, imdbId, items.length, onClose]);
 
   useEffect(() => {
     if (resort) {

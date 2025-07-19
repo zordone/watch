@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IconButton, Snackbar } from "@mui/material";
 import { Add, CheckCircle } from "@mui/icons-material";
 import ItemTable from "./ItemTable";
@@ -12,9 +12,9 @@ import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
 import events, { Events } from "../service/events";
-import { updateHash } from "../service/history";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { useOnMount } from "../hooks/useOnMount";
+import { useSetHash } from "../hooks/useSetHash";
 import "./Home.css";
 
 let isFirstMount = true;
@@ -33,8 +33,10 @@ const Home = () => {
   const { items, search, filteredItems, isLoaderFinished, currentId, sort, snackOpen, snackText } =
     store;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
+  const setHash = useSetHash();
+
   const currentSearchRef = useRef();
 
   const scrollToCurrent = useCallback(() => {
@@ -81,22 +83,25 @@ const Home = () => {
 
   // debounced update of the search term and the URL hash
   const updateSearchDebounced = useDebouncedCallback(
-    useCallback((searchValue) => {
-      // these are special commands, not typed by the user, but passed by the help dialog.
-      // these shouldn't become the visible search term, so we can just ignore them here.
-      if (searchValue.startsWith("sort:")) {
-        return;
-      }
-      actions.setSearch(searchValue);
-      updateHash(searchValue);
-    }, []),
+    useCallback(
+      (searchValue) => {
+        // these are special commands, not typed by the user, but passed by the help dialog.
+        // these shouldn't become the visible search term, so we can just ignore them here.
+        if (searchValue.startsWith("sort:")) {
+          return;
+        }
+        actions.setSearch(searchValue);
+        setHash(searchValue);
+      },
+      [setHash],
+    ),
     500,
   );
 
   // search term was changed on another page, then coming back here
   useEffect(() => {
-    updateHash(search);
-  }, [search]);
+    setHash(search);
+  }, [setHash, search]);
 
   const onSearchChanged = useCallback(
     (searchValue) => {
@@ -110,14 +115,14 @@ const Home = () => {
   const onAddNew = useCallback(
     (event, imdbId) => {
       const imdbParam = imdbId ? `/${imdbId}` : "";
-      history.push(`/item/new${imdbParam}`);
+      navigate(`/item/new${imdbParam}`);
     },
-    [history],
+    [navigate],
   );
 
   const onHelp = useCallback(() => {
-    history.push("/help");
-  }, [history]);
+    navigate("/help");
+  }, [navigate]);
 
   const onLogoClick = useCallback(() => {
     onSearchChanged("");
@@ -130,7 +135,7 @@ const Home = () => {
       const item = filteredItems[0];
       const isSortCommand = currentSearchRef.current.startsWith("sort:");
       if (item && !isSortCommand) {
-        history.push(`/item/${item._id}`);
+        navigate(`/item/${item._id}`);
         return;
       }
       // set sort
@@ -167,9 +172,9 @@ const Home = () => {
         return;
       }
       actions.setCurrentId(id);
-      history.push(path);
+      navigate(path);
     },
-    [history],
+    [navigate],
   );
 
   const onSnackClose = () => {
