@@ -1,8 +1,6 @@
 .ItemTable-paper {
   /* full height - header - top padding - footer */
   max-height: calc(100vh - 75px - 1rem - 1.5rem);
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
 }
 .ItemTable-paper::-webkit-scrollbar {
   background: #393939;
@@ -15,21 +13,45 @@
   border: 2px solid #393939;
 }
 
-.ItemTable td,
-.ItemTable th {
+.ItemTable-virtualContainer {
+  overflow: auto;
+  position: relative;
+  height: 800px;
+}
+
+.ItemTable td {
   font-size: 1.05rem;
   font-weight: 100;
+  overflow-wrap: anywhere;
 }
 
-.ItemTable-head tr th {
-  padding: 0;
+.ItemTable-head {
+  display: grid;
+  position: sticky;
+  background: #222222;
+  top: 0;
+  z-index: 1;
 }
 
-.ItemTable-head th,
-.ItemTable-fixedHeaderCell {
+.ItemTable-head th {
   color: #888;
   font-size: 0.8rem;
   font-weight: 100;
+  border: none;
+  padding: 2px 6px;
+}
+
+.ItemTable-head tr {
+  display: flex;
+}
+
+.ItemTable tbody {
+  display: grid;
+  position: relative;
+}
+
+.ItemTable tr {
+  display: flex;
 }
 
 .ItemTable tr:hover {
@@ -37,8 +59,7 @@
 }
 
 .ItemTable td,
-.ItemTable td:last-child,
-.ItemTable-fixedHeaderCell {
+.ItemTable td:last-child {
   padding: 8px 6px;
 }
 
@@ -55,34 +76,26 @@
   color: #ccc;
 }
 
-.ItemTable-fixedHeader {
+.Home .ItemTable-row {
+  display: flex;
   position: absolute;
-  left: 1rem;
-  right: 1rem;
-  height: 24px;
-  white-space: nowrap;
-  background: #222222;
-  border-radius: 4px 4px 0 0;
-  border-bottom: 2px solid #1a1a1a;
-  overflow: hidden;
+  width: 100%;
+}
+/* bugfix: sometimes the transform is not yet set on a new row, so it display over the first item */
+.Home .ItemTable-row:not(.transform-set) {
+  display: none;
+}
+.Home .ItemTable-row.current {
+  animation: show-current 1000ms ease-out 1;
 }
 
-.ItemTable-fixedHeaderCell {
-  display: inline-block;
-  box-sizing: border-box;
-  padding-top: 0.3rem;
-  color: #fff6;
-}
-
-.ItemTable-fixedHeaderShadow {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 30px;
-  background: linear-gradient(to bottom, #000f 0%, #000b 5%, #0004 30%, transparent 100%);
-  bottom: -30px;
-  opacity: 0.4;
-  pointer-events: none;
+@keyframes show-current {
+  0% {
+    background: #00a9ff;
+  }
+  100% {
+    background: inherit;
+  }
 }
 
 @media only screen and (max-width: 640px) {
@@ -91,7 +104,8 @@
     max-height: calc(100vh - 125px);
     border-radius: 0;
   }
-  .Home .ItemTable-fixedHeader {
-    display: none;
+  .Home .ItemTable-row .title {
+    font-weight: 600;
+    font-size: 1.2rem;
   }
 }
