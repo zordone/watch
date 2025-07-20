@@ -8,6 +8,8 @@
     "@fontsource/roboto": "^5.2.6",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.12",
     "@xmldom/xmldom": "^0.9.8",
     "compression": "^1.8.1",
     "core-js": "^3.44.0",

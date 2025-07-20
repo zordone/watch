@@ -7,7 +7,6 @@ import Header from "./Header";
 import { useStore, actions } from "../store/store";
 import SearchField from "./SearchField";
 import Loader from "./Loader";
-import fixedHeaderWorkaround from "../service/fixedHeader";
 import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
@@ -41,19 +40,17 @@ const Home = () => {
 
   const scrollToCurrent = useCallback(() => {
     if (!currentId) return;
-    const currentRow = document.querySelector(".ItemRow.current");
+    const currentRow = document.querySelector(".ItemTable-row.current");
     if (currentRow) {
       currentRow.scrollIntoViewIfNeeded();
-      // give time to the ItemRow current animation to finish
+      // give time to the "current row" animation to finish
       setTimeout(() => actions.setCurrentId(""), 1000);
     }
   }, [currentId]);
 
   const scrollToTop = useCallback(() => {
-    const firstRow = document.querySelector(".ItemRow");
-    if (firstRow) {
-      firstRow.scrollIntoViewIfNeeded();
-    }
+    const container = document.querySelector(".ItemTable-virtualContainer");
+    container?.scrollTo(0, 0);
   }, []);
 
   // filter items when search term changes (or the item list)
@@ -193,8 +190,6 @@ const Home = () => {
       // fetch all data (as opposed to initial short list first, then full list )
       actions.fetchItems(true).catch(console.error);
     }
-
-    fixedHeaderWorkaround();
 
     const onImdbPaste = (event) => {
       onAddNew(event, event.detail.imdbId);
