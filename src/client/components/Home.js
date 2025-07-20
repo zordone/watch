@@ -44,7 +44,7 @@ const Home = () => {
     if (currentRow) {
       currentRow.scrollIntoViewIfNeeded();
       // give time to the ItemRow current animation to finish
-      setTimeout(() => actions.setCurrentId(""), 1000);
+      setTimeout(() => actions.setCurrentId(""), 1500);
     }
   }, [currentId]);
 
@@ -170,7 +170,9 @@ const Home = () => {
         window.open(path, "_blank");
         return;
       }
-      actions.setCurrentId(id);
+      setTimeout(() => {
+        actions.setCurrentId(id);
+      }, 1000);
       navigate(path, { viewTransition: true });
     },
     [navigate],

@@ -3,6 +3,7 @@
   max-height: calc(100vh - 75px - 1rem - 1.5rem);
   overflow-y: auto;
   background: #222222;
+  user-select: none;
 }
 .ItemTable-paper::-webkit-scrollbar {
   background: #222222;
