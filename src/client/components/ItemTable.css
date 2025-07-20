@@ -1,18 +1,18 @@
-.ItemTable-paper {
+.MuiPaper-root.ItemTable-paper {
   /* full height - header - top padding - footer */
   max-height: calc(100vh - 75px - 1rem - 1.5rem);
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  background: #222222;
 }
 .ItemTable-paper::-webkit-scrollbar {
-  background: #393939;
+  background: #222222;
   border-radius: 100px;
   width: 10px;
 }
 .ItemTable-paper::-webkit-scrollbar-thumb {
-  background: #515151;
+  background: #393939;
   border-radius: 100px;
-  border: 2px solid #393939;
+  border: 2px solid #222222;
 }
 
 .ItemTable td,
@@ -21,24 +21,31 @@
   font-weight: 100;
 }
 
+.ItemTable-head tr {
+  background: #222222;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 .ItemTable-head tr th {
-  padding: 0;
+  padding: 4px 6px;
 }
 
-.ItemTable-head th,
-.ItemTable-fixedHeaderCell {
+.ItemTable-head th {
   color: #888;
   font-size: 0.8rem;
   font-weight: 100;
 }
 
-.ItemTable tr:hover {
+.ItemTable-body tr {
+  background: #393939;
+}
+.ItemTable-body tr:hover {
   background: #fff1;
 }
 
 .ItemTable td,
-.ItemTable td:last-child,
-.ItemTable-fixedHeaderCell {
+.ItemTable td:last-child {
   padding: 8px 6px;
 }
 
@@ -55,43 +62,24 @@
   color: #ccc;
 }
 
-.ItemTable-fixedHeader {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  height: 24px;
-  white-space: nowrap;
-  background: #222222;
-  border-radius: 4px 4px 0 0;
-  border-bottom: 2px solid #1a1a1a;
-  overflow: hidden;
-}
-
-.ItemTable-fixedHeaderCell {
-  display: inline-block;
-  box-sizing: border-box;
-  padding-top: 0.3rem;
-  color: #fff6;
-}
-
-.ItemTable-fixedHeaderShadow {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 30px;
-  background: linear-gradient(to bottom, #000f 0%, #000b 5%, #0004 30%, transparent 100%);
-  bottom: -30px;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
 @media only screen and (max-width: 640px) {
   .Home .ItemTable-paper {
     /* full height - collapsed header (no padding, no footer) */
     max-height: calc(100vh - 125px);
     border-radius: 0;
   }
-  .Home .ItemTable-fixedHeader {
-    display: none;
+  .MuiPaper-root.ItemTable-paper {
+    border-top: 2px solid #313131;
+    background: #313131;
+  }
+  .ItemTable-paper::-webkit-scrollbar {
+    background: #313131;
+  }
+  .ItemTable-paper::-webkit-scrollbar-thumb {
+    background: #414141;
+    border: 2px solid #313131;
+  }
+  .ItemTable-head tr {
+    background: #313131;
   }
 }

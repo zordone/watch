@@ -7,7 +7,6 @@ import Header from "./Header";
 import { useStore, actions } from "../store/store";
 import SearchField from "./SearchField";
 import Loader from "./Loader";
-import fixedHeaderWorkaround from "../service/fixedHeader";
 import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
@@ -193,8 +192,6 @@ const Home = () => {
       // fetch all data (as opposed to initial short list first, then full list )
       actions.fetchItems(true).catch(console.error);
     }
-
-    fixedHeaderWorkaround();
 
     const onImdbPaste = (event) => {
       onAddNew(event, event.detail.imdbId);

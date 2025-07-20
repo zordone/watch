@@ -6,12 +6,8 @@ import { noop } from "../service/utils";
 import "./ItemTable.css";
 
 const ItemTable = ({ items = [], onRowClick = noop, currentId = null }) => {
-  const isEmpty = items.length === 0;
   return (
     <Paper className="ItemTable-paper">
-      <div className="ItemTable-fixedHeader">
-        {!isEmpty && <div className="ItemTable-fixedHeaderShadow" />}
-      </div>
       <Table className="ItemTable">
         <TableHead className="ItemTable-head">
           <TableRow>
@@ -23,7 +19,7 @@ const ItemTable = ({ items = [], onRowClick = noop, currentId = null }) => {
             <TableCell>Vali</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody className="ItemTable-body">
           {items.map((item) => (
             <ItemRow
               key={item._id}
