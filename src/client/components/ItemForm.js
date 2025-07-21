@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
-import { TextField, LinearProgress } from "@mui/material";
+import { TextField } from "@mui/material";
 import { noop } from "lodash";
 import * as service from "../service/service";
-import { ItemType, ValiType, NextType, FinishedType, Const, RatingType } from "../../common/enums";
+import { actions } from "../store/store";
 import SelectField from "./SelectField";
 import ChipField from "./ChipField";
 import { parseDate, mergeArrays } from "../service/utils";
@@ -12,6 +12,15 @@ import events, { Events } from "../service/events";
 import ScrapeButton from "./ScrapeButton";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import data from "../../common/data.json";
+import {
+  ItemType,
+  ValiType,
+  NextType,
+  FinishedType,
+  Const,
+  RatingType,
+  ItemLoadingFlags,
+} from "../../common/enums";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
@@ -71,6 +80,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
 
   const onImdbScrape = useCallback(() => {
     setImdbScraping(true);
+    actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, true);
     service
       .imdbData(item.imdbId)
       .then((data) => {
@@ -96,13 +106,12 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
           newItem.nextType = newItem.type === ItemType.MOVIE ? NextType.RELEASE : NextType.START;
         }
         setItem(newItem);
-        setImdbScraping(false);
         onChange(newItem);
         onTitleChangeDebounced();
       })
-      .catch((err) => {
+      .finally(() => {
         setImdbScraping(false);
-        throw err;
+        actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, false);
       });
   }, [item, onTitleChangeDebounced, onChange]);
 
@@ -128,7 +137,6 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
 
   return (
     <form noValidate autoComplete="off" className="ItemForm" style={formStyle}>
-      {imdbScraping && <LinearProgress className="ItemForm-progress" />}
       <div className="ItemForm-grid">
         <div className="title">
           <TextField

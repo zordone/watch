@@ -1,16 +1,28 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { ItemType } from "../../common/enums";
+import { ItemLoadingFlags, ItemType } from "../../common/enums";
 import ItemIcon from "./ItemIcon";
 import ScrapeButton from "./ScrapeButton";
 import { noop } from "../service/utils";
+import { actions } from "../store/store";
 import "./Poster.css";
 
 const Poster = ({ item, onPosterSearch = noop, posterScraping = false }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const onLoaded = useCallback(() => setIsLoaded(true), []);
-  const onError = useCallback(() => setIsLoaded(false), []);
+  useEffect(() => {
+    actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, !!item.posterUrl);
+  }, [item.posterUrl]);
+
+  const onLoaded = useCallback(() => {
+    setIsLoaded(true);
+    actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, false);
+  }, []);
+
+  const onError = useCallback(() => {
+    setIsLoaded(false);
+    actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, false);
+  }, []);
 
   return (
     <div className="Poster">

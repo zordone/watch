@@ -13,6 +13,8 @@ const store = proxy({
   resort: false,
   snackOpen: false,
   snackText: "",
+  itemLoadingFlags: new Set(),
+  isItemLoading: false,
 });
 
 // hook to get the entire store snapshot
@@ -60,6 +62,15 @@ export const actions = {
 
   setIsLoaderFinished(isLoaderFinished) {
     store.isLoaderFinished = isLoaderFinished;
+  },
+
+  setItemLoadingFlag(flag, value) {
+    if (value) {
+      store.itemLoadingFlags.add(flag);
+    } else {
+      store.itemLoadingFlags.delete(flag);
+    }
+    store.isItemLoading = store.itemLoadingFlags.size > 0;
   },
 
   setCurrentId(currentId) {

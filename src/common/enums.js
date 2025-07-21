@@ -68,6 +68,15 @@ export const SortComparators = Object.freeze({
   UPDATED: "updated",
 });
 
+export const ItemLoadingFlags = Object.freeze({
+  ITEM: "item",
+  POSTER: "poster",
+  POSTER_SEARCH: "posterSearch",
+  IMDB_SCRAPE: "imdbScrape",
+  SAVE: "save",
+  DELETE: "delete",
+});
+
 export const Const = Object.freeze({
   NEW: "new",
 });

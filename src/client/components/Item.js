@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Button, IconButton, Paper } from "@mui/material";
+import { Button, IconButton, LinearProgress, Paper } from "@mui/material";
 import { Create, Check, DeleteForever } from "@mui/icons-material";
 import * as service from "../service/service";
 import { useStore, actions } from "../store/store";
@@ -11,8 +11,7 @@ import itemState from "../service/itemState";
 import { slugify } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
 import PosterSearch from "./PosterSearch";
-import Spinner from "./Spinner";
-import { Const } from "../../common/enums";
+import { Const, ItemLoadingFlags } from "../../common/enums";
 import events, { Events } from "../service/events";
 import { useGoBack } from "../hooks/useGoBack";
 import "./Item.css";
@@ -37,6 +36,8 @@ const useItem = (id) => {
     queryKey: ["item", id],
     queryFn: () => service.getItemById(id),
   });
+
+  actions.setItemLoadingFlag(ItemLoadingFlags.ITEM, isPending && isLoading);
 
   // save item
   const saveMutation = useMutation({
@@ -66,7 +67,6 @@ const useItem = (id) => {
     setDraftItem,
     saveMutation,
     deleteMutation,
-    isLoading: isPending && isLoading,
     isError,
   };
 };
@@ -74,7 +74,7 @@ const useItem = (id) => {
 const Item = () => {
   const { id, imdbId } = useParams();
   const store = useStore();
-  const { items, sort, resort } = store;
+  const { items, sort, resort, isItemLoading } = store;
 
   const {
     draftItem,
@@ -83,7 +83,6 @@ const Item = () => {
     deleteMutation,
     isNew,
     isError: isItemError,
-    isLoading: isItemLoading,
   } = useItem(id);
 
   const [page, setPage] = useState(DETAILS);
@@ -118,6 +117,7 @@ const Item = () => {
 
   const onSave = () => {
     const isNew = draftItem._id === Const.NEW;
+    actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, true);
     saveMutation
       .mutateAsync(draftItem)
       .then((saved) => {
@@ -132,6 +132,9 @@ const Item = () => {
       .catch((err) => {
         console.error("Item update failed.", err);
         setError(err.message);
+      })
+      .finally(() => {
+        actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, false);
       });
   };
 
@@ -147,16 +150,19 @@ const Item = () => {
   const onPosterSearch = () => {
     setPosters({ visible: true, searching: true, images: [] });
     setPosterScraping(true);
+    actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, true);
     const query = encodeURI(draftItem.title);
     service
       .searchImages(query)
       .then((images) => {
         setPosters({ visible: true, searching: false, images });
-        setPosterScraping(false);
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
         setPosterScraping(false);
+        actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, false);
       });
   };
 
@@ -170,6 +176,7 @@ const Item = () => {
   const onDelete = () => {
     if (deleteSure) {
       clearTimeout(deleteTimerRef.current);
+      actions.setItemLoadingFlag(ItemLoadingFlags.DELETE, true);
       deleteMutation
         .mutateAsync(draftItem._id)
         .then(() => {
@@ -183,6 +190,9 @@ const Item = () => {
           console.error("Item delete failed.", err);
           setError(err.message);
           setDeleteSure(false);
+        })
+        .finally(() => {
+          actions.setItemLoadingFlag(ItemLoadingFlags.DELETE, false);
         });
     } else {
       setDeleteSure(true);
@@ -247,13 +257,10 @@ const Item = () => {
 
   const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
 
-  if (isItemLoading) {
-    return <Spinner />;
-  }
-
   return (
     <div className="Item">
       <Paper className="Item-paper">
+        {isItemLoading && <LinearProgress className="ItemForm-progress" />}
         <ItemDetails
           item={draftItem}
           onChange={onChange}
