@@ -1,3 +1,10 @@
+.ItemForm-progress.MuiLinearProgress-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .ItemForm-grid {
   display: grid;
   grid-gap: 1rem;

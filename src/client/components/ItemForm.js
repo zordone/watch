@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
-import TextField from "@mui/material/TextField";
+import { TextField, LinearProgress } from "@mui/material";
 import { noop } from "lodash";
 import * as service from "../service/service";
 import { ItemType, ValiType, NextType, FinishedType, Const, RatingType } from "../../common/enums";
@@ -128,6 +128,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
 
   return (
     <form noValidate autoComplete="off" className="ItemForm" style={formStyle}>
+      {imdbScraping && <LinearProgress className="ItemForm-progress" />}
       <div className="ItemForm-grid">
         <div className="title">
           <TextField
