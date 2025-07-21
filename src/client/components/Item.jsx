@@ -91,7 +91,7 @@ const Item = () => {
     searching: false,
     images: [],
   });
-  const [posterScraping, setPosterScraping] = useState(false);
+  const [posterSearching, setPosterSearching] = useState(false);
   const [error, setError] = useState("");
   const [deleteSure, setDeleteSure] = useState(false);
 
@@ -125,13 +125,14 @@ const Item = () => {
           actions.addNewItem(saved);
         }
         actions.updateItem(items, saved);
-        onClose();
-        actions.setSnack(true, "Item updated.");
         actions.setCurrentId(saved._id);
+        actions.showSnack("Item saved.", "success");
+        onClose();
       })
       .catch((err) => {
-        console.error("Item update failed.", err);
+        console.error(err);
         setError(err.message);
+        actions.showSnack("Failed to save item.", "error");
       })
       .finally(() => {
         actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, false);
@@ -149,7 +150,7 @@ const Item = () => {
 
   const onPosterSearch = () => {
     setPosters({ visible: true, searching: true, images: [] });
-    setPosterScraping(true);
+    setPosterSearching(true);
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, true);
     const query = encodeURI(draftItem.title);
     service
@@ -159,9 +160,10 @@ const Item = () => {
       })
       .catch((err) => {
         console.error(err);
+        actions.showSnack("Failed to search posters.", "error");
       })
       .finally(() => {
-        setPosterScraping(false);
+        setPosterSearching(false);
         actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, false);
       });
   };
@@ -184,12 +186,13 @@ const Item = () => {
           setError("");
           setDeleteSure(false);
           onClose();
-          actions.setSnack(true, "Item deleted.");
+          actions.showSnack("Item deleted.", "success");
         })
         .catch((err) => {
-          console.error("Item delete failed.", err);
+          console.error(err);
           setError(err.message);
           setDeleteSure(false);
+          actions.showSnack("Failed to delete item.", "error");
         })
         .finally(() => {
           actions.setItemLoadingFlag(ItemLoadingFlags.DELETE, false);
@@ -266,7 +269,7 @@ const Item = () => {
           onChange={onChange}
           visible={page === DETAILS}
           onPosterSearch={onPosterSearch}
-          posterScraping={posterScraping}
+          posterSearching={posterSearching}
         />
         <ItemForm
           item={draftItem}

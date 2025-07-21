@@ -57,5 +57,5 @@ export const jsonOrError = (res) =>
     if (res.ok) {
       return !text || text === "OK" ? "empty response" : JSON.parse(text);
     }
-    throw new Error(text);
+    throw new Error(`${res.statusText} ${res.status}: ${res.url}`);
   });

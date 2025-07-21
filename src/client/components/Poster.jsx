@@ -7,7 +7,7 @@ import { noop } from "../service/utils";
 import { actions } from "../store/store";
 import "./Poster.css";
 
-const Poster = ({ item, onPosterSearch = noop, posterScraping = false }) => {
+const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Poster = ({ item, onPosterSearch = noop, posterScraping = false }) => {
       <ScrapeButton
         className="Poster-search"
         ariaLabel="Poster search"
-        inProgress={posterScraping}
+        inProgress={posterSearching}
         onClick={onPosterSearch}
       />
     </div>
@@ -49,7 +49,7 @@ Poster.propTypes = {
     type: PropTypes.oneOf(Object.values(ItemType)),
     posterUrl: PropTypes.string,
   }).isRequired,
-  posterScraping: PropTypes.bool,
+  posterSearching: PropTypes.bool,
   onPosterSearch: PropTypes.func,
 };
 

@@ -11,8 +11,7 @@ const store = proxy({
   currentId: "",
   sort: "default",
   resort: false,
-  snackOpen: false,
-  snackText: "",
+  snacks: [],
   itemLoadingFlags: new Set(),
   isItemLoading: false,
 });
@@ -84,12 +83,21 @@ export const actions = {
     store.resort = false;
   },
 
-  setSnack(snackOpen, snackText) {
-    store.snackOpen = snackOpen;
-    // we only update the text if the snackbar is open
-    // (leave it there during hide transition)
-    if (snackOpen) {
-      store.snackText = snackText;
+  showSnack(text, severity = "success") {
+    const id = window.crypto.randomUUID();
+    store.snacks.push({ id, text, severity, visible: true });
+  },
+
+  closeSnack(id) {
+    const snack = store.snacks.find((snack) => snack.id === id);
+    if (!snack) return;
+    snack.visible = false;
+  },
+
+  clearSnacks() {
+    if (store.snacks.some((snack) => snack.visible)) {
+      return;
     }
+    store.snacks = [];
   },
 };

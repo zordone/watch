@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import events, { Events } from "../service/events";
+import { SnackPack } from "./SnackPack";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
@@ -69,6 +70,7 @@ const App = () => {
         <div className="App">
           <RouterProvider router={router} />
         </div>
+        <SnackPack />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

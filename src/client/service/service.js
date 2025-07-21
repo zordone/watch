@@ -1,6 +1,5 @@
 import { Const, SortComparators } from "../../common/enums";
 import sortComparators from "./sort";
-import mockImagesResponse from "./mockImagesResponse";
 import { defaultItem, jsonHeaders, parseItem, jsonOrError } from "./serviceUtils";
 
 const BASE_URL = window.location.origin.replace(/:3000$/, ":3001");
@@ -54,9 +53,4 @@ export const deleteItemById = (id) => {
 
 export const searchImages = (query) => fetch(`${BASE_URL}/searchimages/${query}`).then(jsonOrError);
 
-export const mockSearchImages = (timeout) =>
-  new Promise((resolve) => {
-    setTimeout(() => resolve(mockImagesResponse), timeout);
-  });
-
-export const imdbData = (id) => fetch(`${BASE_URL}/imdbdata/${id}`).then((res) => res.json());
+export const imdbData = (id) => fetch(`${BASE_URL}/imdbdata/${id}`).then(jsonOrError);

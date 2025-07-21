@@ -29,9 +29,10 @@ const MAX_KEYWORDS = 10;
 const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
   const [item, setItem] = useState({ ...defaultItem });
   const [sameTitle, setSameTitle] = useState(undefined);
-  const [imdbScraping, setImdbScraping] = useState(false);
-
+  const imdbScrapingRef = useRef(false);
+  const imdbAutoScrapeDoneRef = useRef(false);
   const sameTitleLinkRef = useRef();
+
   const seasonSlotProps = { htmlInput: { min: "1", max: "99" } };
   const releaseYearSlotProps = { htmlInput: { min: "1900", max: "2100" } };
 
@@ -79,7 +80,8 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
   };
 
   const onImdbScrape = useCallback(() => {
-    setImdbScraping(true);
+    if (imdbScrapingRef.current) return;
+    imdbScrapingRef.current = true;
     actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, true);
     service
       .imdbData(item.imdbId)
@@ -109,11 +111,16 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
         onChange(newItem);
         onTitleChangeDebounced();
       })
+      .catch((err) => {
+        console.error(err);
+        actions.showSnack("Failed to scrape IMDb data.", "error");
+      })
       .finally(() => {
-        setImdbScraping(false);
+        imdbScrapingRef.current = false;
         actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, false);
       });
-  }, [item, onTitleChangeDebounced, onChange]);
+    return true;
+  }, [item, onChange, onTitleChangeDebounced]);
 
   useEffect(() => {
     events.addListener(Events.IMDB_SCRAPE, onImdbScrape);
@@ -122,14 +129,22 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
     };
   }, [onImdbScrape]);
 
+  // call imdb scrape automatically if it's a new item with imdb ID
   useEffect(() => {
     const isNew = item._id === Const.NEW;
     const hasTitle = Boolean(item.title);
     const hasImdb = Boolean(item.imdbId);
-    if (isNew && !hasTitle && hasImdb && !imdbScraping) {
+    if (
+      isNew &&
+      !hasTitle &&
+      hasImdb &&
+      !imdbAutoScrapeDoneRef.current &&
+      !imdbScrapingRef.current
+    ) {
       onImdbScrape();
+      imdbAutoScrapeDoneRef.current = true;
     }
-  }, [item._id, item.title, item.imdbId, imdbScraping, onImdbScrape]);
+  }, [item._id, item.title, item.imdbId, onImdbScrape]);
 
   const formStyle = {
     display: visible ? "block" : "none",
@@ -249,7 +264,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
             className="imdb-scrape"
             ariaLabel="Fill from IMDb"
             visible={Boolean(item.imdbId)}
-            inProgress={imdbScraping}
+            inProgress={imdbScrapingRef.current}
             onClick={onImdbScrape}
           />
         </div>

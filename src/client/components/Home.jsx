@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { IconButton, Snackbar } from "@mui/material";
-import { Add, CheckCircle } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import ItemTable from "./ItemTable";
 import Header from "./Header";
 import { useStore, actions } from "../store/store";
@@ -18,19 +18,9 @@ import "./Home.css";
 
 let isFirstMount = true;
 
-const snackBarSlotProps = {
-  content: {
-    classes: {
-      root: "Home-snack",
-      message: "Home-snackMessage",
-    },
-  },
-};
-
 const Home = () => {
   const store = useStore();
-  const { items, search, filteredItems, isLoaderFinished, currentId, sort, snackOpen, snackText } =
-    store;
+  const { items, search, filteredItems, isLoaderFinished, currentId, sort } = store;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -147,7 +137,7 @@ const Home = () => {
         }
         if (sort !== newSort) {
           actions.setSort(items, newSort);
-          actions.setSnack(true, `Sorted by ${sortTitles[newSort]}.`);
+          actions.showSnack(`Sorted by ${sortTitles[newSort]}.`, "success");
         }
         updateSearchDebounced("");
       }
@@ -178,10 +168,6 @@ const Home = () => {
     [navigate],
   );
 
-  const onSnackClose = () => {
-    actions.setSnack(false);
-  };
-
   useOnMount(() => {
     // init search from url param
     if (isFirstMount) {
@@ -207,9 +193,10 @@ const Home = () => {
     };
   });
 
+  // scroll to the current when the item list change
   useEffect(() => {
     scrollToCurrent();
-  }, [search, filteredItems, snackOpen, scrollToCurrent]);
+  }, [search, filteredItems, scrollToCurrent]);
 
   // TODO: pass these down as children
   const searchField = (
@@ -240,23 +227,6 @@ const Home = () => {
         </div>
       </main>
       {!isLoaderFinished && <Loader />}
-      <Snackbar
-        open={snackOpen}
-        autoHideDuration={3000}
-        onClose={onSnackClose}
-        message={
-          <span>
-            <CheckCircle />
-            {snackText}
-          </span>
-        }
-        slotProps={snackBarSlotProps}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transitionDuration={500}
-      />
     </div>
   );
 };

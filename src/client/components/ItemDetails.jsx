@@ -36,7 +36,7 @@ const ItemDetails = ({
   item: propItem,
   onChange,
   onPosterSearch = noop,
-  posterScraping = false,
+  posterSearching = false,
   visible = true,
 }) => {
   const [item, setItem] = useState({ ...defaultItem });
@@ -240,7 +240,7 @@ const ItemDetails = ({
     <div className="ItemDetails" style={{ display }}>
       <div className="ItemDetails-grid">
         <div className="ItemDetails-sidebar">
-          <Poster item={item} onPosterSearch={onPosterSearch} posterScraping={posterScraping} />
+          <Poster item={item} onPosterSearch={onPosterSearch} posterSearching={posterSearching} />
           {buttons}
           <RatingButton value={item.rating} onChange={onRatingChange} />
         </div>
@@ -264,7 +264,7 @@ ItemDetails.propTypes = {
   item: PropTypes.shape({}).isRequired,
   onChange: PropTypes.func.isRequired,
   onPosterSearch: PropTypes.func,
-  posterScraping: PropTypes.bool,
+  posterSearching: PropTypes.bool,
   visible: PropTypes.bool,
 };
 
