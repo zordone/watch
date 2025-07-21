@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button, IconButton, Paper } from "@mui/material";
 import { Create, Check, DeleteForever } from "@mui/icons-material";
 import * as service from "../service/service";
@@ -19,15 +20,72 @@ import "./Item.css";
 const FORM = "form";
 const DETAILS = "details";
 
+const useItem = (id) => {
+  const isNew = id === Const.NEW;
+
+  // copy for local editing
+  const [draftItem, setDraftItem] = useState(defaultItem);
+
+  // fetch the item if not new
+  const {
+    data: fetchedItem,
+    isPending,
+    isLoading,
+    isError,
+  } = useQuery({
+    enabled: !isNew,
+    queryKey: ["item", id],
+    queryFn: () => service.getItemById(id),
+  });
+
+  // save item
+  const saveMutation = useMutation({
+    mutationKey: ["item-save"],
+    mutationFn: (draft) => {
+      const isNew = draft._id === Const.NEW;
+      return isNew ? service.saveNewItem(draft) : service.updateItemById(draft._id, draft);
+    },
+  });
+
+  // delete item
+  const deleteMutation = useMutation({
+    mutationKey: ["item-delete"],
+    mutationFn: (id) => service.deleteItemById(id),
+  });
+
+  // when the fetched item arrives (or changes), reset the draft
+  useEffect(() => {
+    if (fetchedItem) {
+      setDraftItem(structuredClone(fetchedItem));
+    }
+  }, [fetchedItem]);
+
+  return {
+    isNew,
+    draftItem,
+    setDraftItem,
+    saveMutation,
+    deleteMutation,
+    isLoading: isPending && isLoading,
+    isError,
+  };
+};
+
 const Item = () => {
   const { id, imdbId } = useParams();
   const store = useStore();
   const { items, sort, resort } = store;
 
-  const [item, setItem] = useState({
-    ...defaultItem,
-    isDefaultItem: true,
-  });
+  const {
+    draftItem,
+    setDraftItem,
+    saveMutation,
+    deleteMutation,
+    isNew,
+    isError: isItemError,
+    isLoading: isItemLoading,
+  } = useItem(id);
+
   const [page, setPage] = useState(DETAILS);
   const [posters, setPosters] = useState({
     visible: false,
@@ -38,12 +96,16 @@ const Item = () => {
   const [error, setError] = useState("");
   const [deleteSure, setDeleteSure] = useState(false);
 
+  if (isItemError && !error) {
+    setError("Failed to fetch item.");
+  }
+
   const deleteTimerRef = useRef();
 
   const onClose = useGoBack();
 
   const updateItemState = (changedItem, updateState = false) => {
-    setItem({
+    setDraftItem({
       ...changedItem,
       state: updateState ? itemState(changedItem) : changedItem.state,
     });
@@ -55,11 +117,10 @@ const Item = () => {
   };
 
   const onSave = () => {
-    const isNew = item._id === Const.NEW;
-    const promise = isNew ? service.saveNewItem(item) : service.updateItemById(item._id, item);
-    promise
+    const isNew = draftItem._id === Const.NEW;
+    saveMutation
+      .mutateAsync(draftItem)
       .then((saved) => {
-        setItem(saved);
         if (isNew) {
           actions.addNewItem(saved);
         }
@@ -69,7 +130,7 @@ const Item = () => {
         actions.setCurrentId(saved._id);
       })
       .catch((err) => {
-        console.error("Updating item failed.", err);
+        console.error("Item update failed.", err);
         setError(err.message);
       });
   };
@@ -80,13 +141,13 @@ const Item = () => {
 
   const onShowDetails = () => {
     setPage(DETAILS);
-    updateItemState(item, true);
+    updateItemState(draftItem, true);
   };
 
   const onPosterSearch = () => {
     setPosters({ visible: true, searching: true, images: [] });
     setPosterScraping(true);
-    const query = encodeURI(item.title);
+    const query = encodeURI(draftItem.title);
     service
       .searchImages(query)
       .then((images) => {
@@ -101,7 +162,7 @@ const Item = () => {
 
   const onPosterSelect = (url) => {
     if (url) {
-      onChange({ ...item, posterUrl: url });
+      onChange({ ...draftItem, posterUrl: url });
     }
     setPosters({ visible: false, searching: false, images: [] });
   };
@@ -109,17 +170,17 @@ const Item = () => {
   const onDelete = () => {
     if (deleteSure) {
       clearTimeout(deleteTimerRef.current);
-      service
-        .deleteItemById(item._id)
+      deleteMutation
+        .mutateAsync(draftItem._id)
         .then(() => {
-          actions.deleteItem(items, item._id);
+          actions.deleteItem(items, draftItem._id);
           setError("");
           setDeleteSure(false);
           onClose();
           actions.setSnack(true, "Item deleted.");
         })
         .catch((err) => {
-          console.error("Updating item failed.", err);
+          console.error("Item delete failed.", err);
           setError(err.message);
           setDeleteSure(false);
         });
@@ -144,12 +205,8 @@ const Item = () => {
       if (id === Const.NEW && imdbId) {
         newItem.imdbId = imdbId;
       }
-      setItem(newItem);
+      setDraftItem(newItem);
       setPage(FORM);
-    } else {
-      service.getItemById(id).then((fetchedItem) => {
-        setItem(fetchedItem);
-      });
     }
 
     const onKeyUp = (event) => {
@@ -180,7 +237,7 @@ const Item = () => {
         clearTimeout(deleteTimerRef.current);
       }
     };
-  }, [id, imdbId, items.length, onClose]);
+  }, [id, imdbId, items.length, onClose, setDraftItem]);
 
   useEffect(() => {
     if (resort) {
@@ -188,22 +245,24 @@ const Item = () => {
     }
   }, [resort, items, sort]);
 
-  const isNew = item._id === Const.NEW;
   const deleteClassName = `Item-button delete${deleteSure ? " sure" : ""}`;
-  const isFullyFetched = item && !item.isDefaultItem;
+
+  if (isItemLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="Item">
       <Paper className="Item-paper">
         <ItemDetails
-          item={item}
+          item={draftItem}
           onChange={onChange}
           visible={page === DETAILS}
           onPosterSearch={onPosterSearch}
           posterScraping={posterScraping}
         />
         <ItemForm
-          item={item}
+          item={draftItem}
           onChange={onChange}
           visible={page === FORM}
           findByTitle={findByTitle}
@@ -241,7 +300,6 @@ const Item = () => {
         )}
       </Paper>
       <PosterSearch {...posters} onSelect={onPosterSelect} />
-      {!isFullyFetched && <Spinner />}
     </div>
   );
 };

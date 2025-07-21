@@ -17,11 +17,11 @@ const ItemRow = ({ item, onClick = noop, isCurrent = false }) => {
       <TableCell scope="row">
         <div className="title">{item.title}</div>
         <div className="only-mobile">{item.genres.join(", ")}</div>
-        <StateLabel className="only-mobile" state={item.state} />
+        <StateLabel className="only-mobile" item={item} />
       </TableCell>
       <TableCell className="only-desktop">{item.genres.join(", ")}</TableCell>
       <TableCell className="only-desktop">
-        <StateLabel state={item.state} />
+        <StateLabel item={item} />
       </TableCell>
       <TableCell className="only-desktop">{maxLength(item.notes, 50)}</TableCell>
       <TableCell>{item.withVali}</TableCell>

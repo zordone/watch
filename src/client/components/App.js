@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import events, { Events } from "../service/events";
 import Home from "./Home";
 import Item from "./Item";
 import Help from "./Help";
 import "./App.css";
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
@@ -60,11 +64,14 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <RouterProvider router={router} />
-      </div>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <RouterProvider router={router} />
+        </div>
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

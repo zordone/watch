@@ -1,8 +1,5 @@
-import React from "react";
 import { ItemType, NextType, StateType, FinishedType, ValiType, Const } from "../../common/enums";
 import { parseDate, seasonCode, getNextSeasonNum } from "./utils";
-
-const boldRegex = /^(s\d{2}|\d{4}.\d{2}.\d{2})$/i;
 
 const stateNum = {
   [StateType.PROGRESS]: 1,
@@ -16,8 +13,7 @@ const stateNum = {
 const state = (type, parts) => ({
   type,
   num: stateNum[type],
-  message: parts.join(""),
-  children: parts.map((part) => (boldRegex.exec(part) ? <strong key={part}>{part}</strong> : part)),
+  parts,
 });
 
 const itemState = (item) => {

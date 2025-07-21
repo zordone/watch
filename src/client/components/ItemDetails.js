@@ -234,7 +234,7 @@ const ItemDetails = ({
   }, [propItem, getButtons, getLinks]);
 
   const display = visible ? "block" : "none";
-  const stateLabel = <StateLabel state={item.state} />;
+  const stateLabel = <StateLabel item={item} />;
 
   return (
     <div className="ItemDetails" style={{ display }}>
