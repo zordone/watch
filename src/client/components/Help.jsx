@@ -107,6 +107,7 @@ const Help = () => {
             Close
           </Button>
         </div>
+        <p className="Help-info">Use ⌘ + click to select multiple.</p>
       </Paper>
     </div>
   );

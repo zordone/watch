@@ -37,6 +37,11 @@
     "jsx-a11y/no-autofocus": "off"
   },
   "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".json"]
+      }
+    },
     "react": {
       "version": "detect"
     }
