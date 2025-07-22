@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import { IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import ItemTable from "./ItemTable";
@@ -7,23 +8,34 @@ import Header from "./Header";
 import { useStore, actions } from "../store/store";
 import SearchField from "./SearchField";
 import Loader from "./Loader";
-import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
 import { sortTitles } from "../service/sort";
+import * as service from "../service/service";
 import events, { Events } from "../service/events";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { useOnMount } from "../hooks/useOnMount";
 import { useSetHash } from "../hooks/useSetHash";
+import packageJson from "../../../package.json";
 import "./Home.css";
-
-let isFirstMount = true;
 
 const Home = () => {
   const store = useStore();
   const { items, search, filteredItems, isLoaderFinished, currentId, sort } = store;
 
+  useQuery({
+    queryKey: ["items"],
+    queryFn: () => service.listItems(true),
+    select: (items) => {
+      actions.setItems(items);
+      return items;
+    },
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
+
   const navigate = useNavigate();
-  const location = useLocation();
   const setHash = useSetHash();
 
   const currentSearchRef = useRef();
@@ -169,18 +181,6 @@ const Home = () => {
   );
 
   useOnMount(() => {
-    // init search from url param
-    if (isFirstMount) {
-      isFirstMount = false;
-      // initialise search term from URL
-      const searchFromHash = (location.hash || "").slice(1);
-      if (searchFromHash) {
-        onSearchChanged(decodeURIComponent(searchFromHash));
-      }
-      // fetch all data (as opposed to initial short list first, then full list )
-      actions.fetchItems(true).catch(console.error);
-    }
-
     const onImdbPaste = (event) => {
       onAddNew(event, event.detail.imdbId);
     };

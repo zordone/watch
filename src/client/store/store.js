@@ -2,11 +2,14 @@ import { proxy, useSnapshot } from "valtio";
 import * as service from "../service/service";
 import { Const } from "../../common/enums";
 
+// get initial search term from the URL hash
+const initialSearch = decodeURIComponent((location.hash || "").slice(1));
+
 // main store proxy with the initial state
 const store = proxy({
   items: [],
   filteredItems: [],
-  search: "",
+  search: initialSearch,
   isLoaderFinished: false,
   currentId: "",
   sort: "default",
@@ -21,15 +24,10 @@ export const useStore = () => useSnapshot(store);
 
 // hook actions to modify the store
 export const actions = {
-  async fetchItems(all) {
-    try {
-      const items = await service.listItems(all);
-      store.items = items;
-      return items;
-    } catch (error) {
-      console.error("Failed to fetch items:", error);
-      throw error;
-    }
+  setItems(items) {
+    // only set it the first time, to prevent the local cache overwrite our local mutations
+    if (store.items.length > 0) return;
+    store.items = items;
   },
 
   addNewItem(item) {
@@ -37,12 +35,13 @@ export const actions = {
     store.items = [item, ...store.items];
   },
 
-  updateItem(items, newItem) {
+  updateItem(newItem) {
+    // if the items are not fetched yet, leave it empty, so it will be fetched later
+    if (!store.items.length) return;
     // replace the one updated item in the items array
-    const newItems = items
+    store.items = store.items
       .filter((oldItem) => ![Const.NEW, newItem._id].includes(oldItem._id))
       .concat(newItem);
-    store.items = newItems;
     // we need to re-sort the items, because the updated item might move
     store.resort = true;
   },

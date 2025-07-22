@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, IconButton, LinearProgress, Paper } from "@mui/material";
 import { Create, Check, DeleteForever } from "@mui/icons-material";
 import * as service from "../service/service";
@@ -25,6 +25,8 @@ const useItem = (id) => {
   // copy for local editing
   const [draftItem, setDraftItem] = useState(defaultItem);
 
+  const queryClient = useQueryClient();
+
   // fetch the item if not new
   const {
     data: fetchedItem,
@@ -43,8 +45,10 @@ const useItem = (id) => {
   const saveMutation = useMutation({
     mutationKey: ["item-save"],
     mutationFn: (draft) => {
-      const isNew = draft._id === Const.NEW;
       return isNew ? service.saveNewItem(draft) : service.updateItemById(draft._id, draft);
+    },
+    onSuccess: (savedItem) => {
+      queryClient.invalidateQueries({ queryKey: ["item", savedItem._id] });
     },
   });
 
@@ -52,6 +56,9 @@ const useItem = (id) => {
   const deleteMutation = useMutation({
     mutationKey: ["item-delete"],
     mutationFn: (id) => service.deleteItemById(id),
+    onSuccess: (deletedItem) => {
+      queryClient.invalidateQueries({ queryKey: ["item", deletedItem._id] });
+    },
   });
 
   // when the fetched item arrives (or changes), reset the draft
@@ -116,7 +123,6 @@ const Item = () => {
   };
 
   const onSave = () => {
-    const isNew = draftItem._id === Const.NEW;
     actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, true);
     saveMutation
       .mutateAsync(draftItem)
@@ -124,7 +130,7 @@ const Item = () => {
         if (isNew) {
           actions.addNewItem(saved);
         }
-        actions.updateItem(items, saved);
+        actions.updateItem(saved);
         actions.setCurrentId(saved._id);
         actions.showSnack("Item saved.", "success");
         onClose();
@@ -235,14 +241,6 @@ const Item = () => {
     };
 
     events.addListener(Events.KEYUP, onKeyUp);
-
-    // pre-fetch items in case we reloaded the app on this page
-    const isFetched = Boolean(items.length);
-    if (!isFetched) {
-      actions.fetchItems().then(() => {
-        actions.setCurrentId(id);
-      });
-    }
 
     return () => {
       events.removeListener(Events.KEYUP, onKeyUp);

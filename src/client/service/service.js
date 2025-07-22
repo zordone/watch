@@ -11,14 +11,12 @@ export const sortItems = (items, sort = SortComparators.DEFAULT) => [
 
 export const listItems = (all) =>
   fetch(`${BASE_URL}/${all ? "items" : "activeitems"}`)
-    .then((res) => res.json())
+    .then(jsonOrError)
     .then((res) => res.map(parseItem))
     .then(sortItems);
 
 export const getItemById = (id) =>
-  fetch(`${BASE_URL}/items/${id}`)
-    .then((res) => res.json())
-    .then(parseItem);
+  fetch(`${BASE_URL}/items/${id}`).then(jsonOrError).then(parseItem);
 
 export const updateItemById = (id, item) => {
   const opts = {
