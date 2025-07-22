@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import { CloudDownload } from "@mui/icons-material";
 import { noop } from "../service/utils";
 import "./PosterSearch.css";
@@ -34,15 +34,17 @@ const PosterSearch = ({ visible = true, searching = false, images = [], onSelect
       {!searching && filteredImages.length > 0 && (
         <div className="PosterSearch-images">
           {filteredImages.map((image) => (
-            <button
+            <Box
+              component="button"
               key={image}
               type="button"
               className="PosterSearch-poster"
               onClick={() => onSelect(image)}
               title={image}
+              sx={{ boxShadow: 2, ":hover": { boxShadow: 8 } }}
             >
               <img src={image} alt="Poster" onError={onFailedImage} />
-            </button>
+            </Box>
           ))}
           <div className="PosterSearch-fade left" />
           <div className="PosterSearch-fade right" />

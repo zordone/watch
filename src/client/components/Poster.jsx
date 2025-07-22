@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { Box } from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
 import { ItemLoadingFlags, ItemType } from "../../common/enums";
 import ItemIcon from "./ItemIcon";
 import ScrapeButton from "./ScrapeButton";
@@ -8,39 +10,51 @@ import { actions } from "../store/store";
 import "./Poster.css";
 
 const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [state, setState] = useState("empty");
 
   useEffect(() => {
+    if (!item.posterUrl) {
+      setState("empty");
+      return;
+    }
+    setState("loading");
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, !!item.posterUrl);
   }, [item.posterUrl]);
 
   const onLoaded = useCallback(() => {
-    setIsLoaded(true);
+    setState("loaded");
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, false);
   }, []);
 
   const onError = useCallback(() => {
-    setIsLoaded(false);
+    setState("failed");
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER, false);
   }, []);
 
   return (
-    <div className="Poster">
-      <ItemIcon className="Poster-fallback" item={item} />
-      <img
-        src={item.posterUrl}
-        alt="Poster"
-        className={`Poster-image ${isLoaded ? "loaded" : "failed"}`}
-        onLoad={onLoaded}
-        onError={onError}
-      />
+    <Box className="Poster" sx={{ boxShadow: 2 }}>
+      {state === "empty" && <ItemIcon className="Poster-fallback" item={item} />}
+      {state === "failed" && (
+        <span className="Poster-fallback">
+          <ErrorOutline item={item} />
+        </span>
+      )}
+      {item.posterUrl && !["empty", "failed"].includes(state) && (
+        <img
+          src={item.posterUrl}
+          alt="Poster"
+          className={`Poster-image ${state}`}
+          onLoad={onLoaded}
+          onError={onError}
+        />
+      )}
       <ScrapeButton
         className="Poster-search"
         ariaLabel="Poster search"
         inProgress={posterSearching}
         onClick={onPosterSearch}
       />
-    </div>
+    </Box>
   );
 };
 
