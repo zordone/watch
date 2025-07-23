@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { actions } from "../store/store";
 import "./Loader.css";
 
-const Loader = () => {
+export const Loader = () => {
   const onAnimationEnd = useCallback((event) => {
     if (event.target.className !== "Loader") return;
     actions.setIsLoaderFinished(true);
@@ -17,5 +17,3 @@ const Loader = () => {
     </div>
   );
 };
-
-export default Loader;

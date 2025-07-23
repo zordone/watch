@@ -1,24 +1,24 @@
-import React, { useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import ItemTable from "./ItemTable";
-import Header from "./Header";
-import { useStore, actions } from "../store/store";
-import SearchField from "./SearchField";
-import Loader from "./Loader";
+import { IconButton } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router";
+import packageJson from "../../../package.json";
 import { SearchKeywords, SortComparators } from "../../common/enums";
-import { sortTitles } from "../service/sort";
-import * as service from "../service/service";
-import events, { Events } from "../service/events";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { useOnMount } from "../hooks/useOnMount";
 import { useSetHash } from "../hooks/useSetHash";
-import packageJson from "../../../package.json";
+import { events, Events } from "../service/events";
+import * as service from "../service/service";
+import { sortTitles } from "../service/sort";
+import { useStore, actions } from "../store/store";
+import { Header } from "./Header";
+import { ItemTable } from "./ItemTable";
+import { Loader } from "./Loader";
+import { SearchField } from "./SearchField";
 import "./Home.css";
 
-const Home = () => {
+export const Home = () => {
   const store = useStore();
   const { items, search, filteredItems, isLoaderFinished, currentId, sort } = store;
 
@@ -234,5 +234,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

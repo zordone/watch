@@ -1,8 +1,8 @@
-import React, { useCallback, useState } from "react";
 import { Button, Paper } from "@mui/material";
-import { useStore, actions } from "../store/store";
+import { useCallback, useState } from "react";
 import { ItemType, RatingType, SortComparators, StateType } from "../../common/enums";
 import { useGoBackAndSetHash } from "../hooks/useGoBackAndSetHash";
+import { useStore, actions } from "../store/store";
 import "./Help.css";
 
 const values = (obj, prefix = "") =>
@@ -22,7 +22,7 @@ const sections = [
   { title: "Sorting", keywords: values(SortComparators, "sort:") },
 ];
 
-const Help = () => {
+export const Help = () => {
   const goBackAndSetHash = useGoBackAndSetHash();
   const store = useStore();
   const { items } = store;
@@ -112,5 +112,3 @@ const Help = () => {
     </div>
   );
 };
-
-export default Help;

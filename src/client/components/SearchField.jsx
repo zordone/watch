@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import PropTypes from "prop-types";
-import { TextField, InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { TextField, InputAdornment } from "@mui/material";
+import PropTypes from "prop-types";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SearchKeywords } from "../../common/enums";
+import { events, Events } from "../service/events";
 import { noop } from "../service/utils";
-import events, { Events } from "../service/events";
 import "./SearchField.css";
 
 const textFieldSlotProps = {
@@ -29,7 +29,7 @@ const textFieldSlotProps = {
   },
 };
 
-const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = "" }) => {
+export const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = "" }) => {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
@@ -112,5 +112,3 @@ SearchField.propTypes = {
   onShortcut: PropTypes.func,
   value: PropTypes.string,
 };
-
-export default SearchField;

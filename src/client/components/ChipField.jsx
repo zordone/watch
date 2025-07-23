@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
-import PropTypes from "prop-types";
-import isEqual from "lodash/isEqual";
 import { Autocomplete, TextField } from "@mui/material";
+import isEqual from "lodash/isEqual";
+import PropTypes from "prop-types";
+import { useCallback } from "react";
 import { noop } from "../service/utils";
 
-const ChipField = ({
+export const ChipField = ({
   id,
   value,
   label,
@@ -68,5 +68,3 @@ ChipField.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
 };
-
-export default ChipField;

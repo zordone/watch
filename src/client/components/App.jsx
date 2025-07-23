@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import events, { Events } from "../service/events";
+import { useEffect } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { events, Events } from "../service/events";
+import { Help } from "./Help";
+import { Home } from "./Home";
+import { Item } from "./Item";
 import { SnackPack } from "./SnackPack";
-import Home from "./Home";
-import Item from "./Item";
-import Help from "./Help";
 import "./App.css";
 
 const queryClient = new QueryClient({
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
   { path: "/help", Component: Help },
 ]);
 
-const App = () => {
+export const App = () => {
   // handle global imdb id pasting
   useEffect(() => {
     const onPaste = (event) => {
@@ -87,5 +87,3 @@ const App = () => {
     </QueryClientProvider>
   );
 };
-
-export default App;

@@ -1,16 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import PropTypes from "prop-types";
 import { TextField } from "@mui/material";
 import { noop } from "lodash";
-import * as service from "../service/service";
-import { actions } from "../store/store";
-import SelectField from "./SelectField";
-import ChipField from "./ChipField";
-import { parseDate, mergeArrays } from "../service/utils";
-import { defaultItem } from "../service/serviceUtils";
-import events, { Events } from "../service/events";
-import ScrapeButton from "./ScrapeButton";
-import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
+import PropTypes from "prop-types";
+import { useState, useEffect, useRef, useCallback } from "react";
 import data from "../../common/data.json";
 import {
   ItemType,
@@ -21,12 +12,21 @@ import {
   RatingType,
   ItemLoadingFlags,
 } from "../../common/enums";
+import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
+import { events, Events } from "../service/events";
+import * as service from "../service/service";
+import { defaultItem } from "../service/serviceUtils";
+import { parseDate, mergeArrays } from "../service/utils";
+import { actions } from "../store/store";
+import { ChipField } from "./ChipField";
+import { ScrapeButton } from "./ScrapeButton";
+import { SelectField } from "./SelectField";
 import "./ItemForm.css";
 
 const MAX_GENRES = 4;
 const MAX_KEYWORDS = 10;
 
-const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
+export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
   const [item, setItem] = useState({ ...defaultItem });
   const [sameTitle, setSameTitle] = useState(undefined);
   const imdbScrapingRef = useRef(false);
@@ -83,7 +83,7 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
     if (imdbScrapingRef.current) return;
     imdbScrapingRef.current = true;
     actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, true);
-    service
+    return service
       .imdbData(item.imdbId)
       .then((data) => {
         console.debug("IMDb data", data);
@@ -119,7 +119,6 @@ const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true
         imdbScrapingRef.current = false;
         actions.setItemLoadingFlag(ItemLoadingFlags.IMDB_SCRAPE, false);
       });
-    return true;
   }, [item, onChange, onTitleChangeDebounced]);
 
   useEffect(() => {
@@ -303,5 +302,3 @@ ItemForm.propTypes = {
   findByTitle: PropTypes.func,
   visible: PropTypes.bool,
 };
-
-export default ItemForm;

@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@mui/material";
-import ItemRow from "./ItemRow";
+import PropTypes from "prop-types";
+import React from "react";
 import { noop } from "../service/utils";
+import { ItemRow } from "./ItemRow";
 import "./ItemTable.css";
 
-const ItemTable = ({ items = [], onRowClick = noop, currentId = null }) => {
+const ItemTableBase = ({ items = [], onRowClick = noop, currentId = null }) => {
   return (
     <Paper className="ItemTable-paper">
       <Table className="ItemTable">
@@ -34,10 +34,10 @@ const ItemTable = ({ items = [], onRowClick = noop, currentId = null }) => {
   );
 };
 
-ItemTable.propTypes = {
+ItemTableBase.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   currentId: PropTypes.string,
   onRowClick: PropTypes.func,
 };
 
-export default React.memo(ItemTable);
+export const ItemTable = React.memo(ItemTableBase);

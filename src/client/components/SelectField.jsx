@@ -1,10 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { TextField } from "@mui/material";
+import PropTypes from "prop-types";
 
 const textFieldSlotProps = { select: { native: true } };
 
-const SelectField = ({ options = [], ...props }) => (
+export const SelectField = ({ options = [], ...props }) => (
   <TextField select {...props} slotProps={textFieldSlotProps}>
     {options.map((option) => (
       <option key={option} value={option}>
@@ -23,5 +22,3 @@ SelectField.propTypes = {
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.string),
 };
-
-export default SelectField;

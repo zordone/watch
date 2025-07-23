@@ -1,13 +1,13 @@
-const omit = require("lodash/omit");
-const google = require("googlethis");
-const dayjs = require("dayjs");
 const fs = require("fs");
 const { DOMParser } = require("@xmldom/xmldom");
-const { Item } = require("./models");
-const { importCsv } = require("./importCsv");
-const { IMPORT_DIR, BACKUP_DIR } = require("./config");
+const dayjs = require("dayjs");
+const google = require("googlethis");
+const omit = require("lodash/omit");
 const { genres } = require("../common/data.json");
 const { ItemType, FinishedType } = require("../common/enums-node");
+const { IMPORT_DIR, BACKUP_DIR } = require("./config");
+const { importCsv } = require("./importCsv");
+const { Item } = require("./models");
 
 const reImage = /\.(jpe?g|png|webp)\b/i;
 const reImdbData = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
@@ -39,7 +39,7 @@ const updateItemById = (id, fields) => {
       .then((item) => {
         if (!item) {
           console.log("[UpdateItemById] Not found.");
-          reject(new Error("not found"));
+          return reject(new Error("not found"));
         }
         item.set(body);
         item.save((err, saved) => {
@@ -60,33 +60,29 @@ const updateItemById = (id, fields) => {
 };
 
 exports.adminImport = (req, res) => {
+  let done = 0;
+  let errors = 0;
+  const filename = `${IMPORT_DIR}/import.csv`;
+  const saveItem = (model) =>
+    model
+      .save()
+      .then(() => {
+        done += 1;
+      })
+      .catch((err) => {
+        console.log("[AdminImport] Item to save", model);
+        console.error("[AdminImport] Item is not saved.", err);
+        errors += 1;
+      });
   removeAllItems()
     .then(() => {
       console.log("[AdminImport] Database cleared.");
-      const filename = `${IMPORT_DIR}/import.csv`;
-      let done = 0;
-      let errors = 0;
-      importCsv(filename)
-        .then((models) =>
-          Promise.all(
-            models.map((model) =>
-              model
-                .save()
-                .then(() => {
-                  done += 1;
-                })
-                .catch((err) => {
-                  console.log("[AdminImport] Item to save", model);
-                  console.error("[AdminImport] Item is not saved.", err);
-                  errors += 1;
-                }),
-            ),
-          ),
-        )
-        .then(() => {
-          console.log("[AdminImport] Import finished. Done:", done, "Errors:", errors);
-          res.sendStatus(200);
-        });
+      return importCsv(filename);
+    })
+    .then((models) => Promise.all(models.map(saveItem)))
+    .then(() => {
+      console.log("[AdminImport] Import finished. Done:", done, "Errors:", errors);
+      res.sendStatus(200);
     })
     .catch((err) => {
       console.error("[AdminImport]", err);

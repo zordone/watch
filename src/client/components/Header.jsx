@@ -1,9 +1,8 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { noop } from "../service/utils";
 import "./Header.css";
 
-const Header = ({
+export const Header = ({
   searchField = null,
   helpButton = null,
   newButton = null,
@@ -30,5 +29,3 @@ Header.propTypes = {
   newButton: PropTypes.element,
   onLogoClick: PropTypes.func,
 };
-
-export default Header;

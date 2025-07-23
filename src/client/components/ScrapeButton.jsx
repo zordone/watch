@@ -1,11 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { IconButton } from "@mui/material";
 import { CloudDownload } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import PropTypes from "prop-types";
 import { noop } from "../service/utils";
 import "./ScrapeButton.css";
 
-const ScrapeButton = ({
+export const ScrapeButton = ({
   visible = true,
   className = "",
   ariaLabel,
@@ -32,5 +31,3 @@ ScrapeButton.propTypes = {
   inProgress: PropTypes.bool,
   onClick: PropTypes.func,
 };
-
-export default ScrapeButton;

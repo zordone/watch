@@ -1,11 +1,11 @@
-const autoprefixer = require("autoprefixer");
 const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const autoprefixer = require("autoprefixer");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const webpack = require("webpack");
 const getClientEnvironment = require("./env");
 const paths = require("./paths");
 

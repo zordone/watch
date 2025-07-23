@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { Box } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
+import { Box } from "@mui/material";
+import PropTypes from "prop-types";
+import { useCallback, useEffect, useState } from "react";
 import { ItemLoadingFlags, ItemType } from "../../common/enums";
-import ItemIcon from "./ItemIcon";
-import ScrapeButton from "./ScrapeButton";
 import { noop } from "../service/utils";
 import { actions } from "../store/store";
+import { ItemIcon } from "./ItemIcon";
+import { ScrapeButton } from "./ScrapeButton";
 import "./Poster.css";
 
-const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
+export const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
   const [state, setState] = useState("empty");
 
   useEffect(() => {
@@ -67,5 +67,3 @@ Poster.propTypes = {
   posterSearching: PropTypes.bool,
   onPosterSearch: PropTypes.func,
 };
-
-export default Poster;

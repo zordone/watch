@@ -1,6 +1,6 @@
 import { proxy, useSnapshot } from "valtio";
-import * as service from "../service/service";
 import { Const } from "../../common/enums";
+import * as service from "../service/service";
 
 // get initial search term from the URL hash
 const initialSearch = decodeURIComponent((location.hash || "").slice(1));

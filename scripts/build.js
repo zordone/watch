@@ -14,12 +14,12 @@ require("../config/env");
 
 const path = require("path");
 const fs = require("fs-extra");
-const webpack = require("webpack");
 const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
-const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
-const printHostingInstructions = require("react-dev-utils/printHostingInstructions");
 const FileSizeReporter = require("react-dev-utils/FileSizeReporter");
+const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
 const printBuildError = require("react-dev-utils/printBuildError");
+const printHostingInstructions = require("react-dev-utils/printHostingInstructions");
+const webpack = require("webpack");
 const paths = require("../config/paths");
 const config = require("../config/webpack.config.prod");
 
@@ -48,38 +48,36 @@ measureFileSizesBeforeBuild(paths.appBuild)
     // Start the webpack build
     return build(previousFileSizes);
   })
-  .then(
-    ({ stats, previousFileSizes, warnings }) => {
-      if (warnings.length) {
-        console.log(warnings.join("\n\n"));
-        console.log("\nSearch for the keywords to learn more about each warning.");
-        console.log('To ignore, add "// eslint-disable-next-line" to the line before.\n');
-      } else {
-        console.log("Compiled successfully.\n");
-      }
+  .then(({ stats, previousFileSizes, warnings }) => {
+    if (warnings.length) {
+      console.log(warnings.join("\n\n"));
+      console.log("\nSearch for the keywords to learn more about each warning.");
+      console.log('To ignore, add "// eslint-disable-next-line" to the line before.\n');
+    } else {
+      console.log("Compiled successfully.\n");
+    }
 
-      console.log("File sizes after gzip:\n");
-      printFileSizesAfterBuild(
-        stats,
-        previousFileSizes,
-        paths.appBuild,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE,
-      );
-      console.log();
+    console.log("File sizes after gzip:\n");
+    printFileSizesAfterBuild(
+      stats,
+      previousFileSizes,
+      paths.appBuild,
+      WARN_AFTER_BUNDLE_GZIP_SIZE,
+      WARN_AFTER_CHUNK_GZIP_SIZE,
+    );
+    console.log();
 
-      const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
-      const publicPath = config.output.publicPath;
-      const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn);
-    },
-    (err) => {
-      console.log("Failed to compile.\n", err, "\n");
-      printBuildError(err);
-      process.exit(1);
-    },
-  );
+    const appPackage = require(paths.appPackageJson);
+    const publicUrl = paths.publicUrl;
+    const publicPath = config.output.publicPath;
+    const buildFolder = path.relative(process.cwd(), paths.appBuild);
+    printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn);
+  })
+  .catch((err) => {
+    console.log("Failed to compile.\n", err, "\n");
+    printBuildError(err);
+    process.exit(1);
+  });
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {

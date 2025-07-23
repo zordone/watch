@@ -1,11 +1,11 @@
-const express = require("express");
 const compression = require("compression");
+const express = require("express");
 const api = require("./api");
-const db = require("./database");
 const backups = require("./backups");
 const { PORT } = require("./config");
+const db = require("./database");
 
-db.connect().then(backups.startPeriodicBackups);
+db.connect().then(backups.startPeriodicBackups).catch(console.error);
 
 // middleware
 const app = express();

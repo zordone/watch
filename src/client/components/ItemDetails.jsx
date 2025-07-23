@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
 import { Button } from "@mui/material";
-import Poster from "./Poster";
-import StateLabel from "./StateLabel";
+import PropTypes from "prop-types";
+import { useState, useEffect, useCallback } from "react";
 import { ItemType, FinishedType, StateType, NextType, ValiType } from "../../common/enums";
-import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from "../service/utils";
 import { defaultItem } from "../service/serviceUtils";
-import RatingButton from "./RatingButton";
+import { inputDateAddMonth, parseDate, seasonCode, getNextSeasonNum, noop } from "../service/utils";
+import { Poster } from "./Poster";
+import { RatingButton } from "./RatingButton";
+import { StateLabel } from "./StateLabel";
 import "./ItemDetails.css";
 
 const checkableStates = [StateType.READY, StateType.PROGRESS, StateType.RECHECK];
@@ -32,7 +32,7 @@ DetailsRow.propTypes = {
   optional: PropTypes.bool,
 };
 
-const ItemDetails = ({
+export const ItemDetails = ({
   item: propItem,
   onChange,
   onPosterSearch = noop,
@@ -254,6 +254,7 @@ const ItemDetails = ({
           <DetailsRow label="Notes" value={item.notes} optional />
           <DetailsRow label="With Vali" value={item.withVali} />
           <DetailsRow label="Links" value={links} className="ItemDetails-links" />
+          <DetailsRow label="Test">Hello</DetailsRow>
         </div>
       </div>
     </div>
@@ -267,5 +268,3 @@ ItemDetails.propTypes = {
   posterSearching: PropTypes.bool,
   visible: PropTypes.bool,
 };
-
-export default ItemDetails;

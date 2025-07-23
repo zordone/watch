@@ -1,13 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { TableRow, TableCell } from "@mui/material";
-import ItemIcon from "./ItemIcon";
-import StateLabel from "./StateLabel";
-import { maxLength, noop } from "../service/utils";
+import PropTypes from "prop-types";
 import { StateType, ValiType } from "../../common/enums";
+import { maxLength, noop } from "../service/utils";
+import { ItemIcon } from "./ItemIcon";
+import { StateLabel } from "./StateLabel";
 import "./ItemRow.css";
 
-const ItemRow = ({ item, onClick = noop, isCurrent = false }) => {
+export const ItemRow = ({ item, onClick = noop, isCurrent = false }) => {
   const className = `ItemRow ${isCurrent ? "current" : ""}`;
   return (
     <TableRow className={className} onClick={(event) => onClick(item._id, event.metaKey)}>
@@ -43,5 +42,3 @@ ItemRow.propTypes = {
   isCurrent: PropTypes.bool,
   onClick: PropTypes.func,
 };
-
-export default ItemRow;

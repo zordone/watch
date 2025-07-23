@@ -9,10 +9,10 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-const openBrowser = require("react-dev-utils/openBrowser");
-const express = require("express");
 const path = require("path");
 const compression = require("compression");
+const express = require("express");
+const openBrowser = require("react-dev-utils/openBrowser");
 
 // Ensure environment variables are read.
 require("../config/env");
@@ -67,7 +67,7 @@ const prodServer = prodApp.listen(port, (err) => {
   }
   console.log("Starting the production server...\n");
   openBrowser(`${protocol}://${HOST}:${port}`);
-  console.log("Production server started on port " + port);
+  console.log(`Production server started on port ${port}`);
 });
 
 ["SIGINT", "SIGTERM"].forEach((sig) => {

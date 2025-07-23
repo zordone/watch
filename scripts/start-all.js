@@ -35,7 +35,7 @@ console.log(`\n🍿 Watch - ${color}${mode}${reset}\n\n`);
 
 // start db, then server & client
 let isAllStarted = false;
-spawnPipe("mongod", ["--dbpath=" + DATA_FOLDER], "[DB]", (line) => {
+spawnPipe("mongod", [`--dbpath=${DATA_FOLDER}`], "[DB]", (line) => {
   if (isAllStarted) {
     return;
   }

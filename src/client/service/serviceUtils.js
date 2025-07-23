@@ -1,8 +1,8 @@
 import mapValues from "lodash/mapValues";
 import { ItemType, NextType, ValiType, FinishedType, StateType } from "../../common/enums";
+import { itemState } from "./itemState";
+import { itemSearchData } from "./search";
 import { parseDate } from "./utils";
-import itemState from "./itemState";
-import itemSearchData from "./search";
 
 export const defaultItem = {
   title: "",

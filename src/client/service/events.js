@@ -12,7 +12,7 @@ const validateEvent = (event) => {
   }
 };
 
-export default {
+export const events = {
   addListener(event, handler) {
     validateEvent(event);
     document.addEventListener(event, handler);

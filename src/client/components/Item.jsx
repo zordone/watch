@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, IconButton, LinearProgress, Paper } from "@mui/material";
 import { Create, Check, DeleteForever } from "@mui/icons-material";
-import * as service from "../service/service";
-import { useStore, actions } from "../store/store";
-import ItemForm from "./ItemForm";
-import ItemDetails from "./ItemDetails";
-import itemState from "../service/itemState";
-import { slugify } from "../service/utils";
-import { defaultItem } from "../service/serviceUtils";
-import PosterSearch from "./PosterSearch";
+import { Button, IconButton, LinearProgress, Paper } from "@mui/material";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router";
 import { Const, ItemLoadingFlags } from "../../common/enums";
-import events, { Events } from "../service/events";
 import { useGoBack } from "../hooks/useGoBack";
+import { events, Events } from "../service/events";
+import { itemState } from "../service/itemState";
+import * as service from "../service/service";
+import { defaultItem } from "../service/serviceUtils";
+import { slugify } from "../service/utils";
+import { useStore, actions } from "../store/store";
+import { ItemDetails } from "./ItemDetails";
+import { ItemForm } from "./ItemForm";
+import { PosterSearch } from "./PosterSearch";
 import "./Item.css";
 
 const FORM = "form";
@@ -78,7 +78,7 @@ const useItem = (id) => {
   };
 };
 
-const Item = () => {
+export const Item = () => {
   const { id, imdbId } = useParams();
   const store = useStore();
   const { items, sort, resort, isItemLoading } = store;
@@ -124,7 +124,7 @@ const Item = () => {
 
   const onSave = () => {
     actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, true);
-    saveMutation
+    return saveMutation
       .mutateAsync(draftItem)
       .then((saved) => {
         if (isNew) {
@@ -159,7 +159,7 @@ const Item = () => {
     setPosterSearching(true);
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, true);
     const query = encodeURI(draftItem.title);
-    service
+    return service
       .searchImages(query)
       .then((images) => {
         setPosters({ visible: true, searching: false, images });
@@ -185,7 +185,7 @@ const Item = () => {
     if (deleteSure) {
       clearTimeout(deleteTimerRef.current);
       actions.setItemLoadingFlag(ItemLoadingFlags.DELETE, true);
-      deleteMutation
+      return deleteMutation
         .mutateAsync(draftItem._id)
         .then(() => {
           actions.deleteItem(items, draftItem._id);
@@ -311,5 +311,3 @@ const Item = () => {
     </div>
   );
 };
-
-export default Item;

@@ -1,6 +1,6 @@
 import { Const, SortComparators } from "../../common/enums";
-import sortComparators from "./sort";
 import { defaultItem, jsonHeaders, parseItem, jsonOrError } from "./serviceUtils";
+import { sortComparators } from "./sort";
 
 const BASE_URL = window.location.origin.replace(/:3000$/, ":3001");
 console.debug("Backend URL", BASE_URL);

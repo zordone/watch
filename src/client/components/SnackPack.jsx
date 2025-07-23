@@ -1,5 +1,5 @@
-import React, { useCallback, useLayoutEffect, useRef } from "react";
 import { Snackbar, Alert } from "@mui/material";
+import { useCallback, useLayoutEffect, useRef } from "react";
 import { actions, useStore } from "../store/store";
 import "./SnackPack.css";
 
@@ -37,7 +37,7 @@ export const SnackPack = () => {
     <div className="SnackPack" ref={containerRef}>
       {snacks.map(({ id, text, severity, visible }) => (
         <Snackbar
-          open={true}
+          open
           autoHideDuration={AUTOHIDE_DURATION}
           onClose={() => onClose(id)}
           key={id}

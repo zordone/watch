@@ -1,11 +1,10 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { StateType } from "../../common/enums";
 import "./StateLabel.css";
 
 const boldRegex = /^(s\d{2}|\d{4}.\d{2}.\d{2})$/i;
 
-const StateLabel = ({ item, className = "" }) => {
+export const StateLabel = ({ item, className = "" }) => {
   const { state = {} } = item;
   const { parts = [] } = state;
 
@@ -25,5 +24,3 @@ StateLabel.propTypes = {
   }).isRequired,
   className: PropTypes.string,
 };
-
-export default StateLabel;

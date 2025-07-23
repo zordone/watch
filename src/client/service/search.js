@@ -26,7 +26,7 @@ const getStateSeason = (state) => {
   return match ? match[1] : "";
 };
 
-const itemSearchData = (item, state) => ({
+export const itemSearchData = (item, state) => ({
   text: cleanArray([
     replaceRomanNumbers(item.title, true),
     cleanText(removeCommonWords(item.notes)),
@@ -56,5 +56,3 @@ const itemSearchData = (item, state) => ({
     ...item.keywords,
   ]),
 });
-
-export default itemSearchData;

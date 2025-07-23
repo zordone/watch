@@ -16,7 +16,8 @@ const state = (type, parts) => ({
   parts,
 });
 
-const itemState = (item) => {
+// eslint-disable-next-line sonarjs/cognitive-complexity -- this is just long, but it's a single responsibility
+export const itemState = (item) => {
   const now = new Date();
   const isFinished = item.finished === FinishedType.YES;
   const nextDate = parseDate(item.nextDate);
@@ -131,5 +132,3 @@ const itemState = (item) => {
   console.warn("Unknown state", item);
   return state(StateType.RECHECK, ["Time to recheck."]);
 };
-
-export default itemState;

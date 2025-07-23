@@ -1,16 +1,16 @@
-const autoprefixer = require("autoprefixer");
 const path = require("path");
-const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
-const { GenerateSW } = require("workbox-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const paths = require("./paths");
+const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require("webpack");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
+const { GenerateSW } = require("workbox-webpack-plugin");
 const getClientEnvironment = require("./env");
+const paths = require("./paths");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -226,7 +226,7 @@ module.exports = {
     // having to parse `index.html`.
     new WebpackManifestPlugin({
       fileName: "asset-manifest.json",
-      publicPath: publicPath,
+      publicPath,
       generate: (seed, files, entrypoints) => {
         const manifestFiles = files.reduce((manifest, file) => {
           manifest[file.name] = file.path;
