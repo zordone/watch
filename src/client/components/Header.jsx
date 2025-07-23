@@ -12,9 +12,9 @@ const Header = ({
   <header className="Header">
     <div className="Header-logoAndTitle">
       <button type="button" className="Header-logoButton" onClick={onLogoClick}>
-        <img className="Header-logo" alt="logo" src="/app-logo.webp" />
+        <img className="Header-logo" alt="logo" src="/app-logo.webp" draggable="false" />
       </button>
-      <img className="Header-title" alt="watch" src="/app-title.webp" />
+      <img className="Header-title" alt="watch" src="/app-title.webp" draggable="false" />
     </div>
     {searchField}
     <div className="Header-buttons">

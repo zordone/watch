@@ -46,6 +46,7 @@ const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
           className={`Poster-image ${state}`}
           onLoad={onLoaded}
           onError={onError}
+          draggable="false"
         />
       )}
       <ScrapeButton

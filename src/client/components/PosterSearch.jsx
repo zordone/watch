@@ -43,7 +43,7 @@ const PosterSearch = ({ visible = true, searching = false, images = [], onSelect
               title={image}
               sx={{ boxShadow: 2, ":hover": { boxShadow: 8 } }}
             >
-              <img src={image} alt="Poster" onError={onFailedImage} />
+              <img src={image} alt="Poster" onError={onFailedImage} draggable="false" />
             </Box>
           ))}
           <div className="PosterSearch-fade left" />
