@@ -27,6 +27,12 @@ export const seasonCode = (num) => (num ? `s${num.toString().padStart(2, "0")}` 
 export const getNextSeasonNum = (item) =>
   item.type === ItemType.MOVIE ? null : (parseInt(item.lastWatched, 10) || 0) + 1;
 
+export const getImdbState = (imdbId) => {
+  if (!imdbId) return "empty";
+  if (["#", "none"].includes(imdbId)) return "none";
+  return "valid";
+};
+
 export const maxLength = (str, len) => (str.length <= len ? str : `${str.substr(0, len - 1)}…`);
 
 export const cachePureFunction = (func, debugName = "") => {

@@ -129,6 +129,5 @@ export const itemState = (item) => {
   if (item._id === Const.NEW) {
     return state(StateType.RECHECK, ["New."]);
   }
-  console.warn("Unknown state", item);
   return state(StateType.RECHECK, ["Time to recheck."]);
 };
