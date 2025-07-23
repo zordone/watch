@@ -24,7 +24,11 @@ const Home = () => {
 
   useQuery({
     queryKey: ["items"],
-    queryFn: () => service.listItems(true),
+    queryFn: () =>
+      service.listItems(true).catch((err) => {
+        console.error("Error fetching items", err);
+        throw err;
+      }),
     select: (items) => {
       actions.setItems(items);
       return items;

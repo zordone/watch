@@ -23,7 +23,7 @@ export const defaultItem = {
   rating: "",
   state: {
     type: StateType.READY,
-    message: "",
+    parts: [],
   },
 };
 
