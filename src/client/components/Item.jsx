@@ -1,7 +1,7 @@
 import { Create, Check, DeleteForever } from "@mui/icons-material";
 import { Button, IconButton, LinearProgress, Paper } from "@mui/material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router";
 import { Const, ItemLoadingFlags } from "../../common/enums";
 import { useGoBack } from "../hooks/useGoBack";
@@ -80,8 +80,8 @@ export const Item = () => {
   const {
     draftItem,
     setDraftItem,
-    saveMutation,
-    deleteMutation,
+    saveMutation: { mutateAsync: saveMutationAsync },
+    deleteMutation: { mutateAsync: deleteMutationAsync },
     isNew,
     isError: isItemError,
   } = useItem(id);
@@ -105,23 +105,27 @@ export const Item = () => {
 
   const onClose = useGoBack();
 
-  const updateItemState = (changedItem, updateState = false) => {
-    setDraftItem({
-      ...changedItem,
-      state: updateState ? itemState(changedItem) : changedItem.state,
-    });
-  };
+  const updateItemState = useCallback(
+    (changedItem, updateState = false) => {
+      setDraftItem({
+        ...changedItem,
+        state: updateState ? itemState(changedItem) : changedItem.state,
+      });
+    },
+    [setDraftItem],
+  );
 
-  const onChange = (changedItem) => {
-    console.log("Item.onChange");
-    const updateState = page === DETAILS;
-    updateItemState(changedItem, updateState);
-  };
+  const onChange = useCallback(
+    (changedItem) => {
+      const updateState = page === DETAILS;
+      updateItemState(changedItem, updateState);
+    },
+    [page, updateItemState],
+  );
 
-  const onSave = () => {
+  const onSave = useCallback(() => {
     actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, true);
-    return saveMutation
-      .mutateAsync(draftItem)
+    return saveMutationAsync(draftItem)
       .then((saved) => {
         actions.updateItem(saved);
         actions.setCurrentId(saved._id);
@@ -136,18 +140,18 @@ export const Item = () => {
       .finally(() => {
         actions.setItemLoadingFlag(ItemLoadingFlags.SAVE, false);
       });
-  };
+  }, [draftItem, onClose, saveMutationAsync]);
 
-  const onShowForm = () => {
+  const onShowForm = useCallback(() => {
     setPage(FORM);
-  };
+  }, []);
 
-  const onShowDetails = () => {
+  const onShowDetails = useCallback(() => {
     setPage(DETAILS);
     updateItemState(draftItem, true);
-  };
+  }, [draftItem, updateItemState]);
 
-  const onPosterSearch = () => {
+  const onPosterSearch = useCallback(() => {
     setPosters({ visible: true, searching: true, images: [] });
     setPosterSearching(true);
     actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, true);
@@ -165,21 +169,23 @@ export const Item = () => {
         setPosterSearching(false);
         actions.setItemLoadingFlag(ItemLoadingFlags.POSTER_SEARCH, false);
       });
-  };
+  }, [draftItem]);
 
-  const onPosterSelect = (url) => {
-    if (url) {
-      onChange({ ...draftItem, posterUrl: url });
-    }
-    setPosters({ visible: false, searching: false, images: [] });
-  };
+  const onPosterSelect = useCallback(
+    (url) => {
+      if (url) {
+        onChange({ ...draftItem, posterUrl: url });
+      }
+      setPosters({ visible: false, searching: false, images: [] });
+    },
+    [draftItem, onChange],
+  );
 
-  const onDelete = () => {
+  const onDelete = useCallback(() => {
     if (deleteSure) {
       clearTimeout(deleteTimerRef.current);
       actions.setItemLoadingFlag(ItemLoadingFlags.DELETE, true);
-      return deleteMutation
-        .mutateAsync(draftItem._id)
+      return deleteMutationAsync(draftItem._id)
         .then(() => {
           actions.deleteItem(items, draftItem._id);
           setError("");
@@ -202,15 +208,19 @@ export const Item = () => {
         setDeleteSure(false);
       }, 3000);
     }
-  };
+  }, [deleteMutationAsync, deleteSure, draftItem._id, items, onClose]);
 
-  const findByTitle = (id, title) => {
-    const titleSlug = slugify(title);
-    return items.find(
-      (currentItem) => currentItem._id !== id && slugify(currentItem.title) === titleSlug,
-    );
-  };
+  const findByTitle = useCallback(
+    (id, title) => {
+      const titleSlug = slugify(title);
+      return items.find(
+        (currentItem) => currentItem._id !== id && slugify(currentItem.title) === titleSlug,
+      );
+    },
+    [items],
+  );
 
+  // if this is a new item, and we have and IMDb ID, start scraping automatically
   useEffect(() => {
     if (id === Const.NEW && !isNewInitialized.current) {
       isNewInitialized.current = true;
@@ -221,7 +231,10 @@ export const Item = () => {
       setDraftItem(newItem);
       setPage(FORM);
     }
+  }, [id, imdbId, setDraftItem]);
 
+  // handle keyboard shortcuts
+  useEffect(() => {
     const onKeyUp = (event) => {
       const inInput = "INPUT,SELECT,TEXTAREA".includes(document.activeElement.tagName);
       if (event.code === "Escape") {
@@ -242,8 +255,9 @@ export const Item = () => {
         clearTimeout(deleteTimerRef.current);
       }
     };
-  }, [id, imdbId, items.length, onClose, setDraftItem]);
+  }, [onClose]);
 
+  // re-sort items when the store says we need to
   useEffect(() => {
     if (resort) {
       actions.setSort(items, sort);

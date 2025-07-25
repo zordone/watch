@@ -134,40 +134,43 @@ export const Home = () => {
     scrollToTop();
   }, [onSearchChanged, scrollToTop]);
 
-  const onShortcut = (code, inSearch, cmdKey) => {
-    if (code === "Enter") {
-      // open first item
-      const item = filteredItems[0];
-      const isSortCommand = currentSearchRef.current?.startsWith("sort:");
-      if (item && !isSortCommand) {
-        navigate(`/item/${item._id}`, { viewTransition: true });
-        return;
-      }
-      // set sort
-      if (isSortCommand) {
-        const newSort =
-          currentSearchRef.current.replace("sort:", "").toLowerCase() || SortComparators.DEFAULT;
-        const isValid = Object.values(SortComparators).includes(newSort);
-        if (!isValid) {
+  const onShortcut = useCallback(
+    (code, inSearch, cmdKey) => {
+      if (code === "Enter") {
+        // open first item
+        const item = filteredItems[0];
+        const isSortCommand = currentSearchRef.current?.startsWith("sort:");
+        if (item && !isSortCommand) {
+          navigate(`/item/${item._id}`, { viewTransition: true });
           return;
         }
-        if (sort !== newSort) {
-          actions.setSort(items, newSort);
-          actions.showSnack(`Sorted by ${sortTitles[newSort]}.`, "success");
+        // set sort
+        if (isSortCommand) {
+          const newSort =
+            currentSearchRef.current.replace("sort:", "").toLowerCase() || SortComparators.DEFAULT;
+          const isValid = Object.values(SortComparators).includes(newSort);
+          if (!isValid) {
+            return;
+          }
+          if (sort !== newSort) {
+            actions.setSort(items, newSort);
+            actions.showSnack(`Sorted by ${sortTitles[newSort]}.`, "success");
+          }
+          updateSearchDebounced("");
         }
-        updateSearchDebounced("");
+      } else if (code === "KeyN" && !inSearch) {
+        // add new item
+        onAddNew();
+      } else if (code === "KeyH" && !inSearch) {
+        // show help
+        onHelp();
+      } else if ((cmdKey && code === "ArrowUp") || code === "Home") {
+        // home
+        scrollToTop();
       }
-    } else if (code === "KeyN" && !inSearch) {
-      // add new item
-      onAddNew();
-    } else if (code === "KeyH" && !inSearch) {
-      // show help
-      onHelp();
-    } else if ((cmdKey && code === "ArrowUp") || code === "Home") {
-      // home
-      scrollToTop();
-    }
-  };
+    },
+    [filteredItems, items, navigate, onAddNew, onHelp, scrollToTop, sort, updateSearchDebounced],
+  );
 
   const onRowClick = useCallback(
     (id, isCmd) => {
@@ -184,6 +187,7 @@ export const Home = () => {
     [navigate],
   );
 
+  // add/remove listeners for the custom IMDb ID pasting event
   useOnMount(() => {
     const onImdbPaste = (event) => {
       onAddNew(event, event.detail.imdbId);
@@ -191,7 +195,6 @@ export const Home = () => {
 
     events.addListener(Events.IMDB_PASTE, onImdbPaste);
 
-    // on unmount
     return () => {
       events.removeListener(Events.IMDB_PASTE, onImdbPaste);
     };

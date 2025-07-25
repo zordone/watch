@@ -84,11 +84,9 @@
   top: 15px;
 }
 
-/* hide number/date spin buttons */
+/* hide number spin buttons */
 .ItemForm input[type="number"]::-webkit-inner-spin-button,
-.ItemForm input[type="number"]::-webkit-outer-spin-button,
-.ItemForm input[type="date"]::-webkit-inner-spin-button,
-.ItemForm input[type="date"]::-webkit-outer-spin-button {
+.ItemForm input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -101,11 +99,10 @@
   color: transparent;
 }
 
-/* transparent date picker button */
-.ItemForm input[type="date"]::-webkit-calendar-picker-indicator,
-.ItemForm .ItemForm-grid input[type="date"]::-webkit-clear-button {
-  background: transparent;
-  color: #fff;
+/* make calendar icon white */
+.ItemForm input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  scale: 0.8;
 }
 
 .ItemForm-grid .title {

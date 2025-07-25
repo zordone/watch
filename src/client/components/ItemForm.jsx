@@ -26,6 +26,9 @@ import "./ItemForm.css";
 const MAX_GENRES = 4;
 const MAX_KEYWORDS = 10;
 
+const seasonSlotProps = { htmlInput: { min: "1", max: "99" } };
+const releaseYearSlotProps = { htmlInput: { min: "1900", max: "2100" } };
+
 export const ItemForm = ({
   // draft item
   item,
@@ -33,51 +36,45 @@ export const ItemForm = ({
   findByTitle = noop,
   visible = true,
 }) => {
-  const [sameTitle, setSameTitle] = useState(undefined);
+  const [same, setSame] = useState(undefined);
   const imdbScrapingRef = useRef(false);
   const imdbAutoScrapeDoneRef = useRef(false);
-  const sameTitleLinkRef = useRef();
-
-  const seasonSlotProps = { htmlInput: { min: "1", max: "99" } };
-  const releaseYearSlotProps = { htmlInput: { min: "1900", max: "2100" } };
 
   const onTitleChangeDebounced = useDebouncedCallback(
     useCallback(() => {
       const other = findByTitle(item._id, item.title);
-      if (other !== sameTitle) {
-        const { _id: id, title } = other || {};
-        if (id) {
-          sameTitleLinkRef.current = (
-            <a href={`/item/${id}`} target="_blank" rel="noopener noreferrer">
-              {title}
-            </a>
-          );
-        }
-        setSameTitle(other);
+      if (other !== same) {
+        setSame(other);
       }
-    }, [findByTitle, item._id, item.title, sameTitle]),
+    }, [findByTitle, item._id, item.title, same]),
     500,
   );
 
-  const onFieldChange = (event) => {
-    const { id, value } = event.target;
-    const newItem = {
-      ...item,
-      [id]: value,
-    };
-    onChange(newItem);
-    if (item.title !== newItem.title) {
-      onTitleChangeDebounced();
-    }
-  };
+  const onFieldChange = useCallback(
+    (event) => {
+      const { id, value } = event.target;
+      const newItem = {
+        ...item,
+        [id]: value,
+      };
+      onChange(newItem);
+      if (item.title !== newItem.title) {
+        onTitleChangeDebounced();
+      }
+    },
+    [item, onChange, onTitleChangeDebounced],
+  );
 
-  const onDateKeyDown = (event) => {
-    if (event.key.toLowerCase() === "t") {
-      const { id } = event.target;
-      const value = parseDate(new Date()).input;
-      onFieldChange({ target: { id, value } });
-    }
-  };
+  const onDateKeyDown = useCallback(
+    (event) => {
+      if (event.key.toLowerCase() === "t") {
+        const { id } = event.target;
+        const value = parseDate(new Date()).input;
+        onFieldChange({ target: { id, value } });
+      }
+    },
+    [onFieldChange],
+  );
 
   const onImdbScrape = useCallback(() => {
     if (imdbScrapingRef.current) return;
@@ -120,6 +117,7 @@ export const ItemForm = ({
       });
   }, [item, onChange, onTitleChangeDebounced]);
 
+  // add/remove listener for the IMDb scrape keyboard shortcut event
   useEffect(() => {
     events.addListener(Events.IMDB_SCRAPE, onImdbScrape);
     return () => {
@@ -161,8 +159,15 @@ export const ItemForm = ({
             fullWidth
             autoFocus
           />
-          <div className={`same-title ${sameTitle ? "show" : ""}`}>
-            This title is already taken by: {sameTitleLinkRef.current}
+          <div className={`same-title ${same ? "show" : ""}`}>
+            {same && (
+              <>
+                This title is already taken by:
+                <a href={`/item/${same?.id}`} target="_blank" rel="noopener noreferrer">
+                  {same?.title}
+                </a>
+              </>
+            )}
           </div>
         </div>
         <SelectField

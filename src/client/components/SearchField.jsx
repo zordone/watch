@@ -33,11 +33,6 @@ export const SearchField = ({ onChange = noop, onShortcut = noop, value: propVal
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
-  // Update local state when prop value changes
-  useEffect(() => {
-    setValue(propValue);
-  }, [propValue]);
-
   const onKeyUp = useCallback(
     (event) => {
       if (event.code === "KeyF") {
@@ -60,6 +55,10 @@ export const SearchField = ({ onChange = noop, onShortcut = noop, value: propVal
     [onShortcut],
   );
 
+  // update local state when prop value changes
+  useEffect(() => setValue(propValue), [propValue]);
+
+  // add remove listeners for key board shortcuts
   useEffect(() => {
     events.addListener(Events.KEYUP, onKeyUp);
     events.addListener(Events.KEYDOWN, onKeyDown);

@@ -13,6 +13,7 @@ import "./Poster.css";
 export const Poster = ({ item, onPosterSearch = noop, posterSearching = false }) => {
   const [state, setState] = useState("empty");
 
+  // when the URL changes, reset state and start loading
   useEffect(() => {
     if (!item.posterUrl) {
       setState("empty");

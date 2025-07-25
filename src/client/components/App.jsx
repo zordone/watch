@@ -59,7 +59,7 @@ const router = createBrowserRouter([
 ]);
 
 export const App = () => {
-  // handle global imdb id pasting
+  // add/remove global listeners for native paste event
   useEffect(() => {
     const onPaste = (event) => {
       const text = event.clipboardData.getData("Text") || "";
