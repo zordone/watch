@@ -1,6 +1,7 @@
 import { Movie, Tv } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { ItemType } from "../../common/enums";
+import { itemPropType } from "./propTypes";
 
 export const ItemIcon = ({ item, className = "" }) => {
   const Icon = item.type === ItemType.MOVIE ? Movie : Tv;
@@ -8,8 +9,6 @@ export const ItemIcon = ({ item, className = "" }) => {
 };
 
 ItemIcon.propTypes = {
-  item: PropTypes.shape({
-    type: PropTypes.oneOf(Object.values(ItemType)),
-  }).isRequired,
+  item: itemPropType,
   className: PropTypes.string,
 };

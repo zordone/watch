@@ -113,6 +113,7 @@ export const Item = () => {
   };
 
   const onChange = (changedItem) => {
+    console.log("Item.onChange");
     const updateState = page === DETAILS;
     updateItemState(changedItem, updateState);
   };

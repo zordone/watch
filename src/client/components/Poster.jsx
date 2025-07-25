@@ -2,10 +2,11 @@ import { ErrorOutline } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
-import { ItemLoadingFlags, ItemType } from "../../common/enums";
+import { ItemLoadingFlags } from "../../common/enums";
 import { noop } from "../service/utils";
 import { actions } from "../store/store";
 import { ItemIcon } from "./ItemIcon";
+import { itemPropType } from "./propTypes";
 import { ScrapeButton } from "./ScrapeButton";
 import "./Poster.css";
 
@@ -56,10 +57,7 @@ export const Poster = ({ item, onPosterSearch = noop, posterSearching = false })
 };
 
 Poster.propTypes = {
-  item: PropTypes.shape({
-    type: PropTypes.oneOf(Object.values(ItemType)),
-    posterUrl: PropTypes.string,
-  }).isRequired,
+  item: itemPropType,
   posterSearching: PropTypes.bool,
   onPosterSearch: PropTypes.func,
 };

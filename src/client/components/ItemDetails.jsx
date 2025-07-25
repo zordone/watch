@@ -1,8 +1,7 @@
 import { Button } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { ItemType, FinishedType, StateType, NextType, ValiType } from "../../common/enums";
-import { defaultItem } from "../service/serviceUtils";
 import {
   inputDateAddMonth,
   parseDate,
@@ -12,6 +11,7 @@ import {
   getImdbState,
 } from "../service/utils";
 import { Poster } from "./Poster";
+import { itemPropType } from "./propTypes";
 import { RatingButton } from "./RatingButton";
 import { StateLabel } from "./StateLabel";
 import "./ItemDetails.css";
@@ -73,14 +73,13 @@ SideButton.propTypes = {
 };
 
 export const ItemDetails = ({
-  item: propItem,
+  // draft item
+  item,
   onChange,
   onPosterSearch = noop,
   posterSearching = false,
   visible = true,
 }) => {
-  const [item, setItem] = useState({ ...defaultItem });
-
   const state = item.state.type;
   const imdbState = getImdbState(item.imdbId);
   const inProgress = Boolean(item.inProgress);
@@ -107,11 +106,11 @@ export const ItemDetails = ({
   const updateItem = useCallback(
     (updateFields) => {
       onChange({
-        ...propItem,
+        ...item,
         ...updateFields,
       });
     },
-    [onChange, propItem],
+    [onChange, item],
   );
 
   const onRatingChange = useCallback(
@@ -120,9 +119,6 @@ export const ItemDetails = ({
     },
     [updateItem],
   );
-
-  // if item prop changes, overwrite the draft item
-  useEffect(() => setItem({ ...propItem }), [propItem]);
 
   const availableNow = useCallback(
     () =>
@@ -139,7 +135,7 @@ export const ItemDetails = ({
     updateItem({ nextDate: inputDateAddMonth(date, 1) });
   }, [updateItem, item.nextDate]);
 
-  const finishedTheShow = useCallback(
+  const finishedShow = useCallback(
     () => updateItem({ finished: FinishedType.YES, nextDate: "", nextType: "" }),
     [updateItem],
   );
@@ -191,7 +187,7 @@ export const ItemDetails = ({
                 </>
               )}
               {isWaitingOrRecheck && !isMovie && (
-                <SideButton label="Finished the show" onClick={finishedTheShow} />
+                <SideButton label="Finished the show" onClick={finishedShow} />
               )}
               {state === StateType.READY && (
                 <SideButton
@@ -292,7 +288,7 @@ export const ItemDetails = ({
 };
 
 ItemDetails.propTypes = {
-  item: PropTypes.shape({}).isRequired,
+  item: itemPropType,
   onChange: PropTypes.func.isRequired,
   onPosterSearch: PropTypes.func,
   posterSearching: PropTypes.bool,

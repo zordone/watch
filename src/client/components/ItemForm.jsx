@@ -15,10 +15,10 @@ import {
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { events, Events } from "../service/events";
 import * as service from "../service/service";
-import { defaultItem } from "../service/serviceUtils";
 import { parseDate, mergeArrays } from "../service/utils";
 import { actions } from "../store/store";
 import { ChipField } from "./ChipField";
+import { itemPropType } from "./propTypes";
 import { ScrapeButton } from "./ScrapeButton";
 import { SelectField } from "./SelectField";
 import "./ItemForm.css";
@@ -26,8 +26,13 @@ import "./ItemForm.css";
 const MAX_GENRES = 4;
 const MAX_KEYWORDS = 10;
 
-export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible = true }) => {
-  const [item, setItem] = useState({ ...defaultItem });
+export const ItemForm = ({
+  // draft item
+  item,
+  onChange,
+  findByTitle = noop,
+  visible = true,
+}) => {
   const [sameTitle, setSameTitle] = useState(undefined);
   const imdbScrapingRef = useRef(false);
   const imdbAutoScrapeDoneRef = useRef(false);
@@ -35,10 +40,6 @@ export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible
 
   const seasonSlotProps = { htmlInput: { min: "1", max: "99" } };
   const releaseYearSlotProps = { htmlInput: { min: "1900", max: "2100" } };
-
-  useEffect(() => {
-    setItem({ ...propItem });
-  }, [propItem]);
 
   const onTitleChangeDebounced = useDebouncedCallback(
     useCallback(() => {
@@ -64,7 +65,6 @@ export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible
       ...item,
       [id]: value,
     };
-    setItem(newItem);
     onChange(newItem);
     if (item.title !== newItem.title) {
       onTitleChangeDebounced();
@@ -107,7 +107,6 @@ export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible
           newItem.nextDate = parsed.released;
           newItem.nextType = newItem.type === ItemType.MOVIE ? NextType.RELEASE : NextType.START;
         }
-        setItem(newItem);
         onChange(newItem);
         onTitleChangeDebounced();
       })
@@ -297,7 +296,7 @@ export const ItemForm = ({ item: propItem, onChange, findByTitle = noop, visible
 };
 
 ItemForm.propTypes = {
-  item: PropTypes.shape({}).isRequired,
+  item: itemPropType,
   onChange: PropTypes.func.isRequired,
   findByTitle: PropTypes.func,
   visible: PropTypes.bool,
