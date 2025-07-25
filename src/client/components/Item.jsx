@@ -23,7 +23,7 @@ const useItem = (id) => {
   const isNew = id === Const.NEW;
 
   // copy for local editing
-  const [draftItem, setDraftItem] = useState(defaultItem);
+  const [draftItem, setDraftItem] = useState(structuredClone(defaultItem));
 
   const queryClient = useQueryClient();
 
@@ -44,21 +44,15 @@ const useItem = (id) => {
   // save item
   const saveMutation = useMutation({
     mutationKey: ["item-save"],
-    mutationFn: (draft) => {
-      return isNew ? service.saveNewItem(draft) : service.updateItemById(draft._id, draft);
-    },
-    onSuccess: (savedItem) => {
-      queryClient.invalidateQueries({ queryKey: ["item", savedItem._id] });
-    },
+    mutationFn: (draft) =>
+      isNew ? service.saveNewItem(draft) : service.updateItemById(draft._id, draft),
+    onSuccess: (savedItem) => queryClient.invalidateQueries({ queryKey: ["item", savedItem._id] }),
   });
 
   // delete item
   const deleteMutation = useMutation({
     mutationKey: ["item-delete"],
     mutationFn: (id) => service.deleteItemById(id),
-    onSuccess: (deletedItem) => {
-      queryClient.invalidateQueries({ queryKey: ["item", deletedItem._id] });
-    },
   });
 
   // when the fetched item arrives (or changes), reset the draft
@@ -93,6 +87,7 @@ export const Item = () => {
   } = useItem(id);
 
   const [page, setPage] = useState(DETAILS);
+  const isNewInitialized = useRef(false);
   const [posters, setPosters] = useState({
     visible: false,
     searching: false,
@@ -127,9 +122,6 @@ export const Item = () => {
     return saveMutation
       .mutateAsync(draftItem)
       .then((saved) => {
-        if (isNew) {
-          actions.addNewItem(saved);
-        }
         actions.updateItem(saved);
         actions.setCurrentId(saved._id);
         actions.showSnack("Item saved.", "success");
@@ -219,9 +211,10 @@ export const Item = () => {
   };
 
   useEffect(() => {
-    if (id === Const.NEW) {
+    if (id === Const.NEW && !isNewInitialized.current) {
+      isNewInitialized.current = true;
       const newItem = service.createNewItem();
-      if (id === Const.NEW && imdbId) {
+      if (imdbId) {
         newItem.imdbId = imdbId;
       }
       setDraftItem(newItem);

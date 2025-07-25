@@ -30,11 +30,6 @@ export const actions = {
     store.items = items;
   },
 
-  addNewItem(item) {
-    // insert the new item in front of the old items
-    store.items = [item, ...store.items];
-  },
-
   updateItem(newItem) {
     // if the items are not fetched yet, leave it empty, so it will be fetched later
     if (!store.items.length) return;
