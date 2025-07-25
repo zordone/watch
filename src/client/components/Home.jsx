@@ -1,5 +1,3 @@
-import { Add } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
@@ -205,24 +203,11 @@ export const Home = () => {
     scrollToCurrent();
   }, [search, filteredItems, scrollToCurrent]);
 
-  // TODO: pass these down as children
-  const searchField = (
-    <SearchField onChange={onSearchChanged} onShortcut={onShortcut} value={search} />
-  );
-  const helpButton = (
-    <IconButton aria-label="Help" onClick={onHelp}>
-      ?
-    </IconButton>
-  );
-  const newButton = (
-    <IconButton aria-label="Add new item" onClick={onAddNew}>
-      <Add />
-    </IconButton>
-  );
-
   return (
     <div className="Home">
-      <Header {...{ searchField, helpButton, newButton, onLogoClick }} />
+      <Header onHelp={onHelp} onAddNew={onAddNew} onLogoClick={onLogoClick}>
+        <SearchField onChange={onSearchChanged} onShortcut={onShortcut} value={search} />
+      </Header>
       <main>
         <ItemTable items={filteredItems} currentId={currentId} onRowClick={onRowClick} />
         <div className="Home-footer">
