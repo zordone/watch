@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { TextField, InputAdornment } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { SearchKeywords } from "../../common/enums";
 import { events, Events } from "../service/events";
 import { noop } from "../service/utils";
@@ -29,8 +29,18 @@ const textFieldSlotProps = {
   },
 };
 
+const renderWord = (word, index) => {
+  const isKeyword = Object.values(SearchKeywords).includes(word);
+  const className = isKeyword ? "SearchField-keyword" : "";
+  return (
+    <span key={`${word}-${index}`} className={className}>
+      {word}
+    </span>
+  );
+};
+
 export const SearchField = ({ onChange = noop, onShortcut = noop, value: propValue = "" }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(propValue);
   const inputRef = useRef(null);
 
   const onKeyUp = useCallback(
@@ -79,20 +89,12 @@ export const SearchField = ({ onChange = noop, onShortcut = noop, value: propVal
     [onChange],
   );
 
-  const renderWord = useCallback((word, index) => {
-    const isKeyword = Object.values(SearchKeywords).includes(word);
-    const className = isKeyword ? "SearchField-keyword" : "";
-    return (
-      <span key={`${word}-${index}`} className={className}>
-        {word}
-      </span>
-    );
-  }, []);
+  const words = useMemo(() => value.split(" ").map(renderWord), [value]);
 
   const emptyClass = value ? "not-empty" : "empty";
   return (
     <div className={`SearchField ${emptyClass}`}>
-      <div className="SearchField-words">{value.split(" ").map(renderWord)}</div>
+      <div className="SearchField-words">{words}</div>
       <TextField
         placeholder="Filter"
         value={value}

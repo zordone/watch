@@ -51,8 +51,7 @@ export const SearchKeywords = Object.freeze({
   ...StateType,
   VALI: "vali",
   CSABA: "csaba",
-  // secondary keywors (with # prefix)
-  FINISHED: "#finished",
+  // secondary keywords (with # prefix)
   UNFINISHED: "#unfinished",
   NOPOSTER: "#noposter",
   NOIMDB: "#noimdb",

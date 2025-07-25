@@ -17,7 +17,7 @@ const sections = [
   { title: "Audience", keywords: ["csaba", "vali"] },
   {
     title: "Technical",
-    keywords: ["#finished", "#unfinished", "#noposter", "#noimdb", "#unscraped"],
+    keywords: ["#unfinished", "#noposter", "#noimdb", "#unscraped"],
   },
   { title: "Sorting", keywords: values(SortComparators, "sort:") },
 ];
