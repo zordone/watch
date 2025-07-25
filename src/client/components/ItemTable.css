@@ -45,20 +45,24 @@
   background: #fff1;
 }
 
-.ItemTable td,
-.ItemTable td:last-child {
+.ItemTable td {
   padding: 8px 6px;
+  /* one long word shouldn't keep a whole column at that min width */
+  overflow-wrap: anywhere;
+  text-wrap-style: balance;
 }
-
-.ItemTable .ItemTable-skinny-col {
-  width: 1px;
+.ItemTable td.type {
+  width: 27px;
+}
+.ItemTable td.vali {
+  width: 51px;
 }
 
 .ItemTable td:has(.ItemIcon) {
   font-size: 0;
 }
 
-.ItemTable .ItemIcon svg {
+.ItemTable .ItemIcon {
   font-size: 1.6rem;
   color: #ccc;
 }

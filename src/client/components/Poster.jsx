@@ -34,11 +34,7 @@ export const Poster = ({ item, onPosterSearch = noop, posterSearching = false })
   return (
     <Box className="Poster" sx={{ boxShadow: 2 }}>
       {state === "empty" && <ItemIcon className="Poster-fallback" item={item} />}
-      {state === "failed" && (
-        <span className="Poster-fallback">
-          <ErrorOutline item={item} />
-        </span>
-      )}
+      {state === "failed" && <ErrorOutline className="Poster-fallback" item={item} />}
       {item.posterUrl && !["empty", "failed"].includes(state) && (
         <img
           src={item.posterUrl}

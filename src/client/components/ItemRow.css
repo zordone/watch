@@ -14,14 +14,6 @@
   }
 }
 
-i.ItemIcon.movie {
-  line-height: 1.5;
-}
-
-i.ItemIcon.show {
-  line-height: 1;
-}
-
 @media only screen and (max-width: 640px) {
   .ItemRow .title {
     font-weight: 600;

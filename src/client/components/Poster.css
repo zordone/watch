@@ -15,10 +15,6 @@
   transform: translate(-50%, -50%);
   opacity: 0.1;
   zoom: 2;
-  font-size: 0;
-}
-
-.Poster .Poster-fallback svg {
   font-size: 1.5rem;
 }
 

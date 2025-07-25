@@ -1,29 +1,41 @@
 import { TableRow, TableCell } from "@mui/material";
 import PropTypes from "prop-types";
 import { StateType, ValiType } from "../../common/enums";
+import { useIsMobile } from "../hooks/useIsMobile";
 import { maxLength, noop } from "../service/utils";
 import { ItemIcon } from "./ItemIcon";
 import { StateLabel } from "./StateLabel";
 import "./ItemRow.css";
 
 export const ItemRow = ({ item, onClick = noop, isCurrent = false }) => {
+  const { isMobile, isDesktop } = useIsMobile();
+
   const className = `ItemRow ${isCurrent ? "current" : ""}`;
   return (
     <TableRow className={className} onClick={(event) => onClick(item._id, event.metaKey)}>
-      <TableCell className="ItemTable-skinny-col">
+      <TableCell className="type">
         <ItemIcon item={item} />
       </TableCell>
       <TableCell scope="row">
-        <div className="title">{item.title}</div>
-        <div className="only-mobile">{item.genres.join(", ")}</div>
-        <StateLabel className="only-mobile" item={item} />
+        {isDesktop && item.title}
+        {isMobile && (
+          <>
+            <div className="title">{item.title}</div>
+            <div>{item.genres.join(", ")}</div>
+            <StateLabel item={item} />
+          </>
+        )}
       </TableCell>
-      <TableCell className="only-desktop">{item.genres.join(", ")}</TableCell>
-      <TableCell className="only-desktop">
-        <StateLabel item={item} />
-      </TableCell>
-      <TableCell className="only-desktop">{maxLength(item.notes, 50)}</TableCell>
-      <TableCell>{item.withVali}</TableCell>
+      {isDesktop && (
+        <>
+          <TableCell>{item.genres.join(", ")}</TableCell>
+          <TableCell>
+            <StateLabel item={item} />
+          </TableCell>
+          <TableCell>{maxLength(item.notes, 50)}</TableCell>
+        </>
+      )}
+      <TableCell className="vali">{item.withVali}</TableCell>
     </TableRow>
   );
 };
