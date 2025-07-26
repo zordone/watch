@@ -94,13 +94,7 @@ export const Item = () => {
     images: [],
   });
   const [posterSearching, setPosterSearching] = useState(false);
-  const [error, setError] = useState("");
   const [deleteSure, setDeleteSure] = useState(false);
-
-  if (isItemError && !error) {
-    setError("Failed to fetch item.");
-  }
-
   const deleteTimerRef = useRef();
 
   const onClose = useGoBack();
@@ -134,7 +128,6 @@ export const Item = () => {
       })
       .catch((err) => {
         console.error(err);
-        setError(err.message);
         actions.showSnack("Failed to save item.", "error");
       })
       .finally(() => {
@@ -188,14 +181,12 @@ export const Item = () => {
       return deleteMutationAsync(draftItem._id)
         .then(() => {
           actions.deleteItem(items, draftItem._id);
-          setError("");
           setDeleteSure(false);
           onClose();
           actions.showSnack("Item deleted.", "success");
         })
         .catch((err) => {
           console.error(err);
-          setError(err.message);
           setDeleteSure(false);
           actions.showSnack("Failed to delete item.", "error");
         })
@@ -219,6 +210,14 @@ export const Item = () => {
     },
     [items],
   );
+
+  // close and show snack on item fetch error
+  useEffect(() => {
+    if (isItemError) {
+      actions.showSnack("Failed to fetch item.", "error");
+      onClose();
+    }
+  }, [isItemError, onClose]);
 
   // if this is a new item, and we have and IMDb ID, start scraping automatically
   useEffect(() => {
@@ -283,9 +282,14 @@ export const Item = () => {
           visible={page === FORM}
           findByTitle={findByTitle}
         />
-        {error && <p className="Item-error">{error}</p>}
         <div className="Item-buttons">
-          <Button variant="contained" color="primary" className="Item-button" onClick={onSave}>
+          <Button
+            disabled={!draftItem.title}
+            variant="contained"
+            color="primary"
+            className="Item-button"
+            onClick={onSave}
+          >
             Save
           </Button>
           <Button variant="contained" color="default" className="Item-button" onClick={onClose}>
