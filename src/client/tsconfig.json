@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "composite": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "baseUrl": "..",
+    "paths": {
+      "@common/*": ["common/*"],
+      "@server/*": ["server/*"],
+      "@client/*": ["client/*"]
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"],
+  "references": [{ "path": "../common" }]
+}

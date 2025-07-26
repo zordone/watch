@@ -1,0 +1,60 @@
+import { Snackbar, Alert } from "@mui/material";
+import { useCallback, useLayoutEffect, useRef } from "react";
+import { actions, useStore } from "../store/store";
+import "./SnackPack.css";
+
+const AUTOHIDE_DURATION = 4000;
+const TRANSITION_DURATION = 500;
+
+// looks like MUI doesn't provide a type for this
+interface MuiClickAwayEvent {
+  defaultMuiPrevented?: boolean;
+}
+
+const snackbarSlotProps = {
+  clickAwayListener: () => ({
+    onClickAway: (event: MuiClickAwayEvent) => {
+      // prevent default onClickAway behavior
+      event.defaultMuiPrevented = true;
+    },
+  }),
+};
+
+export const SnackPack = () => {
+  const { snacks } = useStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const onClose = useCallback((id: string) => {
+    actions.closeSnack(id);
+    setTimeout(() => actions.clearSnacks(), TRANSITION_DURATION);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+    const bottomMargin = 16;
+    const height = snacks.length
+      ? containerRef.current.getBoundingClientRect().height + bottomMargin
+      : 0;
+    containerRef.current.style.transform = `translateY(${-height}px)`;
+  }, [snacks.length]);
+
+  return (
+    <div className="SnackPack" ref={containerRef}>
+      {snacks.map(({ id, text, severity, visible }) => (
+        <Snackbar
+          open
+          autoHideDuration={AUTOHIDE_DURATION}
+          onClose={() => onClose(id)}
+          key={id}
+          className={`SnackPack-snackbar ${visible ? "" : "closed"}`}
+          transitionDuration={TRANSITION_DURATION}
+          slotProps={snackbarSlotProps}
+        >
+          <Alert severity={severity} variant="filled" sx={{ width: "100%" }}>
+            {text}
+          </Alert>
+        </Snackbar>
+      ))}
+    </div>
+  );
+};

@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "composite": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "outDir": "../../build/server",
+    "rootDir": "..",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "baseUrl": "..",
+    "paths": {
+      "@common/*": ["common/*"],
+      "@server/*": ["server/*"],
+      "@client/*": ["client/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules", "../../build"],
+  "references": [{ "path": "../common" }]
+}

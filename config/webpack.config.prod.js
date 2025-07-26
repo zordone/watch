@@ -84,11 +84,15 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx"],
+    extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx", ".ts", ".tsx"],
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       "react-native": "react-native-web",
+      // TypeScript path mappings
+      "@common": path.resolve(__dirname, "../src/common"),
+      "@server": path.resolve(__dirname, "../src/server"),
+      "@client": path.resolve(__dirname, "../src/client"),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -116,7 +120,7 @@ module.exports = {
               },
             },
           },
-          // Process JS with Babel.
+          // Process JS/JSX with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
             include: paths.appSrc,
@@ -125,6 +129,27 @@ module.exports = {
               configFile: path.resolve(__dirname, "babel.config.js"),
               compact: true,
             },
+          },
+          // Process TS/TSX with TypeScript loader.
+          {
+            test: /\.(ts|tsx)$/,
+            include: paths.appSrc,
+            use: [
+              {
+                loader: require.resolve("babel-loader"),
+                options: {
+                  configFile: path.resolve(__dirname, "babel.config.js"),
+                  compact: true,
+                },
+              },
+              {
+                loader: require.resolve("ts-loader"),
+                options: {
+                  configFile: path.resolve(paths.appSrc, "client", "tsconfig.json"),
+                  transpileOnly: true,
+                },
+              },
+            ],
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

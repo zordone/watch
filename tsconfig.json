@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    // Target and Module
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": false,
+
+    // Emit
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "skipLibCheck": true,
+
+    // JavaScript Support
+    "allowJs": true,
+    "checkJs": false,
+
+    // Path mapping
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@server/*": ["src/server/*"],
+      "@client/*": ["src/client/*"]
+    },
+
+    // Library
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+  },
+  "files": [],
+  "references": [{ "path": "./src/common" }, { "path": "./src/client" }, { "path": "./src/server" }]
+}
