@@ -43,7 +43,9 @@ export const itemSearchData = (item, state) => ({
     // csaba?
     item.withVali === ValiType.NO ? SearchKeywords.CSABA : "",
     // finished?
-    item.finished === FinishedType.YES ? SearchKeywords.FINISHED : SearchKeywords.UNFINISHED,
+    [FinishedType.YES, FinishedType.QUIT].includes(item.finished)
+      ? SearchKeywords.FINISHED
+      : SearchKeywords.UNFINISHED,
     // no poster?
     !item.posterUrl ? SearchKeywords.NOPOSTER : "",
     // no imdb?
