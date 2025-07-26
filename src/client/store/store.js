@@ -3,7 +3,7 @@ import { Const } from "../../common/enums";
 import * as service from "../service/service";
 
 // get initial search term from the URL hash
-const initialSearch = decodeURIComponent((location.hash || "").slice(1));
+const initialSearch = decodeURIComponent((location.hash ?? "").slice(1));
 
 // main store proxy with the initial state
 const store = proxy({

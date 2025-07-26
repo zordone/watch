@@ -18,7 +18,7 @@ export const useSetHash = () => {
       {
         pathname: locationRef.current.pathname,
         search: locationRef.current.search,
-        hash,
+        hash: encodeURIComponent(hash ?? ""),
       },
       {
         replace: true,

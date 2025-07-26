@@ -13,8 +13,8 @@ const values = (obj, prefix = "") =>
 const sections = [
   { title: "Type", keywords: values(ItemType) },
   { title: "State", keywords: values(StateType) },
-  { title: "Rating", keywords: values(RatingType, "#") },
   { title: "Audience", keywords: ["csaba", "vali"] },
+  { title: "Rating", keywords: values(RatingType, "#") },
   {
     title: "Technical",
     keywords: ["#unfinished", "#noposter", "#noimdb", "#unscraped"],
