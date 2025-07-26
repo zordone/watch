@@ -286,22 +286,11 @@ exports.imdbData = (req, res) => {
           released: data.datePublished ? data.datePublished : "",
           releaseYear: data.datePublished ? parseInt(data.datePublished.substr(0, 4), 10) : null,
         },
-        // TODO make use of these or remove
+        // these are not used yet
         extra: {
-          actors: makeArray(data.actor)
-            .filter((actor) => actor["@type"] === "Person")
-            .map((actor) => actor.name),
-          creators: makeArray(data.creator)
-            .filter((creator) => creator["@type"] === "Person")
-            .map((creator) => creator.name),
-          directors: makeArray(data.director)
-            .filter((director) => director["@type"] === "Person")
-            .map((director) => director.name),
           rating: (data.aggregateRating || {}).ratingValue || "",
           ratingCount: ((data.aggregateRating || {}).ratingCount || 0).toString(),
         },
-        // TODO: remove raw
-        raw: data,
       };
       res.send(result);
     })
