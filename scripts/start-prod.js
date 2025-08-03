@@ -14,9 +14,6 @@ const compression = require("compression");
 const express = require("express");
 const openBrowser = require("react-dev-utils/openBrowser");
 
-// Ensure environment variables are read.
-require("../config/env");
-
 // Tools like Cloud9 rely on this.
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const HOST = process.env.HOST || "localhost";

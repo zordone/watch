@@ -3,21 +3,12 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const autoprefixer = require("autoprefixer");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
-const webpack = require("webpack");
-const getClientEnvironment = require("./env");
 const paths = require("./paths");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = "/";
-// `publicUrl` is just like `publicPath`, but we will provide it to our app
-// as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-// Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
-const publicUrl = "";
-// Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl);
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -25,8 +16,6 @@ const env = getClientEnvironment(publicUrl);
 module.exports = {
   mode: "development",
   target: ["web", "es2023"],
-  // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
-  // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: "cheap-module-source-map",
   // These are the "entry points" to our application.
   // This means they will be the "root" imports that are included in JS bundle.
@@ -66,22 +55,9 @@ module.exports = {
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.
-    // https://github.com/facebookincubator/create-react-app/issues/253
-    modules: ["node_modules", paths.appNodeModules].concat(
-      // It is guaranteed to exist because we tweak it in `env.js`
-      process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
-    ),
-    // These are the reasonable defaults supported by the Node ecosystem.
-    // We also include JSX as a common component filename extension to support
-    // some tools, although we do not recommend using it, see:
-    // https://github.com/facebookincubator/create-react-app/issues/290
-    // `web` extension prefixes have been added for better support
-    // for React Native Web.
-    extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx", ".ts", ".tsx"],
+    modules: ["node_modules", paths.appNodeModules],
+    extensions: [".js", ".ts", ".tsx"],
     alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      "react-native": "react-native-web",
       // TypeScript path mappings
       "@common": path.resolve(__dirname, "../src/common"),
       "@server": path.resolve(__dirname, "../src/server"),
@@ -111,7 +87,7 @@ module.exports = {
         oneOf: [
           // Process images
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            test: [/\.png$/],
             type: "asset",
             parser: {
               dataUrlCondition: {
@@ -122,29 +98,16 @@ module.exports = {
               filename: "static/media/[name].[hash:8][ext]",
             },
           },
-          // Process JS/JSX with Babel.
-          {
-            test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
-            loader: require.resolve("babel-loader"),
-            options: {
-              configFile: path.resolve(__dirname, "babel.config.js"),
-              // This is a feature of `babel-loader` for webpack (not Babel itself).
-              // It enables caching results in ./node_modules/.cache/babel-loader/
-              // directory for faster rebuilds.
-              cacheDirectory: true,
-            },
-          },
           // Process TS/TSX with TypeScript loader.
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
             use: [
+              // The only reason we still need babel-loader is for React Fast Refresh.
               {
                 loader: require.resolve("babel-loader"),
                 options: {
-                  configFile: path.resolve(__dirname, "babel.config.js"),
-                  cacheDirectory: true,
+                  plugins: [require.resolve("react-refresh/babel")],
                 },
               },
               {
@@ -175,17 +138,7 @@ module.exports = {
                 loader: require.resolve("postcss-loader"),
                 options: {
                   postcssOptions: {
-                    plugins: [
-                      autoprefixer({
-                        overrideBrowserslist: [
-                          "last 2 Chrome versions",
-                          "last 2 Firefox versions",
-                          "last 2 Safari versions",
-                          "last 2 Edge versions",
-                        ],
-                        flexbox: "no-2009",
-                      }),
-                    ],
+                    plugins: [autoprefixer({ flexbox: "no-2009" })],
                   },
                 },
               },
@@ -201,7 +154,7 @@ module.exports = {
             // its runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|mjs)$/, /\.html$/, /\.json$/],
             type: "asset/resource",
             generator: {
               filename: "static/media/[name].[hash:8][ext]",
@@ -217,16 +170,6 @@ module.exports = {
       inject: true,
       template: paths.appHtml,
     }),
-    // Makes some environment variables available in index.html.
-    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In development, this will be an empty string.
-    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
-    new webpack.DefinePlugin(env.stringified),
-    // Watcher doesn't work well if you mistype casing in a path so we use
-    // a plugin that prints an error when you attempt to do this.
     // See https://github.com/facebookincubator/create-react-app/issues/240
     new CaseSensitivePathsPlugin(),
     // React Fast Refresh (state-preserving HMR)

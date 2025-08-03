@@ -3,13 +3,10 @@ const autoprefixer = require("autoprefixer");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const webpack = require("webpack");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const { GenerateSW } = require("workbox-webpack-plugin");
-const getClientEnvironment = require("./env");
 const paths = require("./paths");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -20,16 +17,10 @@ const publicPath = paths.servedPath;
 const shouldUseRelativeAssetPaths = publicPath === "./";
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
-// `publicUrl` is just like `publicPath`, but we will provide it to our app
-// as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-// Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
-const publicUrl = publicPath.slice(0, -1);
-// Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl);
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-if (env.stringified["process.env"].NODE_ENV !== '"production"') {
+if (process.env.NODE_ENV !== "production") {
   throw new Error("Production builds must have NODE_ENV=production.");
 }
 
@@ -44,8 +35,6 @@ module.exports = {
   target: ["web", "es2023"],
   // Don't attempt to continue if there are any errors.
   bail: true,
-  // We generate sourcemaps in production. This is slow but gives good results.
-  // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? "source-map" : false,
   // In production, we only want to load the app code.
   entry: [paths.appIndexJs],
@@ -73,22 +62,9 @@ module.exports = {
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.
-    // https://github.com/facebookincubator/create-react-app/issues/253
-    modules: ["node_modules", paths.appNodeModules].concat(
-      // It is guaranteed to exist because we tweak it in `env.js`
-      process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
-    ),
-    // These are the reasonable defaults supported by the Node ecosystem.
-    // We also include JSX as a common component filename extension to support
-    // some tools, although we do not recommend using it, see:
-    // https://github.com/facebookincubator/create-react-app/issues/290
-    // `web` extension prefixes have been added for better support
-    // for React Native Web.
-    extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx", ".ts", ".tsx"],
+    modules: ["node_modules", paths.appNodeModules],
+    extensions: [".js", ".ts", ".tsx"],
     alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      "react-native": "react-native-web",
       // TypeScript path mappings
       "@common": path.resolve(__dirname, "../src/common"),
       "@server": path.resolve(__dirname, "../src/server"),
@@ -112,7 +88,7 @@ module.exports = {
         oneOf: [
           // Process images using asset modules
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            test: [/\.png$/],
             type: "asset",
             parser: {
               dataUrlCondition: {
@@ -120,28 +96,11 @@ module.exports = {
               },
             },
           },
-          // Process JS/JSX with Babel.
-          {
-            test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
-            loader: require.resolve("babel-loader"),
-            options: {
-              configFile: path.resolve(__dirname, "babel.config.js"),
-              compact: true,
-            },
-          },
           // Process TS/TSX with TypeScript loader.
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
             use: [
-              {
-                loader: require.resolve("babel-loader"),
-                options: {
-                  configFile: path.resolve(__dirname, "babel.config.js"),
-                  compact: true,
-                },
-              },
               {
                 loader: require.resolve("ts-loader"),
                 options: {
@@ -183,17 +142,7 @@ module.exports = {
                 loader: require.resolve("postcss-loader"),
                 options: {
                   postcssOptions: {
-                    plugins: [
-                      autoprefixer({
-                        overrideBrowserslist: [
-                          "last 2 Chrome versions",
-                          "last 2 Firefox versions",
-                          "last 2 Safari versions",
-                          "last 2 Edge versions",
-                        ],
-                        flexbox: "no-2009",
-                      }),
-                    ],
+                    plugins: [autoprefixer({ flexbox: "no-2009" })],
                   },
                   sourceMap: shouldUseSourceMap,
                 },
@@ -205,7 +154,7 @@ module.exports = {
           // This loader doesn't use a "test" so it will catch all modules
           // that fall through the other loaders.
           {
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|mjs)$/, /\.html$/, /\.json$/],
             type: "asset/resource",
           },
         ],
@@ -230,17 +179,6 @@ module.exports = {
         minifyURLs: true,
       },
     }),
-    // Makes some environment variables available in index.html.
-    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In production, it will be an empty string unless you specify "homepage"
-    // in `package.json`, in which case it will be the pathname of that URL.
-    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
-    // It is absolutely essential that NODE_ENV was set to production here.
-    // Otherwise React will be compiled in the very slow development mode.
-    new webpack.DefinePlugin(env.stringified),
     // Extract CSS into separate files
     new MiniCssExtractPlugin({
       filename: cssFilename,
@@ -270,7 +208,7 @@ module.exports = {
     new GenerateSW({
       clientsClaim: true,
       exclude: [/\.map$/, /asset-manifest\.json$/],
-      navigateFallback: `${publicUrl}/index.html`,
+      navigateFallback: "/index.html",
     }),
     // Copy static assets from public folder
     new CopyWebpackPlugin({

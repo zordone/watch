@@ -9,9 +9,6 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-// Ensure environment variables are read.
-require("../config/env");
-
 const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
 const clearConsole = require("react-dev-utils/clearConsole");
 const openBrowser = require("react-dev-utils/openBrowser");
