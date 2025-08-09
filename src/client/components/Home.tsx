@@ -54,7 +54,7 @@ export const Home = () => {
 
   const scrollToTop = useCallback(() => {
     const firstRow = document.querySelector(".ItemRow");
-    firstRow?.scrollIntoView();
+    firstRow?.scrollIntoView({ block: "center" });
   }, []);
 
   // filter items when search term changes (or the item list)
