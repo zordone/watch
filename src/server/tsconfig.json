@@ -10,7 +10,7 @@
     "isolatedModules": false,
     "outDir": "../../build/server",
     "rootDir": "..",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM"],
     "types": ["node"],
     "baseUrl": "..",
     "paths": {

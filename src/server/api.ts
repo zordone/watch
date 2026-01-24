@@ -5,26 +5,11 @@ import omit from "lodash/omit";
 import { Genre, Type } from "@common/enums";
 import { Item, ParsedImdbData } from "@common/types";
 import { IMPORT_DIR } from "./config";
+import { fetchImdbData } from "./imdb";
 import { importCsv } from "./importCsv";
 import { ItemInstance, ItemModel, Item_dontUpdateFields } from "./models";
 
-interface ImdbData {
-  "@type": string;
-  keywords: string;
-  name: string;
-  alternateName: string;
-  genre: string | string[];
-  description: string;
-  image: string;
-  datePublished: string;
-  aggregateRating: {
-    ratingValue: string;
-    ratingCount: string;
-  };
-}
-
 const reImage = /\.(jpe?g|png|webp)\b/i;
-const reImdbData = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
 
 const decode = (htmlString: string) =>
   new DOMParser().parseFromString(`<d>${htmlString}</d>`, "text/html").documentElement?.textContent;
@@ -222,24 +207,8 @@ export const searchImages = (req: Request, res: Response) => {
 export const imdbData = (req: Request, res: Response) => {
   const { imdbId } = req.params;
   console.log("[ImdbData] IMDb ID:", imdbId);
-  const url = `https://www.imdb.com/title/${imdbId}/`;
-  fetch(url, {
-    headers: {
-      "Accept-Encoding": "gzip",
-      "Accept-Language": "en-US",
-      Accept: "text/html; charset=utf-8",
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-    },
-  })
-    .then((imdbRes) => imdbRes.text())
-    .then((html) => {
-      reImdbData.lastIndex = 0;
-      const json = (reImdbData.exec(html) ?? [])[1];
-      if (!json) {
-        throw new Error("JSON regex didn't match");
-      }
-      const data = JSON.parse(json) as ImdbData;
+  fetchImdbData(imdbId)
+    .then((data) => {
       const result: ParsedImdbData = {
         parsed: {
           type: data["@type"] === "TVSeries" ? Type.SHOW : Type.MOVIE,
