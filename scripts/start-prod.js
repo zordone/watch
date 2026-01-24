@@ -63,8 +63,10 @@ const prodServer = prodApp.listen(port, (err) => {
     return console.log(err);
   }
   console.log("Starting the production server...\n");
-  openBrowser(`${protocol}://${HOST}:${port}`);
-  console.log(`Production server started on port ${port}`);
+  setTimeout(() => {
+    openBrowser(`${protocol}://${HOST}:${port}`);
+    console.log(`Production server started on port ${port}`);
+  }, 1000);
 });
 
 ["SIGINT", "SIGTERM"].forEach((sig) => {

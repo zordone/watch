@@ -248,7 +248,7 @@ export const ItemDetails = ({
             {imdbState === "empty" && (
               <Link label="IMDb search" url={`https://www.imdb.com/find?q=${titleQuery}`} />
             )}
-            {imdbState === "valid" && isCheckable && !isMovie && (
+            {imdbState === "valid" && !isMovie && (
               <Link
                 label={`IMDb ${seasonCode(nextSeasonNum)}`}
                 url={`https://www.imdb.com/title/${item.imdbId}/episodes/?season=${nextSeasonNum}`}
