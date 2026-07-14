@@ -9,7 +9,7 @@ import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 import { useOnMount } from "../hooks/useOnMount";
 import { useSetHash } from "../hooks/useSetHash";
 import { ImdbPasteEventHandler } from "../service/events";
-import { listItems } from "../service/service";
+import { listItems, localIp } from "../service/service";
 import { sortTitles } from "../service/sort";
 import { useStore, actions } from "../store/store";
 import { Header } from "./Header";
@@ -125,6 +125,23 @@ export const Home = () => {
     navigate("/help", { viewTransition: true });
   }, [navigate]);
 
+  const onShare = useCallback(() => {
+    localIp()
+      .then(({ ip }) => {
+        if (!ip) {
+          actions.showSnack("Could not determine local IP address.", "error");
+          return undefined;
+        }
+        const url = window.location.href.replace(window.location.hostname, ip);
+        return navigator.clipboard.writeText(url).then(() => {
+          actions.showSnack("Link copied", "success");
+        });
+      })
+      .catch(() => {
+        actions.showSnack("Failed to copy link.", "error");
+      });
+  }, []);
+
   const onLogoClick = useCallback(() => {
     onSearchChanged("");
     scrollToTop();
@@ -202,7 +219,7 @@ export const Home = () => {
 
   return (
     <div className="Home">
-      <Header onHelp={onHelp} onAddNew={onAddNew} onLogoClick={onLogoClick}>
+      <Header onShare={onShare} onHelp={onHelp} onAddNew={onAddNew} onLogoClick={onLogoClick}>
         <SearchField onChange={onSearchChanged} onShortcut={onShortcut} value={search} />
       </Header>
       <main>

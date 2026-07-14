@@ -1,10 +1,12 @@
-import { Add, QuestionMark } from "@mui/icons-material";
+import { ReactNode } from "react";
+import { Add, Link, QuestionMark } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { noop } from "../service/utils";
 import "./Header.css";
 
 interface HeaderProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
+  onShare?: () => void;
   onHelp?: () => void;
   onAddNew?: () => void;
   onLogoClick?: () => void;
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 export const Header = ({
   children,
+  onShare = noop,
   onHelp = noop,
   onAddNew = noop,
   onLogoClick = noop,
@@ -25,6 +28,9 @@ export const Header = ({
     </div>
     {children}
     <div className="Header-buttons">
+      <IconButton aria-label="Copy link" onClick={onShare}>
+        <Link />
+      </IconButton>
       <IconButton aria-label="Help" onClick={onHelp}>
         <QuestionMark />
       </IconButton>

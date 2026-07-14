@@ -1,9 +1,10 @@
+import os from "os";
 import { DOMParser } from "@xmldom/xmldom";
 import { Request, Response } from "express";
 import google from "googlethis";
 import omit from "lodash/omit";
 import { Genre, Type } from "@common/enums";
-import { Item, ParsedImdbData } from "@common/types";
+import { Item, NetworkInfo, ParsedImdbData } from "@common/types";
 import { IMPORT_DIR } from "./config";
 import { fetchImdbData } from "./imdb";
 import { importCsv } from "./importCsv";
@@ -243,4 +244,13 @@ export const imdbData = (req: Request, res: Response) => {
       console.log("[ImdbData]", err);
       res.status(500).send(errorMessage(err));
     });
+};
+
+export const localIp = (req: Request, res: Response) => {
+  const ip =
+    Object.values(os.networkInterfaces())
+      .flat()
+      .find((net) => net?.family === "IPv4" && !net.internal)?.address ?? "";
+  const result: NetworkInfo = { ip };
+  res.send(result);
 };

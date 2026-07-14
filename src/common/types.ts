@@ -76,6 +76,10 @@ export interface ParsedImdbData {
   };
 }
 
+export interface NetworkInfo {
+  ip: string;
+}
+
 export interface StateInfo {
   type: State;
   num: number;

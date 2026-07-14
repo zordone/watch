@@ -1,5 +1,5 @@
 import { SortComparator } from "@common/enums";
-import { Item, ParsedImdbData, ParsedItem } from "@common/types";
+import { Item, NetworkInfo, ParsedImdbData, ParsedItem } from "@common/types";
 import { defaultItem, jsonHeaders, parseItem, jsonOrError } from "./serviceUtils";
 import { sortComparators } from "./sort";
 
@@ -63,3 +63,6 @@ export const searchImages = (query: string): Promise<string[]> =>
 
 export const imdbData = (id: string): Promise<ParsedImdbData> =>
   fetch(`${BASE_URL}/imdbdata/${id}`).then(jsonOrError<ParsedImdbData>);
+
+export const localIp = (): Promise<NetworkInfo> =>
+  fetch(`${BASE_URL}/localip`).then(jsonOrError<NetworkInfo>);
