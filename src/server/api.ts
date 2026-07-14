@@ -1,4 +1,4 @@
-import os from "os";
+import os from "node:os";
 import { DOMParser } from "@xmldom/xmldom";
 import { Request, Response } from "express";
 import google from "googlethis";
@@ -51,7 +51,7 @@ const search = (query: string, { site, limit = 100 }: { site?: string; limit?: n
     });
 };
 
-export const adminImport = (req: Request, res: Response) => {
+export const adminImport = (_req: Request, res: Response) => {
   let done = 0;
   let errors = 0;
   const filename = `${IMPORT_DIR}/import.csv`;
@@ -82,7 +82,7 @@ export const adminImport = (req: Request, res: Response) => {
     });
 };
 
-export const listItems = (req: Request, res: Response) => {
+export const listItems = (_req: Request, res: Response) => {
   ItemModel.find()
     .then((items) => {
       console.log(`[ListItems] Found: ${items.length}`);
@@ -246,7 +246,7 @@ export const imdbData = (req: Request, res: Response) => {
     });
 };
 
-export const localIp = (req: Request, res: Response) => {
+export const localIp = (_req: Request, res: Response) => {
   const ip =
     Object.values(os.networkInterfaces())
       .flat()

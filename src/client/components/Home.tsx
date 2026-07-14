@@ -114,7 +114,7 @@ export const Home = () => {
   );
 
   const onAddNew = useCallback(
-    (event?: Event, imdbId?: string) => {
+    (_event?: Event, imdbId?: string) => {
       const imdbParam = imdbId ? `/${imdbId}` : "";
       navigate(`/item/new${imdbParam}`, { viewTransition: true });
     },

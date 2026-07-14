@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { DATABASE_URL } from "./config";
 
-// set strictQuery to false to prepare for Mongoose 7
+// set strictQuery=false to prepare for Mongoose 7
 mongoose.set("strictQuery", false);
 
 export const connectToDatabase = (): Promise<void> =>

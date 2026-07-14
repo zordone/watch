@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import dayjs from "dayjs";
 import { BACKUP_DIR } from "./config";
 import { ItemModel } from "./models";
