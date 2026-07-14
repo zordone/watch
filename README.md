@@ -32,29 +32,39 @@ exactly to my own needs.
 - Server: Node.js, Express.
 - Client: React SPA, Material UI, Valtio.
 
+Fully TypeScript, including the API between the client and the server.
+
 ## Notes and Disclaimers
 
 - This is a very old project. I recently (2025) modernized it a fair bit, but still.
 - Locally hosted for my own usage. There are no features like authentication or multiple profiles.
 - Single repo, but not a monorepo. I'd use yarn or bun workspaces today.
-- No TypeScript. I'd definitely use TypeScript today.
 - No unit tests. I'd probably add tests today, that would be quite useful for AI agents.
 - Only tested on the latest Chrome, Safari and Mobile Safari.
 
-## Usage
+## Install
 
 - Clone the repo.
 - Install [MongoDB](https://www.mongodb.com/) if you don't already have.
-- Run `nvm use 22`.
+- Run `nvm use 22` (or newer).
 - Run `npm install`.
-- Then `npm run start-all` for development mode.
 
 ## Scripts
 
-- To start in development mode:
-  1. Start Mongo DB: `npm run mongo`
-  2. Start server: `npm run server`
-  3. Start client: `npm start`
-- To start all at once in development mode: `npm run start-all`
-- To make a production build: `npm run build`
-- To start the production build: `npm run start-all-prod`
+Start the parts separately in development mode:
+
+- Start database: `npm run mongo`
+- Start server: `npm run server`
+- Start client: `npm start`
+
+Start all at once in development mode: 
+
+- `npm run start-all`
+
+Make a production build: 
+
+- `npm run build`
+
+Start the production build: 
+
+- `npm run start-all-prod`
