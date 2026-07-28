@@ -6,7 +6,7 @@ import omit from "lodash/omit";
 import { Genre, Type } from "@common/enums";
 import { Item, NetworkInfo, ParsedImdbData } from "@common/types";
 import { IMPORT_DIR } from "./config";
-import { fetchImdbData } from "./imdb";
+import { fetchImdbData, ImdbData } from "./imdb";
 import { importCsv } from "./importCsv";
 import { ItemInstance, ItemModel, Item_dontUpdateFields } from "./models";
 
@@ -205,45 +205,60 @@ export const searchImages = (req: Request, res: Response) => {
     });
 };
 
+const parseImdbData = (data: ImdbData): ParsedImdbData => ({
+  parsed: {
+    imdbId: data.url?.match(/\/(tt\d{6,})\//)?.[1] ?? "",
+    type: data["@type"] === "TVSeries" ? Type.SHOW : Type.MOVIE,
+    title: decode(data.alternateName ?? data.name ?? "") ?? "",
+    genres: makeArray(data.genre)
+      .map((genre) => genre.toLowerCase() as Genre)
+      .filter((genre) => {
+        const isValid = Object.values(Genre).includes(genre);
+        if (!isValid) {
+          console.warn("[parseImdbData] Invalid genre:", genre);
+        }
+        return isValid;
+      }),
+    description: decode(data.description ?? "") ?? "",
+    keywords: (data.keywords ?? "")
+      .split(",")
+      .map((keyword) => keyword.trim().toLowerCase())
+      .filter(Boolean),
+    posterUrl: data.image ?? "",
+    released: data.datePublished ? data.datePublished : "",
+    releaseYear: data.datePublished ? Number.parseInt(data.datePublished.slice(0, 4), 10) : null,
+  },
+  // these are not used yet
+  extra: {
+    rating: data.aggregateRating?.ratingValue ?? "",
+    ratingCount: (data.aggregateRating?.ratingCount ?? 0).toString(),
+  },
+});
+
 export const imdbData = (req: Request, res: Response) => {
   const { imdbId } = req.params;
   console.log("[ImdbData] IMDb ID:", imdbId);
   fetchImdbData(imdbId)
     .then((data) => {
-      const result: ParsedImdbData = {
-        parsed: {
-          type: data["@type"] === "TVSeries" ? Type.SHOW : Type.MOVIE,
-          title: decode(data.alternateName ?? data.name ?? "") ?? "",
-          genres: makeArray(data.genre)
-            .map((genre) => genre.toLowerCase() as Genre)
-            .filter((genre) => {
-              const isValid = Object.values(Genre).includes(genre);
-              if (!isValid) {
-                console.warn("[ImdbData] Invalid genre:", genre);
-              }
-              return isValid;
-            }),
-          description: decode(data.description ?? "") ?? "",
-          keywords: (data.keywords ?? "")
-            .split(",")
-            .map((keyword) => keyword.trim().toLowerCase())
-            .filter(Boolean),
-          posterUrl: data.image ?? "",
-          released: data.datePublished ? data.datePublished : "",
-          releaseYear: data.datePublished ? parseInt(data.datePublished.slice(0, 4), 10) : null,
-        },
-        // these are not used yet
-        extra: {
-          rating: data.aggregateRating?.ratingValue ?? "",
-          ratingCount: (data.aggregateRating?.ratingCount ?? 0).toString(),
-        },
-      };
-      res.send(result);
+      const parsed = parseImdbData(data);
+      res.send(parsed);
     })
     .catch((err: unknown) => {
       console.log("[ImdbData]", err);
       res.status(500).send(errorMessage(err));
     });
+};
+
+export const imdbDataParse = (req: Request, res: Response) => {
+  const data: ImdbData = req.body;
+  console.log("[ImdbDataParse] data:", data);
+  try {
+    const parsed = parseImdbData(data);
+    res.send(parsed);
+  } catch (err) {
+    console.log("[ImdbDataParse]", err);
+    res.status(500).send(errorMessage(err));
+  }
 };
 
 export const localIp = (_req: Request, res: Response) => {

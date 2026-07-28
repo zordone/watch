@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Type, Vali, Next, Finished, Rating, ItemLoadingFlag, Genre } from "@common/enums";
 import { ParsedItem } from "@common/types";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
-import { imdbData, NEW_ID } from "../service/service";
+import { imdbData, imdbDataParse, NEW_ID } from "../service/service";
 import { parseDate, mergeArrays, emptyToNull } from "../service/utils";
 import { actions } from "../store/store";
 import { ChipField } from "./ChipField";
@@ -95,12 +95,21 @@ export const ItemForm = ({
     if (imdbScrapingRef.current || !item.imdbId) return;
     imdbScrapingRef.current = true;
     actions.setItemLoadingFlag(ItemLoadingFlag.IMDB_SCRAPE, true);
-    imdbData(item.imdbId)
+
+    const promise = item.imdbId.startsWith("tt")
+      ? // tt12345678 - scrape from imdb
+        imdbData(item.imdbId)
+      : // json string copied from imdb - parse it
+        imdbDataParse(item.imdbId);
+
+    promise
       .then((data) => {
         console.debug("IMDb data", data);
         const parsed = data.parsed ?? {};
         const newItem: ParsedItem = {
           ...item,
+          // not falling back to item.imdbId, because that would contain the json copied from imdb in the json use case
+          imdbId: parsed.imdbId,
           type: emptyToNull(parsed.type) ?? item.type,
           title: emptyToNull(parsed.title) ?? item.title,
           genres: mergeArrays(parsed.genres, item.genres),
@@ -275,7 +284,12 @@ export const ItemForm = ({
           value={item.notes}
         />
         <div className="imdb">
-          <TextField id="imdbId" label="IMDb ID" onChange={onFieldChange} value={item.imdbId} />
+          <TextField
+            id="imdbId"
+            label="IMDb ID or JSON"
+            onChange={onFieldChange}
+            value={item.imdbId}
+          />
           <ScrapeButton
             className="imdb-scrape"
             ariaLabel="Fill from IMDb"

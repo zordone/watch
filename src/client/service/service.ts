@@ -64,5 +64,12 @@ export const searchImages = (query: string): Promise<string[]> =>
 export const imdbData = (id: string): Promise<ParsedImdbData> =>
   fetch(`${BASE_URL}/imdbdata/${id}`).then(jsonOrError<ParsedImdbData>);
 
+export const imdbDataParse = (json: string): Promise<ParsedImdbData> =>
+  fetch(`${BASE_URL}/imdbdata/parse`, {
+    method: "POST",
+    headers: jsonHeaders,
+    body: json,
+  }).then(jsonOrError<ParsedImdbData>);
+
 export const localIp = (): Promise<NetworkInfo> =>
   fetch(`${BASE_URL}/localip`).then(jsonOrError<NetworkInfo>);

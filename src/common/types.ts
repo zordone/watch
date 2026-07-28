@@ -61,6 +61,7 @@ export interface ParsedItem
 
 export interface ParsedImdbData {
   parsed: {
+    imdbId: string;
     type: Type;
     title: string;
     genres: Genre[];

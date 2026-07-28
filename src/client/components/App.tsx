@@ -58,14 +58,18 @@ const router = createBrowserRouter([
 ]);
 
 const reImdbId = /^tt\d{6,10}$/;
+const reImdbJson = /^\{"@context".*}$/;
 
 export const App = () => {
   // add/remove global listeners for native paste event
   useEffect(() => {
     const onPaste = (event: ClipboardEvent) => {
       const text = event.clipboardData?.getData("Text") ?? "";
-      if (reImdbId.exec(text)) {
-        const imdbPasteEvent = new CustomEvent("imdbPaste", { detail: { imdbId: text } });
+      if (reImdbId.exec(text) || reImdbJson.exec(text)) {
+        const imdbPasteEvent = new CustomEvent("imdbPaste", {
+          // url encode, so we can pass the imdb json, through the route /item/new/<json>
+          detail: { imdbId: encodeURIComponent(text) },
+        });
         document.dispatchEvent(imdbPasteEvent);
       }
     };

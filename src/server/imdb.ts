@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer-core";
 
-interface ImdbData {
+export interface ImdbData {
   "@type": string;
   keywords: string;
   name: string;
@@ -13,6 +13,7 @@ interface ImdbData {
     ratingValue: string;
     ratingCount: string;
   };
+  url: string;
 }
 
 const USER_AGENT =

@@ -30,6 +30,7 @@ app.put("/items/:id", api.updateItemById);
 app.delete("/items/:id", api.deleteItemById);
 app.get("/searchimages/:query", api.searchImages);
 app.get("/imdbdata/:imdbId", api.imdbData);
+app.post("/imdbdata/parse", api.imdbDataParse);
 app.get("/localip", api.localIp);
 
 app.listen(PORT, () => {
